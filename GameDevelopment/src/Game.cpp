@@ -1,16 +1,28 @@
 #include "include/Game.h"
 #include <iostream>
 
+const unsigned int numberOfBall = 2;
+
 Game::Game() : mWindow(nullptr), mIsRunning(true), mTicksCount(0.0f), 
 			mRenderer(), mPaddleHeight1(90), mPaddleHeight2(90)
 {
 	mWindowWidth = 800;
 	mWindowHeight = 600;
 	// Ball
-	mBallPos.x = 800 / 2;
-	mBallPos.y = 600 / 2;
-	mBallVelocity.x = -200.0f;
-	mBallVelocity.y = 235.0f;
+	for (unsigned int i = 0; i < numberOfBall; i++) {
+		Ball ball;
+		ball.position.x = mWindowWidth / 2.0f;
+		ball.position.y = mWindowHeight / 2.0f;
+		if (i == 0) {
+			ball.velocity.x = -200.0f;
+			ball.velocity.y = 235.0f;
+		}
+		else {
+			ball.velocity.x = 200.0f;
+			ball.velocity.y = -235.0f;
+		}
+		mBalls.push_back(ball);
+	}
 	// Paddle 1
 	mPaddlePos1.x = 7.5;
 	mPaddlePos1.y = 600 / 2;
@@ -124,32 +136,32 @@ void Game::UpdateGame()
 		mPaddlePos2.y = mWindowHeight - mPaddleHeight2 / 2.0f - 5.0f;
 	}
 
-	// Ball
-	mBallPos.x += mBallVelocity.x * deltaTime;
-	mBallPos.y += mBallVelocity.y * deltaTime;
-	// Collide top wall
-	if (mBallPos.y < mThickness / 2.0f && mBallVelocity.y < 0.0f) {
-		mBallVelocity.y *= -1;
-	}	
-	// Collide bottom wall
-	if (mBallPos.y > mWindowHeight - mThickness / 2.0f && mBallVelocity.y > 0.0f) {
-		mBallVelocity.y *= -1;
+	for (Ball& ball : mBalls) {
+		ball.position.x += ball.velocity.x * deltaTime;
+		ball.position.y += ball.velocity.y * deltaTime;
+		// Collide top wall
+		if (ball.position.y < mThickness / 2.0f && ball.velocity.y < 0.0f) {
+			ball.velocity.y *= -1;
+		}
+		// Collide bottom wall
+		if (ball.position.y > mWindowHeight - mThickness / 2.0f && ball.velocity.y > 0.0f) {
+			ball.velocity.y *= -1;
+		}
+		// Collide Left Paddle
+		if (std::abs(ball.position.y - mPaddlePos1.y) < mPaddleHeight1 / 2.0f
+			&& ball.position.x > 0.0f && ball.position.x < mPaddlePos1.x + mThickness / 2.0f
+			&& ball.velocity.x < 0.0f
+			) {
+			ball.velocity.x *= -1;
+		}
+		// Collide Right Paddle
+		if (std::abs(ball.position.y - mPaddlePos2.y) < mPaddleHeight2 / 2.0f
+			&& ball.position.x < mWindowWidth && ball.position.x > mPaddlePos2.x - mThickness
+			&& ball.velocity.x > 0.0f
+			) {
+			ball.velocity.x *= -1;
+		}
 	}
-	// Collide Left Paddle
-	if (std::abs(mBallPos.y - mPaddlePos1.y) < mPaddleHeight1 / 2.0f
-		&& mBallPos.x > 0.0f && mBallPos.x < mPaddlePos1.x + mThickness / 2.0f
-		&& mBallVelocity.x < 0.0f
-	) {
-		mBallVelocity.x *= -1;
-	}
-	// Collide Right Paddle
-	if (std::abs(mBallPos.y - mPaddlePos2.y) < mPaddleHeight2 / 2.0f
-		&& mBallPos.x < mWindowWidth && mBallPos.x > mPaddlePos2.x - mThickness
-		&& mBallVelocity.x > 0.0f
-	) {
-		mBallVelocity.x *= -1;
-	}
-
 }
 
 void Game::GenerateOutput()
@@ -158,14 +170,15 @@ void Game::GenerateOutput()
 	SDL_RenderClear(mRenderer);
 	// Draw objects on the scene
 	SDL_SetRenderDrawColor(mRenderer, 255, 255, 255, 255);
-	
-	SDL_Rect ball{
-		static_cast<int>(mBallPos.x - mThickness / 2),
-		static_cast<int>(mBallPos.y - mThickness / 2),
-		mThickness,
-		mThickness,
-	};
-	SDL_RenderFillRect(mRenderer, &ball);
+	for (Ball& ball : mBalls) {
+		SDL_Rect ballRect{
+			static_cast<int>(ball.position.x - mThickness / 2),
+			static_cast<int>(ball.position.y - mThickness / 2),
+			mThickness,
+			mThickness,
+		};
+		SDL_RenderFillRect(mRenderer, &ballRect);
+	}
 	SDL_Rect paddle1{
 		static_cast<int>(mPaddlePos1.x - mThickness / 2),
 		static_cast<int>(mPaddlePos1.y - mPaddleHeight1 / 2),
@@ -180,7 +193,6 @@ void Game::GenerateOutput()
 		mPaddleHeight2,
 	};
 	SDL_RenderFillRect(mRenderer, &paddle2);
-
 
 	// Swap back and front color buffer
 	SDL_RenderPresent(mRenderer);
