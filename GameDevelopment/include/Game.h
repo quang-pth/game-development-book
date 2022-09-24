@@ -23,13 +23,21 @@ private:
 	SDL_Renderer* mRenderer;
 	bool mIsRunning;
 	float mTicksCount; // Measured in miliseconds
+	int mWindowWidth;
+	int mWindowHeight;
 
-	// Game Objects
+	// Ball
 	Vector2 mBallPos;
 	Vector2 mBallVelocity;
+	// Player 1 
+	Vector2 mPaddlePos1;
+	int mPaddleDir1;
+	int mPaddleHeight1;
+	// Player 2 
+	Vector2 mPaddlePos2;
+	int mPaddleDir2;
+	int mPaddleHeight2;
 
-	Vector2 mPaddlePos;
-	int mPaddleDir;
-	int mPaddleHeight;
+	const float mThickness = 15.0f;
 };
 
