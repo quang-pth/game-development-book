@@ -125,7 +125,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Users\ASUS\Desktop\Game Development\GameDevelopment\GameDevelopment;C:\Users\ASUS\Desktop\Game Development\GameDevelopment\GameDevelopment\include;C:\Users\ASUS\Desktop\Game Development\GameDevelopment\GameDevelopment\src;C:\Users\ASUS\Desktop\Game Development\GameDevelopment\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>;SDL2.lib;SDL2main.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>;SDL2_image.lib;SDL2.lib;SDL2main.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -145,11 +145,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Ship.cpp" />
+    <ClCompile Include="src\BackgroundSpriteComponent.cpp" />
+    <ClCompile Include="src\AnimationSpriteComponent.cpp" />
+    <ClCompile Include="src\CustomMath.cpp" />
+    <ClCompile Include="src\SpriteComponent.cpp" />
+    <ClCompile Include="src\Component.cpp" />
+    <ClCompile Include="src\Actor.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\BackgroundSpriteComponent.h" />
+    <ClInclude Include="include\AnimationSpriteComponent.h" />
+    <ClInclude Include="include\Component.h" />
+    <ClInclude Include="include\Actor.h" />
     <ClInclude Include="include\Game.h" />
+    <ClInclude Include="include\SpriteComponent.h" />
+    <ClInclude Include="include\CustomMath.h" />
+    <ClInclude Include="include\Ship.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

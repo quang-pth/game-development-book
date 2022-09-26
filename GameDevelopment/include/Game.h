@@ -2,16 +2,7 @@
 
 #include<SDL2/SDL.h>
 #include<vector>
-
-struct Vector2 {
-	float x;
-	float y;
-};
-
-struct Ball {
-	Vector2 position;
-	Vector2 velocity;
-};
+#include<unordered_map>
 
 class Game
 {
@@ -20,29 +11,30 @@ public:
 	bool Initialize();
 	void RunLoop();
 	void ShutDown();
+	void AddActor(class Actor* actor);
+	void RemoveActor(class Actor* actor);
+	void AddSprite(class SpriteComponent* sprite);
+	void RemoveSprite(class SpriteComponent* sprite);
+	SDL_Texture* GetTexture(const std::string& fileName);
 private:
 	void ProcessInput();
 	void UpdateGame();
 	void GenerateOutput();
-	
+	void LoadData();
+	void UnloadData();
+	// Game Window
 	SDL_Window* mWindow;
+	int mWindowWidth;
+	int mWindowHeight;
 	SDL_Renderer* mRenderer;
 	bool mIsRunning;
 	float mTicksCount; // Measured in miliseconds
-	int mWindowWidth;
-	int mWindowHeight;
-
-	// Balls
-	std::vector<Ball> mBalls;
-	// Player 1 
-	Vector2 mPaddlePos1;
-	int mPaddleDir1;
-	int mPaddleHeight1;
-	// Player 2 
-	Vector2 mPaddlePos2;
-	int mPaddleDir2;
-	int mPaddleHeight2;
-
-	const float mThickness = 15.0f;
+	// Game Objects
+	std::vector<class Actor*> mActors;
+	std::vector<class Actor*> mPendingActors;
+	bool mUpdatingActors;
+	class Ship* mShip;
+	// Sprites
+	std::vector<class SpriteComponent*> mSprites;
+	std::unordered_map<std::string, SDL_Texture*> mTextures;
 };
-
