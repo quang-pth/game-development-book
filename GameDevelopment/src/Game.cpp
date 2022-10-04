@@ -1,5 +1,5 @@
 #include "include/Game.h"
-#include"include/Actor.h"
+#include"include/GameObject.h"
 #include"include/SpriteComponent.h"
 #include"include/BackgroundSpriteComponent.h"
 #include"include/Ship.h"
@@ -7,7 +7,7 @@
 #include <iostream>
 
 Game::Game() : mWindow(nullptr), mIsRunning(true), mTicksCount(0.0f), 
-			mRenderer(), mUpdatingActors(false), mWindowWidth(800), mWindowHeight(600), mShip(nullptr)
+			mRenderer(), mUpdatingGameObjects(false), mWindowWidth(800), mWindowHeight(600), mShip(nullptr)
 {
 }
 
@@ -90,26 +90,26 @@ void Game::UpdateGame()
 		deltaTime = 0.05f;
 	}
 	// Update game objects
-	mUpdatingActors = true;
-	for (auto actor : mActors) {
-		actor->Update(deltaTime);
+	mUpdatingGameObjects = true;
+	for (GameObject* gameObject : mGameObjects) {
+		gameObject->Update(deltaTime);
 	}
-	mUpdatingActors = false;
+	mUpdatingGameObjects = false;
 	// Add pending actors 
-	for (auto actor : mPendingActors) {
-		mActors.emplace_back(actor);
+	for (GameObject* gameObject : mPendingGameObjects) {
+		mGameObjects.emplace_back(gameObject);
 	}
-	mPendingActors.clear();
+	mPendingGameObjects.clear();
 	// Get dead actors
-	std::vector<Actor*> deadActors;
-	for (auto actor : mActors) {
-		if (actor->GetState() == Actor::EDead) {
-			deadActors.emplace_back(actor);
+	std::vector<GameObject*> deadActors;
+	for (GameObject* gameObject: mGameObjects) {
+		if (gameObject->GetState() == GameObject::EDead) {
+			deadActors.emplace_back(gameObject);
 		}
 	}
 	// Delete dead actors
-	for (auto actor : deadActors) {
-		delete actor;
+	for (GameObject* gameObject : deadActors) {
+		delete gameObject;
 	}
 }
 
@@ -131,7 +131,7 @@ void Game::LoadData()
 	mShip->SetPosition(Vector2(100.0f, 384.0f));
 	mShip->SetScale(1.5f);
 	// Background actors
-	Actor* backgroundActor = new Actor(this);
+	GameObject* backgroundActor = new GameObject(this);
 	backgroundActor->SetPosition(Vector2(mWindowWidth / 2.0f, mWindowHeight / 2.0f));
 	// Far background
 	BackgroundSpriteComponent* farBackground = new BackgroundSpriteComponent(backgroundActor);
@@ -155,10 +155,10 @@ void Game::LoadData()
 
 void Game::UnloadData()
 {
-	while (!mActors.empty()) {
-		delete mActors.back();
+	while (!mGameObjects.empty()) {
+		delete mGameObjects.back();
 	}
-	for (auto i : mTextures) {
+	for (std::pair<const std::string&, SDL_Texture*> i : mTextures) {
 		SDL_DestroyTexture(i.second);
 	}
 	mTextures.clear();
@@ -167,7 +167,7 @@ void Game::UnloadData()
 SDL_Texture* Game::GetTexture(const std::string& fileName)
 {
 	// Get texture if already loaded
-	auto iter = mTextures.find(fileName);
+	std::unordered_map<std::string, SDL_Texture*>::iterator iter = mTextures.find(fileName);
 	if (iter != mTextures.end()) {
 		return mTextures[fileName];
 	}
@@ -189,33 +189,33 @@ SDL_Texture* Game::GetTexture(const std::string& fileName)
 	return texture;
 }
 
-void Game::AddActor(Actor* actor)
+void Game::AddGameObject(GameObject* gameObject)
 {
-	if (mUpdatingActors) {
-		mPendingActors.emplace_back(actor);
+	if (mUpdatingGameObjects) {
+		mPendingGameObjects.emplace_back(gameObject);
 	}
 	else {
-		mActors.emplace_back(actor);
+		mGameObjects.emplace_back(gameObject);
 	}
 }
 
-void Game::RemoveActor(Actor* actor)
+void Game::RemoveGameObject(GameObject* gameObject)
 {
-	auto iter = std::find(mPendingActors.begin(), mPendingActors.end(), actor);
-	if (iter != mPendingActors.end()) {
-		mPendingActors.erase(iter);
+	std::vector<GameObject*>::iterator iter = std::find(mPendingGameObjects.begin(), mPendingGameObjects.end(), gameObject);
+	if (iter != mPendingGameObjects.end()) {
+		mPendingGameObjects.erase(iter);
 	}
 
-	iter = std::find(mActors.begin(), mActors.end(), actor);
-	if (iter != mActors.end()) {
-		mActors.erase(iter);
+	iter = std::find(mGameObjects.begin(), mGameObjects.end(), gameObject);
+	if (iter != mGameObjects.end()) {
+		mGameObjects.erase(iter);
 	}	
 }
 
 void Game::AddSprite(SpriteComponent* sprite)
 {
 	int currentSpriteDrawOrder = sprite->GetDrawOrder();
-	auto iter = mSprites.begin();
+	std::vector<SpriteComponent*>::iterator iter = mSprites.begin();
 	for (; iter != mSprites.end(); iter++) {
 		if (currentSpriteDrawOrder < (*iter)->GetDrawOrder()) {
 			break;
@@ -226,7 +226,7 @@ void Game::AddSprite(SpriteComponent* sprite)
 
 void Game::RemoveSprite(SpriteComponent* sprite)
 {
-	auto iter = std::find(mSprites.begin(), mSprites.end(), sprite);
+	std::vector<SpriteComponent*>::iterator iter = std::find(mSprites.begin(), mSprites.end(), sprite);
 	if (iter != mSprites.end()) {
 		mSprites.erase(iter);
 	}

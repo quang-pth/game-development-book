@@ -2,7 +2,11 @@
 #include "include/CustomMath.h"
 #include "include/Game.h"
 
-SpriteComponent::SpriteComponent(Actor* owner, int drawOrder) : Component(owner), mTexture(nullptr),
+SpriteComponent::SpriteComponent()
+{
+}
+
+SpriteComponent::SpriteComponent(GameObject* owner, int drawOrder) : Component(owner), mTexture(nullptr),
 		mDrawOrder(drawOrder), mTextureWidth(0), mTextureHeight(0)
 {
 	mOwner->GetGame()->AddSprite(this);

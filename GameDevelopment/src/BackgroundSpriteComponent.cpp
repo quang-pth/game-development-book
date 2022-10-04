@@ -1,6 +1,6 @@
 #include "include/BackgroundSpriteComponent.h"
 
-BackgroundSpriteComponent::BackgroundSpriteComponent(Actor* owner, int drawOrder) :
+BackgroundSpriteComponent::BackgroundSpriteComponent(GameObject* owner, int drawOrder) :
 	SpriteComponent(owner, drawOrder), mScrollSpeed(0.0f)
 {
 }

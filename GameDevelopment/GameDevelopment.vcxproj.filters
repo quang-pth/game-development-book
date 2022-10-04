@@ -21,7 +21,7 @@
     <ClCompile Include="src\Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Actor.cpp">
+    <ClCompile Include="src\GameObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Component.cpp">
@@ -33,7 +33,7 @@
     <ClCompile Include="src\CustomMath.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\AnimationSpriteComponent.cpp">
+    <ClCompile Include="src\AnimatorComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\BackgroundSpriteComponent.cpp">
@@ -42,12 +42,21 @@
     <ClCompile Include="src\Ship.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\EulerAngle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EsstenialMath.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Animation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Actor.h">
+    <ClInclude Include="include\GameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Component.h">
@@ -59,13 +68,22 @@
     <ClInclude Include="include\CustomMath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\AnimationSpriteComponent.h">
+    <ClInclude Include="include\AnimatorComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\BackgroundSpriteComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Ship.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EulerAngle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EsstenialMath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Animation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,17 +1,18 @@
 #pragma once
 
-#include"include/Actor.h"
+#include"include/GameObject.h"
 
 class Component
 {
 public:
-	Component(Actor* owner, int updateOrder = 100);
+	Component();
+	Component(GameObject* owner, int updateOrder = 100);
 	virtual ~Component();
 
 	virtual void Update(float deltaTime);
 	int GetUpdateOrder() const { return mUpdateOrder; }
 protected:
-	Actor* mOwner;
+	GameObject* mOwner;
 	int mUpdateOrder;
 };
 

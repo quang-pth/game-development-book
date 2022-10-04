@@ -6,7 +6,7 @@
 class BackgroundSpriteComponent : public SpriteComponent
 {
 public:
-	BackgroundSpriteComponent(class Actor* owner, int drawOrder = 10);
+	BackgroundSpriteComponent(class GameObject* owner, int drawOrder = 10);
 	void Update(float deltaTime) override;
 	void Draw(SDL_Renderer* renderer) override;
 	void SetBackgroundTextures(const std::vector<SDL_Texture*>& textures);

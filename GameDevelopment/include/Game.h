@@ -11,8 +11,8 @@ public:
 	bool Initialize();
 	void RunLoop();
 	void ShutDown();
-	void AddActor(class Actor* actor);
-	void RemoveActor(class Actor* actor);
+	void AddGameObject(class GameObject* gameObject);
+	void RemoveGameObject(class GameObject* gameObject);
 	void AddSprite(class SpriteComponent* sprite);
 	void RemoveSprite(class SpriteComponent* sprite);
 	SDL_Texture* GetTexture(const std::string& fileName);
@@ -30,9 +30,9 @@ private:
 	bool mIsRunning;
 	float mTicksCount; // Measured in miliseconds
 	// Game Objects
-	std::vector<class Actor*> mActors;
-	std::vector<class Actor*> mPendingActors;
-	bool mUpdatingActors;
+	std::vector<class GameObject*> mGameObjects;
+	std::vector<class GameObject*> mPendingGameObjects;
+	bool mUpdatingGameObjects;
 	class Ship* mShip;
 	// Sprites
 	std::vector<class SpriteComponent*> mSprites;

@@ -1,6 +1,10 @@
 #include"include/Component.h"
 
-Component::Component(Actor* owner, int updateOrder) : mOwner(owner)
+Component::Component()
+{
+}
+
+Component::Component(GameObject* owner, int updateOrder) : mOwner(owner)
 {
 	mOwner->AddComponent(this);
 }

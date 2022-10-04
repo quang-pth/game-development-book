@@ -1,4 +1,6 @@
 #include<include/Game.h>
+#include<include/EulerAngle.h>
+#include <iostream>
 
 int main(int argc, char* args[]) {
 	Game game;
@@ -7,6 +9,6 @@ int main(int argc, char* args[]) {
 		game.RunLoop();
 	}
 	game.ShutDown();
-	
+
 	return 0;
 }

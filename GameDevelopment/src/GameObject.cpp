@@ -1,42 +1,42 @@
-#include<include/Actor.h>
+#include<include/GameObject.h>
 #include<include/Game.h>
 #include<include/Component.h>
 
-Actor::Actor(Game* game) : mGame(game), mRotation(0.0f), 
-		mScale(1.0f), mTransform(Vector2::Zero), mState(Actor::State::EActive)
+GameObject::GameObject(Game* game) : mGame(game), mRotation(0.0f), 
+		mScale(1.0f), mTransform(Vector2::Zero), mState(GameObject::State::EActive)
 {
-	mGame->AddActor(this);
+	mGame->AddGameObject(this);
 }
 
-Actor::~Actor()
+GameObject::~GameObject()
 {
-	mGame->RemoveActor(this);
+	mGame->RemoveGameObject(this);
 	while (!mComponents.empty()) {
 		delete mComponents.back();
 	}
 }
 
-void Actor::Update(float deltaTime) 
+void GameObject::Update(float deltaTime) 
 {
-	if (mState == Actor::State::EActive) {
+	if (mState == GameObject::State::EActive) {
 		UpdateComponents(deltaTime);
-		UpdateActor(deltaTime);
+		UpdateGameObject(deltaTime);
 	}
 }
 
-void Actor::UpdateComponents(float deltaTime)
+void GameObject::UpdateComponents(float deltaTime)
 {
 	for (auto component : mComponents) {
 		component->Update(deltaTime);
 	}
 }
 
-void Actor::UpdateActor(float deltaTime)
+void GameObject::UpdateGameObject(float deltaTime)
 {
 
 }
 
-void Actor::AddComponent(Component* component)
+void GameObject::AddComponent(Component* component)
 {
 	auto iter = mComponents.begin();
 	for (; iter != mComponents.end(); iter++) {
@@ -47,7 +47,7 @@ void Actor::AddComponent(Component* component)
 	mComponents.insert(iter, component);
 }
 
-void Actor::RemoveComponent(Component* component)
+void GameObject::RemoveComponent(Component* component)
 {
 	auto iter = std::find(mComponents.begin(), mComponents.end(), component);
 	if (iter != mComponents.end()) {

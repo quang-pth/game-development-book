@@ -145,21 +145,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Animation.cpp" />
+    <ClCompile Include="EsstenialMath.cpp" />
+    <ClCompile Include="src\EulerAngle.cpp" />
     <ClCompile Include="src\Ship.cpp" />
     <ClCompile Include="src\BackgroundSpriteComponent.cpp" />
-    <ClCompile Include="src\AnimationSpriteComponent.cpp" />
+    <ClCompile Include="src\AnimatorComponent.cpp" />
     <ClCompile Include="src\CustomMath.cpp" />
     <ClCompile Include="src\SpriteComponent.cpp" />
     <ClCompile Include="src\Component.cpp" />
-    <ClCompile Include="src\Actor.cpp" />
+    <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Animation.h" />
+    <ClInclude Include="EsstenialMath.h" />
+    <ClInclude Include="include\EulerAngle.h" />
     <ClInclude Include="include\BackgroundSpriteComponent.h" />
-    <ClInclude Include="include\AnimationSpriteComponent.h" />
+    <ClInclude Include="include\AnimatorComponent.h" />
     <ClInclude Include="include\Component.h" />
-    <ClInclude Include="include\Actor.h" />
+    <ClInclude Include="include\GameObject.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\SpriteComponent.h" />
     <ClInclude Include="include\CustomMath.h" />

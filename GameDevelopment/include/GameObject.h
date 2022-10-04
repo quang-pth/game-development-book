@@ -3,7 +3,7 @@
 #include<vector>
 #include<include/CustomMath.h>
 
-class Actor
+class GameObject
 {
 public:
 	enum State {
@@ -11,12 +11,12 @@ public:
 		EPaused,
 		EDead,
 	};
-	Actor(class Game* game);
-	virtual ~Actor();
+	GameObject(class Game* game);
+	virtual ~GameObject();
 	
 	void Update(float deltaTime);
 	void UpdateComponents(float deltaTime);
-	virtual void UpdateActor(float deltaTime);
+	virtual void UpdateGameObject(float deltaTime);
 	void AddComponent(class Component* component);
 	void RemoveComponent(class Component* component);
 	State GetState() const { return mState; }
