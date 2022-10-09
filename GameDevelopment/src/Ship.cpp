@@ -17,7 +17,7 @@ Ship::Ship(Game* game) : GameObject(game), mRightSpeed(0.0f), mDownSpeed(0.0f)
 		game->GetTexture("Assets/Character06.png"),
 	};
 	Animation* walkingAnimation = new Animation(walkingName, walkingTextures);
-	walkingAnimation->SetFPS(5.0f);
+	walkingAnimation->SetFPS(8.0f);
 	// Jumping 7 15
 	std::string jumpingName = "Jump";
 	std::vector<SDL_Texture*> jumpingTextures = {
@@ -32,7 +32,7 @@ Ship::Ship(Game* game) : GameObject(game), mRightSpeed(0.0f), mDownSpeed(0.0f)
 		game->GetTexture("Assets/Character15.png"),
 	};
 	Animation* jumpingAnimation = new Animation(jumpingName, jumpingTextures, false);
-	jumpingAnimation->SetFPS(16.0f);
+	jumpingAnimation->SetFPS(24.0f);
 	// Punch 16 18
 	std::string punchName = "Punch";
 	std::vector<SDL_Texture*> punchTextures = {
@@ -41,7 +41,7 @@ Ship::Ship(Game* game) : GameObject(game), mRightSpeed(0.0f), mDownSpeed(0.0f)
 		game->GetTexture("Assets/Character18.png"),
 	};
 	Animation* punchAnimation = new Animation(punchName, punchTextures, false);
-	punchAnimation->SetFPS(6.0f);
+	punchAnimation->SetFPS(9.0f);
 
 	mAnimator->AddAnimation(walkingName, walkingAnimation);
 	mAnimator->AddAnimation(jumpingName, jumpingAnimation);

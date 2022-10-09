@@ -12,7 +12,7 @@ public:
 	void Update(float deltaTime) override;
 	void SetAnimation(const std::string& animationName);
 	void AddAnimation(const std::string& animationName, class Animation* animation);
-	void ResetAnimationFrame();
+	void ResetAnimation(std::string animationName);
 private:
 	//std::unordered_map<std::string, std::vector<SDL_Texture*>> mAnimations;
 	std::unordered_map<std::string, class Animation*> mAnimationsMap;

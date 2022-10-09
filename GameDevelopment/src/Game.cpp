@@ -2,6 +2,7 @@
 #include"include/GameObject.h"
 #include"include/SpriteComponent.h"
 #include"include/BackgroundSpriteComponent.h"
+#include"include/TileMapComponent.h"
 #include"include/Ship.h"
 #include<SDL2/SDL_image.h>
 #include <iostream>
@@ -131,10 +132,10 @@ void Game::LoadData()
 	mShip->SetPosition(Vector2(100.0f, 384.0f));
 	mShip->SetScale(1.5f);
 	// Background actors
-	GameObject* backgroundActor = new GameObject(this);
-	backgroundActor->SetPosition(Vector2(mWindowWidth / 2.0f, mWindowHeight / 2.0f));
+	GameObject* backgroundGameObject = new GameObject(this);
+	backgroundGameObject->SetPosition(Vector2(mWindowWidth / 2.0f, mWindowHeight / 2.0f));
 	// Far background
-	BackgroundSpriteComponent* farBackground = new BackgroundSpriteComponent(backgroundActor);
+	BackgroundSpriteComponent* farBackground = new BackgroundSpriteComponent(backgroundGameObject);
 	farBackground->SetScreenSize(Vector2(mWindowWidth, mWindowHeight));
 	std::vector<SDL_Texture*> farBackgroundTextures = {
 		GetTexture("Assets/Farback01.png"),
@@ -143,7 +144,7 @@ void Game::LoadData()
 	farBackground->SetBackgroundTextures(farBackgroundTextures);
 	farBackground->SetScrollSpeed(-100.0f);
 	// Near background
-	BackgroundSpriteComponent* nearBackground = new BackgroundSpriteComponent(backgroundActor, 50);
+	BackgroundSpriteComponent* nearBackground = new BackgroundSpriteComponent(backgroundGameObject, 50);
 	nearBackground->SetScreenSize(Vector2(mWindowWidth, mWindowHeight));
 	std::vector<SDL_Texture*> nearBackgroundTextures = {
 		GetTexture("Assets/Stars.png"),
@@ -151,6 +152,13 @@ void Game::LoadData()
 	};
 	nearBackground->SetBackgroundTextures(nearBackgroundTextures);
 	nearBackground->SetScrollSpeed(-200.0f);
+
+	TileMapComponent* tileMapLayer1 = new TileMapComponent(backgroundGameObject);
+	tileMapLayer1->LoadTileMap("Assets/MapLayer1.csv");
+	TileMapComponent* tileMapLayer2 = new TileMapComponent(backgroundGameObject);
+	tileMapLayer2->LoadTileMap("Assets/MapLayer2.csv");
+	TileMapComponent* tileMapLayer3 = new TileMapComponent(backgroundGameObject);
+	tileMapLayer3->LoadTileMap("Assets/MapLayer3.csv");
 }
 
 void Game::UnloadData()

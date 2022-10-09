@@ -18,8 +18,6 @@ AnimatorComponent::~AnimatorComponent()
 
 void AnimatorComponent::Update(float deltaTime)
 {
-	SpriteComponent::Update(deltaTime);
-
 	const Animation* animation = mAnimationsMap[mAnimationName];
 	const std::vector<SDL_Texture*> textures = animation->mTextures;
 	const int animationFrames = textures.size();
@@ -27,9 +25,10 @@ void AnimatorComponent::Update(float deltaTime)
 	if (animationFrames < 0) return;
 
 	mCurrentFrame += animation->GetFPS() * deltaTime;
-	if (mCurrentFrame > animationFrames) {
-		ResetAnimationFrame();
 
+	while (mCurrentFrame >= animationFrames) {
+		mCurrentFrame -= animationFrames;
+		
 		if (!animation->mIsLoop) {
 			SetAnimation("Walk");
 			return;
@@ -46,7 +45,7 @@ void AnimatorComponent::SetAnimation(const std::string& animationName)
 		return;
 	}
 
-	mAnimationName = animationName;
+	ResetAnimation(animationName);
 }
 
 void AnimatorComponent::AddAnimation(const std::string& animationName, Animation* animation)
@@ -54,7 +53,8 @@ void AnimatorComponent::AddAnimation(const std::string& animationName, Animation
 	mAnimationsMap.insert({animationName, animation});
 }
 
-void AnimatorComponent::ResetAnimationFrame()
+void AnimatorComponent::ResetAnimation(std::string animationName)
 {
+	mAnimationName = animationName;
 	mCurrentFrame = 0;
 }
