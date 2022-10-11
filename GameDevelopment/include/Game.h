@@ -16,6 +16,8 @@ public:
 	void AddSprite(class SpriteComponent* sprite);
 	void RemoveSprite(class SpriteComponent* sprite);
 	SDL_Texture* GetTexture(const std::string& fileName);
+	int GetWindowWidth() const { return mWindowWidth; }
+	int GetWindowHeight() const { return mWindowHeight; }
 private:
 	void ProcessInput();
 	void UpdateGame();

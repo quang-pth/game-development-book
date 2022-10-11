@@ -9,6 +9,7 @@ class TileMapComponent : public SpriteComponent
 public:
 	TileMapComponent(class GameObject* owner, int drawOrder = 100);
 	~TileMapComponent();
+	void Update(float dt) override;
 	void Draw(SDL_Renderer* renderer) override;
 	void Init(const char* filePath);
 private:
@@ -17,5 +18,6 @@ private:
 	void CheckTileMapContent(const char* filePath);
 	std::vector<std::vector<int>> mTilesData;
 	unsigned int mTileWidth, mTileHeight, mTilePerRow;
+	float mOffsetX, mXBound;
 };
 

@@ -6,13 +6,21 @@
 #include<string>
 
 TileMapComponent::TileMapComponent(GameObject* owner, int drawOrder)
-	: SpriteComponent(owner, drawOrder), mTileWidth(32), mTileHeight(32), mTilePerRow(8)
+	: SpriteComponent(owner, drawOrder), mTileWidth(16), mTileHeight(16), mTilePerRow(7), mOffsetX(0.0f), mXBound(0.0f)
 {
-
 }
 
 TileMapComponent::~TileMapComponent()
 {
+}
+
+void TileMapComponent::Update(float dt)
+{
+	mOffsetX += dt * 400.0f;
+
+	if (mOffsetX >= mXBound) {
+		mOffsetX = mXBound;
+	}
 }
 
 void TileMapComponent::Draw(SDL_Renderer* renderer)
@@ -34,7 +42,7 @@ void TileMapComponent::Draw(SDL_Renderer* renderer)
 			SDL_Rect destrect;
 			destrect.w = static_cast<int>(mTileWidth * mOwner->GetScale());
 			destrect.h = static_cast<int>(mTileHeight * mOwner->GetScale());
-			destrect.x = static_cast<int>(mOwner->GetPosition().x + destrect.w * col);
+			destrect.x = static_cast<int>(mOwner->GetPosition().x + destrect.w * col - mOffsetX);
 			destrect.y = static_cast<int>(mOwner->GetPosition().y + destrect.h * row);
 
 			SDL_RenderCopyEx(renderer, mTexture, &srcrect,
@@ -46,7 +54,8 @@ void TileMapComponent::Draw(SDL_Renderer* renderer)
 void TileMapComponent::Init(const char* filePath)
 {
 	this->LoadTileData(filePath);
-	this->SetTexture("Assets/Tiles.png");
+	this->SetTexture("MarioAssets/decorationsAndBlocks.png");
+	mXBound = mTilesData[0].size() * mTileWidth * mOwner->GetScale() - mOwner->GetGame()->GetWindowWidth();
 }
 
 void TileMapComponent::LoadTileData(const char* filePath)

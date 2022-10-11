@@ -8,7 +8,7 @@
 #include<iostream>
 
 Game::Game() : mWindow(nullptr), mIsRunning(true), mTicksCount(0.0f), 
-			mRenderer(), mUpdatingGameObjects(false), mWindowWidth(800), mWindowHeight(600), mShip(nullptr)
+			mRenderer(), mUpdatingGameObjects(false), mWindowWidth(800), mWindowHeight(640), mShip(nullptr)
 {
 }
 
@@ -155,9 +155,9 @@ void Game::LoadData()
 
 	GameObject* tilemap = new GameObject(this);
 	tilemap->SetPosition(Vector2(0.0f, 0.0f));
-	tilemap->SetScale(0.79f);
-	TileMapComponent* tileMapLayer1 = new TileMapComponent(tilemap);
-	tileMapLayer1->Init("Assets/MapLayer1.csv");
+	tilemap->SetScale(2.0f);
+	TileMapComponent* tileMapLayer = new TileMapComponent(tilemap);
+	tileMapLayer->Init("Assets/level-platform.csv");
 }
 
 void Game::UnloadData()
