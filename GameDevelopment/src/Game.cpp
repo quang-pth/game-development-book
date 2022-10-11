@@ -1,11 +1,11 @@
-#include "include/Game.h"
+#include"include/Game.h"
 #include"include/GameObject.h"
 #include"include/SpriteComponent.h"
 #include"include/BackgroundSpriteComponent.h"
 #include"include/TileMapComponent.h"
 #include"include/Ship.h"
 #include<SDL2/SDL_image.h>
-#include <iostream>
+#include<iostream>
 
 Game::Game() : mWindow(nullptr), mIsRunning(true), mTicksCount(0.0f), 
 			mRenderer(), mUpdatingGameObjects(false), mWindowWidth(800), mWindowHeight(600), mShip(nullptr)
@@ -96,19 +96,19 @@ void Game::UpdateGame()
 		gameObject->Update(deltaTime);
 	}
 	mUpdatingGameObjects = false;
-	// Add pending actors 
+	// Add pending gameobject
 	for (GameObject* gameObject : mPendingGameObjects) {
 		mGameObjects.emplace_back(gameObject);
 	}
 	mPendingGameObjects.clear();
-	// Get dead actors
+	// Get dead gameobjects
 	std::vector<GameObject*> deadActors;
 	for (GameObject* gameObject: mGameObjects) {
 		if (gameObject->GetState() == GameObject::EDead) {
 			deadActors.emplace_back(gameObject);
 		}
 	}
-	// Delete dead actors
+	// Delete dead gameobjects
 	for (GameObject* gameObject : deadActors) {
 		delete gameObject;
 	}
@@ -116,7 +116,7 @@ void Game::UpdateGame()
 
 void Game::GenerateOutput()
 {
-	SDL_SetRenderDrawColor(mRenderer, 0, 0, 255, 255);
+	SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, 255);
 	SDL_RenderClear(mRenderer);
 	// Draw objects on the scene
 	for (auto sprite : mSprites) {
@@ -131,34 +131,33 @@ void Game::LoadData()
 	mShip = new Ship(this);
 	mShip->SetPosition(Vector2(100.0f, 384.0f));
 	mShip->SetScale(1.5f);
-	// Background actors
-	GameObject* backgroundGameObject = new GameObject(this);
-	backgroundGameObject->SetPosition(Vector2(mWindowWidth / 2.0f, mWindowHeight / 2.0f));
+	
+	GameObject* background = new GameObject(this);
+	background->SetPosition(Vector2(mWindowWidth / 2.0f, mWindowHeight / 2.0f));
 	// Far background
-	BackgroundSpriteComponent* farBackground = new BackgroundSpriteComponent(backgroundGameObject);
-	farBackground->SetScreenSize(Vector2(mWindowWidth, mWindowHeight));
+	BackgroundSpriteComponent* farBackgroundComponent = new BackgroundSpriteComponent(background);
+	farBackgroundComponent->SetScreenSize(Vector2(mWindowWidth, mWindowHeight));
 	std::vector<SDL_Texture*> farBackgroundTextures = {
 		GetTexture("Assets/Farback01.png"),
 		GetTexture("Assets/Farback02.png"),
 	};
-	farBackground->SetBackgroundTextures(farBackgroundTextures);
-	farBackground->SetScrollSpeed(-100.0f);
+	farBackgroundComponent->SetBackgroundTextures(farBackgroundTextures);
+	farBackgroundComponent->SetScrollSpeed(-100.0f);
 	// Near background
-	BackgroundSpriteComponent* nearBackground = new BackgroundSpriteComponent(backgroundGameObject, 50);
-	nearBackground->SetScreenSize(Vector2(mWindowWidth, mWindowHeight));
+	BackgroundSpriteComponent* nearBackgroundComponent = new BackgroundSpriteComponent(background, 50);
+	nearBackgroundComponent->SetScreenSize(Vector2(mWindowWidth, mWindowHeight));
 	std::vector<SDL_Texture*> nearBackgroundTextures = {
 		GetTexture("Assets/Stars.png"),
 		GetTexture("Assets/Stars.png"),
 	};
-	nearBackground->SetBackgroundTextures(nearBackgroundTextures);
-	nearBackground->SetScrollSpeed(-200.0f);
+	nearBackgroundComponent->SetBackgroundTextures(nearBackgroundTextures);
+	nearBackgroundComponent->SetScrollSpeed(-200.0f);
 
-	TileMapComponent* tileMapLayer1 = new TileMapComponent(backgroundGameObject);
-	tileMapLayer1->LoadTileMap("Assets/MapLayer1.csv");
-	TileMapComponent* tileMapLayer2 = new TileMapComponent(backgroundGameObject);
-	tileMapLayer2->LoadTileMap("Assets/MapLayer2.csv");
-	TileMapComponent* tileMapLayer3 = new TileMapComponent(backgroundGameObject);
-	tileMapLayer3->LoadTileMap("Assets/MapLayer3.csv");
+	GameObject* tilemap = new GameObject(this);
+	tilemap->SetPosition(Vector2(0.0f, 0.0f));
+	tilemap->SetScale(0.79f);
+	TileMapComponent* tileMapLayer1 = new TileMapComponent(tilemap);
+	tileMapLayer1->Init("Assets/MapLayer1.csv");
 }
 
 void Game::UnloadData()

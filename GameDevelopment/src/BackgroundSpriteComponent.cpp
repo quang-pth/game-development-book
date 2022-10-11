@@ -7,7 +7,6 @@ BackgroundSpriteComponent::BackgroundSpriteComponent(GameObject* owner, int draw
 
 void BackgroundSpriteComponent::Update(float deltaTime)
 {
-	SpriteComponent::Update(deltaTime);
 	for (auto& texture : mBackgroundTextures) {
 		texture.mOffset.x += mScrollSpeed * deltaTime;
 		if (texture.mOffset.x < -mScreenSize.x) {

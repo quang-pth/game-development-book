@@ -10,11 +10,12 @@ public:
 	TileMapComponent(class GameObject* owner, int drawOrder = 100);
 	~TileMapComponent();
 	void Draw(SDL_Renderer* renderer) override;
-	void LoadTileMap(const char* filePath);
+	void Init(const char* filePath);
 private:
-	void CheckTileMapContent();
+	void LoadTileData(const char* filePath);
+	void SetTexture(const char* filePath);
+	void CheckTileMapContent(const char* filePath);
 	std::vector<std::vector<int>> mTilesData;
-	float mTileWidth, mTileHeight;
-	std::string mFilePath;
+	unsigned int mTileWidth, mTileHeight, mTilePerRow;
 };
 
