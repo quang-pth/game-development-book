@@ -41,7 +41,7 @@ void Asteroid::UpdateGameObject(float deltaTime)
 		newYPos = -mSpriteComponent->GetTextureHeight();
 	}
 	else if (transform->GetPosition().y < 0.0f - mSpriteComponent->GetTextureHeight()) {
-		newXPos = GetGame()->GetWindowHeight() + mSpriteComponent->GetTextureHeight();
+		newYPos = GetGame()->GetWindowHeight() + mSpriteComponent->GetTextureHeight();
 	}
 
 	transform->SetPosition(Vector2(newXPos, newYPos));

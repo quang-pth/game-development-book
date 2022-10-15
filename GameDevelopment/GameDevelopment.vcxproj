@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\InputComponent.cpp" />
     <ClCompile Include="src\Random.cpp" />
     <ClCompile Include="src\Asteroid.cpp" />
     <ClCompile Include="src\MoveComponent.cpp" />
@@ -178,6 +179,7 @@
     <ClInclude Include="include\TransformComponent.h" />
     <ClInclude Include="include\MoveComponent.h" />
     <ClInclude Include="include\Random.h" />
+    <ClInclude Include="include\InputComponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

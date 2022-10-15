@@ -19,7 +19,9 @@ public:
 	
 	void Update(float deltaTime);
 	void UpdateComponents(float deltaTime);
+	void ProcessInput(const uint8_t* keyState);
 	virtual void UpdateGameObject(float deltaTime);
+	virtual void ProcessGameObjectInput(const uint8_t* keyState);
 	void AddComponent(class Component* component);
 	void RemoveComponent(class Component* component);
 	State GetState() const;

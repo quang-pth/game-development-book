@@ -5,7 +5,8 @@
 #include"include/CustomMath.h"
 #include <iostream>
 
-GameObject::GameObject(Game* game, std::string name) : mGame(game), mName(name), mState(GameObject::State::EActive)
+GameObject::GameObject(Game* game, std::string name) : 
+	mGame(game), mName(name), mState(GameObject::State::EActive)
 {
 	mGame->AddGameObject(this);
 	this->AddDefaultComponents();
@@ -29,14 +30,29 @@ void GameObject::Update(float deltaTime)
 
 void GameObject::UpdateComponents(float deltaTime)
 {
-	for (auto component : mComponents) {
+	for (Component* component : mComponents) {
 		component->Update(deltaTime);
+	}
+}
+
+void GameObject::ProcessInput(const uint8_t* keyState)
+{
+	if (mState == GameObject::State::EActive) {
+		for (Component* component : mComponents) {
+			component->ProcessInput(keyState);
+		}
+	
+		ProcessGameObjectInput(keyState);
 	}
 }
 
 void GameObject::UpdateGameObject(float deltaTime)
 {
 
+}
+
+void GameObject::ProcessGameObjectInput(const uint8_t* keyState)
+{
 }
 
 void GameObject::AddComponent(Component* component)

@@ -13,7 +13,7 @@ public:
 	float GetAngularSpeed() const { return mAngularSpeed; }
 	void SetForwardSpeed(float speed) { mForwardSpeed = speed; }
 	void SetAngularSpeed(float speed) { mAngularSpeed = speed; }
-private:
+protected:
 	// Velocity measured in units/second
 	float mForwardSpeed;
 	// Rotation angle measured in radians/second

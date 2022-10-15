@@ -78,9 +78,11 @@ void Game::ProcessInput()
  		mIsRunning = false;
 	}
 
-	if (mShip != nullptr) {
-		mShip->ProcesKeyboard(keyboardState);
+	mUpdatingGameObjects = true;
+	for (GameObject* gameObject : mGameObjects) {
+		gameObject->ProcessInput(keyboardState);
 	}
+	mUpdatingGameObjects = false;
 }
 
 void Game::UpdateGame()
@@ -133,6 +135,8 @@ void Game::GenerateOutput()
 
 void Game::LoadData()
 {
+	new Ship(this);
+
 	for (unsigned int i = 0; i < 20; i++) {
 		new Asteroid(this);
 	}
@@ -140,11 +144,11 @@ void Game::LoadData()
 	GameObject* background = new GameObject(this, "Background");
 	background->GetTransform()->SetPosition(Vector2(mWindowWidth / 2.0f, mWindowHeight / 2.0f));
 	// Far background
-	BackgroundSpriteComponent* farBackgroundComponent = new BackgroundSpriteComponent(background);
+	BackgroundSpriteComponent* farBackgroundComponent = new BackgroundSpriteComponent(background, 10);
 	farBackgroundComponent->SetScreenSize(Vector2(mWindowWidth, mWindowHeight));
 	std::vector<SDL_Texture*> farBackgroundTextures = {
-		GetTexture("Assets/Farback01.png"),
-		GetTexture("Assets/Farback02.png"),
+		GetTexture("Assets/Chapter2/Farback01.png"),
+		GetTexture("Assets/Chapter2/Farback02.png"),
 	};
 	farBackgroundComponent->SetBackgroundTextures(farBackgroundTextures);
 	farBackgroundComponent->SetScrollSpeed(-100.0f);
@@ -152,8 +156,8 @@ void Game::LoadData()
 	BackgroundSpriteComponent* nearBackgroundComponent = new BackgroundSpriteComponent(background, 50);
 	nearBackgroundComponent->SetScreenSize(Vector2(mWindowWidth, mWindowHeight));
 	std::vector<SDL_Texture*> nearBackgroundTextures = {
-		GetTexture("Assets/Stars.png"),
-		GetTexture("Assets/Stars.png"),
+		GetTexture("Assets/Chapter2/Stars.png"),
+		GetTexture("Assets/Chapter2/Stars.png"),
 	};
 	nearBackgroundComponent->SetBackgroundTextures(nearBackgroundTextures);
 	nearBackgroundComponent->SetScrollSpeed(-200.0f);

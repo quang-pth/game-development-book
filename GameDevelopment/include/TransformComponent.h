@@ -20,6 +20,5 @@ private:
 	Vector2 mPosition; // Center point of the gameobject
 	float mScale; // Scale factor
 	float mRotation; // Rotation angle in radians
-
 };
 
