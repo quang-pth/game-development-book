@@ -2,8 +2,9 @@
 #include "include/AnimatorComponent.h"
 #include "include/Animation.h"
 #include "include/Game.h"
+#include "include/TransformComponent.h"
 
-Ship::Ship(Game* game) : GameObject(game), mRightSpeed(0.0f), mDownSpeed(0.0f)
+Ship::Ship(Game* game) : GameObject(game, "Ship"), mRightSpeed(0.0f), mDownSpeed(0.0f)
 {
 	mAnimator = new AnimatorComponent(this);
 	// Walking 1 6
@@ -51,7 +52,7 @@ Ship::Ship(Game* game) : GameObject(game), mRightSpeed(0.0f), mDownSpeed(0.0f)
 
 void Ship::UpdateGameObject(float deltaTime)
 {
-	Vector2 position = GetTransform()->mPosition;
+	Vector2 position = GetTransform()->GetPosition();
 	position.x += mRightSpeed * deltaTime;
 	position.y += mDownSpeed * deltaTime;
 	

@@ -1,5 +1,6 @@
 #include "include/GameObject.h";
 #include "include/TileMapComponent.h";
+#include "include/TransformComponent.h";
 #include "include/Game.h";
 #include<fstream>
 #include<sstream>
@@ -33,13 +34,13 @@ void TileMapComponent::Draw(SDL_Renderer* renderer)
 			srcrect.y = static_cast<int>(mTileHeight * (tile / mTilePerRow));
 
 			SDL_Rect destrect;
-			destrect.w = static_cast<int>(mTileWidth * mOwner->GetTransform()->mScale);
-			destrect.h = static_cast<int>(mTileHeight * mOwner->GetTransform()->mScale);
-			destrect.x = static_cast<int>(mOwner->GetTransform()->mPosition.x + destrect.w * col);
-			destrect.y = static_cast<int>(mOwner->GetTransform()->mPosition.y + destrect.h * row);
+			destrect.w = static_cast<int>(mTileWidth * mOwner->GetTransform()->GetScale());
+			destrect.h = static_cast<int>(mTileHeight * mOwner->GetTransform()->GetScale());
+			destrect.x = static_cast<int>(mOwner->GetTransform()->GetPosition().x + destrect.w * col);
+			destrect.y = static_cast<int>(mOwner->GetTransform()->GetPosition().y + destrect.h * row);
 
 			SDL_RenderCopyEx(renderer, mTexture, &srcrect,
-				&destrect, -Math::ToDegrees(mOwner->GetTransform()->mRotation), nullptr, SDL_FLIP_NONE);
+				&destrect, -Math::ToDegrees(mOwner->GetTransform()->GetRotation()), nullptr, SDL_FLIP_NONE);
 		}
 	}
 }

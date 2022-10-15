@@ -4,8 +4,9 @@
 int main(int argc, char* args[]) 
 {
 	Game game;
-	bool isInit = game.Initialize();
-	if (isInit) {
+	bool isSuccess = game.Initialize();
+
+	if (isSuccess) {
 		game.RunLoop();
 	}
 

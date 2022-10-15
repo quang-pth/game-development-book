@@ -145,6 +145,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Random.cpp" />
+    <ClCompile Include="src\Asteroid.cpp" />
+    <ClCompile Include="src\MoveComponent.cpp" />
     <ClCompile Include="src\Animation.cpp" />
     <ClCompile Include="EsstenialMath.cpp" />
     <ClCompile Include="src\Ship.cpp" />
@@ -160,6 +163,7 @@
     <ClCompile Include="src\TransformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Asteroid.h" />
     <ClInclude Include="include\Animation.h" />
     <ClInclude Include="EsstenialMath.h" />
     <ClInclude Include="include\BackgroundSpriteComponent.h" />
@@ -172,6 +176,8 @@
     <ClInclude Include="include\Ship.h" />
     <ClInclude Include="include\TileMapComponent.h" />
     <ClInclude Include="include\TransformComponent.h" />
+    <ClInclude Include="include\MoveComponent.h" />
+    <ClInclude Include="include\Random.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

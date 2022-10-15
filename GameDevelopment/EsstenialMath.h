@@ -36,7 +36,7 @@ namespace EssentialMath
 		Vector2 Normalize() const {
 			float length = this->LengthSquared();
 			
-			if (length < 0.01f) {
+			if (length < 0.001f) {
 				return *this;
 			}
 

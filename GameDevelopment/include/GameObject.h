@@ -1,8 +1,8 @@
 #pragma once
 
-#include<include/CustomMath.h>
-#include<include/TransformComponent.h>
 #include<vector>
+#include<string>
+#include"CustomMath.h"
 
 class GameObject
 {
@@ -12,7 +12,9 @@ public:
 		EPaused,
 		EDead,
 	};
-	GameObject(class Game* game);
+	std::string mName;
+
+	GameObject(class Game* game, std::string name = "");
 	virtual ~GameObject();
 	
 	void Update(float deltaTime);
@@ -20,17 +22,17 @@ public:
 	virtual void UpdateGameObject(float deltaTime);
 	void AddComponent(class Component* component);
 	void RemoveComponent(class Component* component);
-	State GetState() const { return mState; }
-	TransformComponent* GetTransform() const { return mTransform; }
+	State GetState() const;
+	class TransformComponent* GetTransform() const;
 	class Component* GetComponent(std::string name);
-	Vector2 GetForward() const { return Vector2(Math::Cos(mTransform->mRotation), -Math::Sin(mTransform->mRotation)); }
-	class Game* GetGame() { return mGame; }
+	Vector2 GetForward() const;
+	class Game* GetGame() const;
 private:
 	State mState;
 	std::vector<class Component*> mComponents;
 	class Game* mGame;
-	TransformComponent* mTransform;
+	class TransformComponent* mTransform;
 
-	void AddTransformComponent();
+	void AddDefaultComponents();
 };
 

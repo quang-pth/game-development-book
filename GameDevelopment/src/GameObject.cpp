@@ -1,13 +1,14 @@
-#include<include/GameObject.h>
-#include<include/Game.h>
-#include<include/Component.h>
-#include<include/TransformComponent.h>
+#include"include/Game.h"
+#include"include/GameObject.h"
+#include"include/Component.h"
+#include"include/TransformComponent.h"
+#include"include/CustomMath.h"
 #include <iostream>
 
-GameObject::GameObject(Game* game) : mGame(game), mState(GameObject::State::EActive)
+GameObject::GameObject(Game* game, std::string name) : mGame(game), mName(name), mState(GameObject::State::EActive)
 {
 	mGame->AddGameObject(this);
-	this->AddTransformComponent();
+	this->AddDefaultComponents();
 }
 
 GameObject::~GameObject()
@@ -57,6 +58,16 @@ void GameObject::RemoveComponent(Component* component)
 	}
 }
 
+GameObject::State GameObject::GetState() const
+{
+	return mState;
+}
+
+TransformComponent* GameObject::GetTransform() const
+{
+	return mTransform;
+}
+
 Component* GameObject::GetComponent(std::string name)
 {
 	auto iter = std::find_if(mComponents.begin(), mComponents.end(), 
@@ -70,8 +81,17 @@ Component* GameObject::GetComponent(std::string name)
 	return nullptr;
 }
 
-void GameObject::AddTransformComponent()
+Vector2 GameObject::GetForward() const
+{
+	return Vector2(Math::Cos(mTransform->GetRotation()), -Math::Sin(mTransform->GetRotation()));
+}
+
+Game* GameObject::GetGame() const
+{
+	return mGame;
+}
+
+void GameObject::AddDefaultComponents()
 {
 	mTransform = new TransformComponent(this, 0, "TransformComponent");
-	this->AddComponent(mTransform);
 }

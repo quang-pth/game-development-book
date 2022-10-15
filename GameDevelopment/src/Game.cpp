@@ -2,8 +2,10 @@
 #include"include/GameObject.h"
 #include"include/SpriteComponent.h"
 #include"include/BackgroundSpriteComponent.h"
+#include"include/TransformComponent.h"
 #include"include/TileMapComponent.h"
 #include"include/Ship.h"
+#include"include/Asteroid.h"
 #include<SDL2/SDL_image.h>
 #include<iostream>
 
@@ -76,7 +78,9 @@ void Game::ProcessInput()
  		mIsRunning = false;
 	}
 
-	mShip->ProcesKeyboard(keyboardState);
+	if (mShip != nullptr) {
+		mShip->ProcesKeyboard(keyboardState);
+	}
 }
 
 void Game::UpdateGame()
@@ -129,11 +133,11 @@ void Game::GenerateOutput()
 
 void Game::LoadData()
 {
-	mShip = new Ship(this);
-	mShip->GetTransform()->SetPosition(Vector2(100.0f, 384.0f));
-	mShip->GetTransform()->SetScale(1.5f);
-	
-	GameObject* background = new GameObject(this);
+	for (unsigned int i = 0; i < 20; i++) {
+		new Asteroid(this);
+	}
+
+	GameObject* background = new GameObject(this, "Background");
 	background->GetTransform()->SetPosition(Vector2(mWindowWidth / 2.0f, mWindowHeight / 2.0f));
 	// Far background
 	BackgroundSpriteComponent* farBackgroundComponent = new BackgroundSpriteComponent(background);
@@ -153,12 +157,6 @@ void Game::LoadData()
 	};
 	nearBackgroundComponent->SetBackgroundTextures(nearBackgroundTextures);
 	nearBackgroundComponent->SetScrollSpeed(-200.0f);
-
-	GameObject* tilemap = new GameObject(this);
-	tilemap->GetTransform()->SetPosition(Vector2(0.0f, 0.0f));
-	tilemap->GetTransform()->SetScale(0.79f);
-	TileMapComponent* tileMapLayer1 = new TileMapComponent(tilemap);
-	tileMapLayer1->Init("Assets/MapLayer1.csv");
 }
 
 void Game::UnloadData()
@@ -195,6 +193,16 @@ SDL_Texture* Game::GetTexture(const std::string& fileName)
 
 	mTextures.emplace(fileName.c_str(), texture);
 	return texture;
+}
+
+int Game::GetWindowWidth() const
+{
+	return mWindowWidth;
+}
+
+int Game::GetWindowHeight() const
+{
+	return mWindowHeight;
 }
 
 void Game::AddGameObject(GameObject* gameObject)

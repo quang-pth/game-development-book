@@ -1,4 +1,5 @@
 #include "include/GameObject.h"
+#include "include/TransformComponent.h"
 #include "include/BackgroundSpriteComponent.h"
 
 BackgroundSpriteComponent::BackgroundSpriteComponent(GameObject* owner, int drawOrder) :
@@ -22,8 +23,8 @@ void BackgroundSpriteComponent::Draw(SDL_Renderer* renderer)
 		SDL_Rect rect;
 		rect.w = static_cast<int>(mScreenSize.x);
 		rect.h = static_cast<int>(mScreenSize.y);
-		rect.x = static_cast<int>(mOwner->GetTransform()->mPosition.x - rect.w / 2.0f + texture.mOffset.x);
-		rect.y = static_cast<int>(mOwner->GetTransform()->mPosition.y - rect.h / 2.0f + texture.mOffset.y);
+		rect.x = static_cast<int>(mOwner->GetTransform()->GetPosition().x - rect.w / 2.0f + texture.mOffset.x);
+		rect.y = static_cast<int>(mOwner->GetTransform()->GetPosition().y - rect.h / 2.0f + texture.mOffset.y);
 
 		SDL_RenderCopy(renderer, texture.mTexture, nullptr, &rect);
 	}
