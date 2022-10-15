@@ -1,18 +1,22 @@
 #pragma once
 
-#include"include/GameObject.h"
+#include <string>
 
 class Component
 {
 public:
+	std::string mName;
 	Component();
-	Component(GameObject* owner, int updateOrder = 100);
+	/*
+	* updateOrder: component with smaller updateOrder is updated first
+	*/
+	Component(class GameObject* owner, int updateOrder = 100, std::string name = "");
 	virtual ~Component();
 
 	virtual void Update(float deltaTime);
 	int GetUpdateOrder() const { return mUpdateOrder; }
 protected:
-	GameObject* mOwner;
+	class GameObject* mOwner;
 	int mUpdateOrder;
 };
 

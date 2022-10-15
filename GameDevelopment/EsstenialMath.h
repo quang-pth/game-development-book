@@ -10,13 +10,59 @@ namespace EssentialMath
 	{
 	public:
 		float x, y, z;
-
-		Vector3() : x(), y(), z() {}
-		Vector3(float x, float y, float z) : x(x), y(y), z(z) {}
+		Vector3(float x = 0.0f, float y = 0.0f, float z = 0.0f) : x(x), y(y), z(z) {}
 
 		Vector3 operator*(float scalar) {
 			return Vector3(x * scalar, y * scalar, z * scalar);
 		}
+	};
+
+	class Vector2 
+	{
+	public:
+		float x, y;
+		Vector2(float x = 0.0f, float y = 0.0f) : x(x), y(y) {}
+		
+		Vector2 operator*(float scalar) const {
+			return Vector2(x * scalar, y * scalar);
+		}
+		Vector2 operator-(const Vector2& other) const {
+			return Vector2(x - other.x, y - other.y);
+		}
+		Vector2 operator+(const Vector2& other) const {
+			return Vector2(x + other.x, y + other.y);
+		}
+
+		Vector2 Normalize() const {
+			float length = this->LengthSquared();
+			
+			if (length < 0.01f) {
+				return *this;
+			}
+
+			return Vector2(x / length, y / length);
+		}
+
+		float Dot(const Vector2& other) {
+			Vector2 otherNormalized = other.Normalize();
+			Vector2 thisNormalized = this->Normalize();
+
+			return thisNormalized.x * otherNormalized.x + thisNormalized.y * otherNormalized.y;
+		}
+
+		float Length() const {
+			return x * x + y * y;
+		}
+
+		float LengthSquared() const {
+			return sqrtf(x * x + y * y);
+		}
+
+		static Vector2 GetForwardVector(float angle) {
+			// Return a unit forward vector
+			return Vector2(cosf(angle), sinf(angle));
+		}
+
 	};
 
 	/*

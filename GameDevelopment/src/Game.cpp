@@ -73,8 +73,9 @@ void Game::ProcessInput()
 	// Process keyboard event
 	const Uint8* keyboardState = SDL_GetKeyboardState(NULL);
 	if (keyboardState[SDL_SCANCODE_ESCAPE]) {
-		mIsRunning = false;
+ 		mIsRunning = false;
 	}
+
 	mShip->ProcesKeyboard(keyboardState);
 }
 
@@ -104,7 +105,7 @@ void Game::UpdateGame()
 	// Get dead gameobjects
 	std::vector<GameObject*> deadActors;
 	for (GameObject* gameObject: mGameObjects) {
-		if (gameObject->GetState() == GameObject::EDead) {
+		if (gameObject->GetState() == GameObject::State::EDead) {
 			deadActors.emplace_back(gameObject);
 		}
 	}
@@ -129,11 +130,11 @@ void Game::GenerateOutput()
 void Game::LoadData()
 {
 	mShip = new Ship(this);
-	mShip->SetPosition(Vector2(100.0f, 384.0f));
-	mShip->SetScale(1.5f);
+	mShip->GetTransform()->SetPosition(Vector2(100.0f, 384.0f));
+	mShip->GetTransform()->SetScale(1.5f);
 	
 	GameObject* background = new GameObject(this);
-	background->SetPosition(Vector2(mWindowWidth / 2.0f, mWindowHeight / 2.0f));
+	background->GetTransform()->SetPosition(Vector2(mWindowWidth / 2.0f, mWindowHeight / 2.0f));
 	// Far background
 	BackgroundSpriteComponent* farBackgroundComponent = new BackgroundSpriteComponent(background);
 	farBackgroundComponent->SetScreenSize(Vector2(mWindowWidth, mWindowHeight));
@@ -154,8 +155,8 @@ void Game::LoadData()
 	nearBackgroundComponent->SetScrollSpeed(-200.0f);
 
 	GameObject* tilemap = new GameObject(this);
-	tilemap->SetPosition(Vector2(0.0f, 0.0f));
-	tilemap->SetScale(0.79f);
+	tilemap->GetTransform()->SetPosition(Vector2(0.0f, 0.0f));
+	tilemap->GetTransform()->SetScale(0.79f);
 	TileMapComponent* tileMapLayer1 = new TileMapComponent(tilemap);
 	tileMapLayer1->Init("Assets/MapLayer1.csv");
 }

@@ -157,6 +157,7 @@
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="src\TileMapComponent.cpp" />
+    <ClCompile Include="src\TransformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Animation.h" />
@@ -170,6 +171,7 @@
     <ClInclude Include="include\CustomMath.h" />
     <ClInclude Include="include\Ship.h" />
     <ClInclude Include="include\TileMapComponent.h" />
+    <ClInclude Include="include\TransformComponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

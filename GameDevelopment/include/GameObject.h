@@ -1,12 +1,13 @@
 #pragma once
 
-#include<vector>
 #include<include/CustomMath.h>
+#include<include/TransformComponent.h>
+#include<vector>
 
 class GameObject
 {
 public:
-	enum State {
+	enum class State {
 		EActive,
 		EPaused,
 		EDead,
@@ -20,18 +21,16 @@ public:
 	void AddComponent(class Component* component);
 	void RemoveComponent(class Component* component);
 	State GetState() const { return mState; }
-	float GetScale() const { return mScale; }
-	void SetScale(float scale) { mScale = scale; }
-	float GetRotation() const { return mRotation; }
-	const Vector2& GetPosition() const { return mTransform; }
-	void SetPosition(Vector2 position) { mTransform.x = position.x; mTransform.y = position.y; }
+	TransformComponent* GetTransform() const { return mTransform; }
+	class Component* GetComponent(std::string name);
+	Vector2 GetForward() const { return Vector2(Math::Cos(mTransform->mRotation), -Math::Sin(mTransform->mRotation)); }
 	class Game* GetGame() { return mGame; }
 private:
 	State mState;
-	Vector2 mTransform; // Center point of the actor
-	float mScale; // Scale factor
-	float mRotation; // Rotation angle in radians
 	std::vector<class Component*> mComponents;
 	class Game* mGame;
+	TransformComponent* mTransform;
+
+	void AddTransformComponent();
 };
 

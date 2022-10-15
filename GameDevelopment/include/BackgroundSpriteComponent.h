@@ -2,6 +2,7 @@
 
 #include<include/SpriteComponent.h>
 #include<include/CustomMath.h>
+#include <vector>
 
 class BackgroundSpriteComponent : public SpriteComponent
 {

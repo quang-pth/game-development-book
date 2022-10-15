@@ -51,7 +51,7 @@ Ship::Ship(Game* game) : GameObject(game), mRightSpeed(0.0f), mDownSpeed(0.0f)
 
 void Ship::UpdateGameObject(float deltaTime)
 {
-	Vector2 position = GetPosition();
+	Vector2 position = GetTransform()->mPosition;
 	position.x += mRightSpeed * deltaTime;
 	position.y += mDownSpeed * deltaTime;
 	
@@ -68,7 +68,7 @@ void Ship::UpdateGameObject(float deltaTime)
 		position.y = 598.0f;
 	}
 
-	SetPosition(position);
+	GetTransform()->SetPosition(position);
 }
 
 void Ship::ProcesKeyboard(const uint8_t* state)
