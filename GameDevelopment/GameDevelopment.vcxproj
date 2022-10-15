@@ -147,7 +147,6 @@
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp" />
     <ClCompile Include="EsstenialMath.cpp" />
-    <ClCompile Include="src\EulerAngle.cpp" />
     <ClCompile Include="src\Ship.cpp" />
     <ClCompile Include="src\BackgroundSpriteComponent.cpp" />
     <ClCompile Include="src\AnimatorComponent.cpp" />
@@ -162,7 +161,6 @@
   <ItemGroup>
     <ClInclude Include="include\Animation.h" />
     <ClInclude Include="EsstenialMath.h" />
-    <ClInclude Include="include\EulerAngle.h" />
     <ClInclude Include="include\BackgroundSpriteComponent.h" />
     <ClInclude Include="include\AnimatorComponent.h" />
     <ClInclude Include="include\Component.h" />
