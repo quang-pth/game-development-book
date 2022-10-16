@@ -2,14 +2,17 @@
 #include "include/CustomMath.h"
 #include<SDL2/SDL.h>
 
-InputComponent::InputComponent() : MoveComponent(), mMaxForwardSpeed(0.0f), mMaxAngularSpeed(0.0f),
-	mForwardKey(), mBackwardKey(), mClockwiseKey(), mCounterClockwiseKey()
+InputComponent::InputComponent() : 
+	MoveComponent(), 
+	mMaxForwardSpeed(0.0f), mMaxAngularSpeed(0.0f),
+	mForwardKey(), mBackwardKey(), 
+	mClockwiseKey(), mCounterClockwiseKey()
 {
 }
 
 InputComponent::InputComponent(GameObject* owner, int updateOrder) : 
 	MoveComponent(owner, updateOrder),
-	mMaxForwardSpeed(300.0f), mMaxAngularSpeed(Math::Pi),
+	mMaxForwardSpeed(200.0f), mMaxAngularSpeed(Math::Pi),
 	mForwardKey(SDL_SCANCODE_W), mBackwardKey(SDL_SCANCODE_S),
 	mClockwiseKey(SDL_SCANCODE_A), mCounterClockwiseKey(SDL_SCANCODE_D)
 {

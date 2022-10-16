@@ -2,13 +2,14 @@
 #include "include/MoveComponent.h"
 #include "include/TransformComponent.h"
 #include "CustomMath.h"
+#include <iostream>
 
 MoveComponent::MoveComponent() : Component(), mForwardSpeed(0.0f), mAngularSpeed(0.0f)
 {
 }
 
-MoveComponent::MoveComponent(GameObject* owner, int updateOrder)
-	: Component(owner, updateOrder), mForwardSpeed(0.0f), mAngularSpeed(0.0f)
+MoveComponent::MoveComponent(GameObject* owner, int updateOrder, std::string name)
+	: Component(owner, updateOrder, name), mForwardSpeed(0.0f), mAngularSpeed(0.0f)
 {
 
 }

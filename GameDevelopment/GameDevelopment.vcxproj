@@ -145,6 +145,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Laser.cpp" />
+    <ClCompile Include="src\CircleComponent.cpp" />
     <ClCompile Include="src\InputComponent.cpp" />
     <ClCompile Include="src\Random.cpp" />
     <ClCompile Include="src\Asteroid.cpp" />
@@ -164,6 +166,7 @@
     <ClCompile Include="src\TransformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\CircleComponent.h" />
     <ClInclude Include="include\Asteroid.h" />
     <ClInclude Include="include\Animation.h" />
     <ClInclude Include="EsstenialMath.h" />
@@ -180,6 +183,7 @@
     <ClInclude Include="include\MoveComponent.h" />
     <ClInclude Include="include\Random.h" />
     <ClInclude Include="include\InputComponent.h" />
+    <ClInclude Include="include\Laser.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

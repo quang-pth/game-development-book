@@ -16,6 +16,8 @@ public:
 	void AddSprite(class SpriteComponent* sprite);
 	void RemoveSprite(class SpriteComponent* sprite);
 	SDL_Texture* GetTexture(const std::string& fileName);
+	class std::vector<class Asteroid*> GetAsteroids() const;
+	class Ship* GetShip() const;
 	int GetWindowWidth() const;
 	int GetWindowHeight() const;
 private:
@@ -34,6 +36,7 @@ private:
 	// Game Objects
 	std::vector<class GameObject*> mGameObjects;
 	std::vector<class GameObject*> mPendingGameObjects;
+	std::vector<class Asteroid*> mAsteroids;
 	bool mUpdatingGameObjects;
 	class Ship* mShip;
 	// Sprites

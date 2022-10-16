@@ -5,7 +5,11 @@
 #include"include/CustomMath.h"
 #include <iostream>
 
-GameObject::GameObject(Game* game, std::string name) : 
+GameObject::GameObject() : mGame(), mName(), mState(), mTransform()
+{
+}
+
+GameObject::GameObject(Game* game, std::string name) :
 	mGame(game), mName(name), mState(GameObject::State::EActive)
 {
 	mGame->AddGameObject(this);
@@ -77,6 +81,11 @@ void GameObject::RemoveComponent(Component* component)
 GameObject::State GameObject::GetState() const
 {
 	return mState;
+}
+
+void GameObject::SetState(State state)
+{
+	mState = state;
 }
 
 TransformComponent* GameObject::GetTransform() const

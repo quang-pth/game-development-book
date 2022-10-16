@@ -191,7 +191,7 @@ public:
 	}
 
 	// Length squared of vector
-	float LengthSq() const
+	float LengthSquared() const
 	{
 		return (x * x + y * y);
 	}
@@ -199,7 +199,7 @@ public:
 	// Length of vector
 	float Length() const
 	{
-		return (Math::Sqrt(LengthSq()));
+		return (Math::Sqrt(LengthSquared()));
 	}
 
 	// Normalize this vector

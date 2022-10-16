@@ -9,8 +9,10 @@
 #include<SDL2/SDL_image.h>
 #include<iostream>
 
-Game::Game() : mWindow(nullptr), mIsRunning(true), mTicksCount(0.0f), 
-			mRenderer(), mUpdatingGameObjects(false), mWindowWidth(800), mWindowHeight(600), mShip(nullptr)
+Game::Game() : 
+	mWindow(nullptr), mIsRunning(true), 
+	mTicksCount(0.0f), mRenderer(), mUpdatingGameObjects(false), 
+	mWindowWidth(800), mWindowHeight(600), mShip(nullptr)
 {
 }
 
@@ -135,10 +137,10 @@ void Game::GenerateOutput()
 
 void Game::LoadData()
 {
-	new Ship(this);
+	mShip = new Ship(this);
 
 	for (unsigned int i = 0; i < 20; i++) {
-		new Asteroid(this);
+		mAsteroids.emplace_back(new Asteroid(this));
 	}
 
 	GameObject* background = new GameObject(this, "Background");
@@ -197,6 +199,16 @@ SDL_Texture* Game::GetTexture(const std::string& fileName)
 
 	mTextures.emplace(fileName.c_str(), texture);
 	return texture;
+}
+
+std::vector<class Asteroid*> Game::GetAsteroids() const
+{
+	return mAsteroids;
+}
+
+Ship* Game::GetShip() const
+{
+	return mShip;
 }
 
 int Game::GetWindowWidth() const

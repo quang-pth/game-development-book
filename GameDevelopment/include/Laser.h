@@ -1,12 +1,12 @@
 #pragma once
 
-#include "include/GameObject.h"
+#include"include/GameObject.h"
 
-class Asteroid : public GameObject
+class Laser : public GameObject
 {
 public:
-	Asteroid(class Game *game, std::string = "Asteriod");
-	~Asteroid();
+	Laser();
+	Laser(class Game* game, std::string name = "Laser");
 	void UpdateGameObject(float deltaTime) override;
 	class MoveComponent* GetMoveComponent() const;
 	class SpriteComponent* GetSpriteComponent() const;

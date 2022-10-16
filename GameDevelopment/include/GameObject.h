@@ -9,11 +9,13 @@ class GameObject
 public:
 	enum class State {
 		EActive,
+		EDeactive,
 		EPaused,
 		EDead,
 	};
 	std::string mName;
 
+	GameObject();
 	GameObject(class Game* game, std::string name = "");
 	virtual ~GameObject();
 	
@@ -25,6 +27,7 @@ public:
 	void AddComponent(class Component* component);
 	void RemoveComponent(class Component* component);
 	State GetState() const;
+	void SetState(State state);
 	class TransformComponent* GetTransform() const;
 	class Component* GetComponent(std::string name);
 	Vector2 GetForward() const;

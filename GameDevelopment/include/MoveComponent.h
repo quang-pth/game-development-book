@@ -6,7 +6,7 @@ class MoveComponent : public Component
 {
 public:
 	MoveComponent();
-	MoveComponent(class GameObject* owner, int updateOrder = 10);
+	MoveComponent(class GameObject* owner, int updateOrder = 10, std::string = "MoveComponent");
 
 	void Update(float deltaTime) override;
 	float GetForwardSpeed() const { return mForwardSpeed; }
