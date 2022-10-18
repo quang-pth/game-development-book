@@ -61,7 +61,7 @@ void GameObject::ProcessGameObjectInput(const uint8_t* keyState)
 
 void GameObject::AddComponent(Component* component)
 {
-	auto iter = mComponents.begin();
+	std::vector<Component*>::iterator iter = mComponents.begin();
 	for (; iter != mComponents.end(); iter++) {
 		if ((*iter)->GetUpdateOrder() > component->GetUpdateOrder()) {
 			break;
@@ -72,7 +72,7 @@ void GameObject::AddComponent(Component* component)
 
 void GameObject::RemoveComponent(Component* component)
 {
-	auto iter = std::find(mComponents.begin(), mComponents.end(), component);
+	std::vector<Component*>::iterator iter = std::find(mComponents.begin(), mComponents.end(), component);
 	if (iter != mComponents.end()) {
 		mComponents.erase(iter);
 	}
@@ -95,7 +95,7 @@ TransformComponent* GameObject::GetTransform() const
 
 Component* GameObject::GetComponent(std::string name)
 {
-	auto iter = std::find_if(mComponents.begin(), mComponents.end(), 
+	std::vector<Component*>::iterator iter = std::find_if(mComponents.begin(), mComponents.end(),
 		[&](const Component* component){ return component->mName == name; });
 	
 	if (iter != mComponents.end()) {

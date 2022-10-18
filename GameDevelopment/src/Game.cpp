@@ -1,5 +1,6 @@
 #include"include/Game.h"
 #include"include/GameObject.h"
+#include"include/CooldownManager.h"
 #include"include/SpriteComponent.h"
 #include"include/BackgroundSpriteComponent.h"
 #include"include/TransformComponent.h"
@@ -14,6 +15,7 @@ Game::Game() :
 	mTicksCount(0.0f), mRenderer(), mUpdatingGameObjects(false), 
 	mWindowWidth(800), mWindowHeight(600), mShip(nullptr)
 {
+	mCooldownManager = new CooldownManager(this);
 }
 
 bool Game::Initialize()
@@ -112,7 +114,7 @@ void Game::UpdateGame()
 	mPendingGameObjects.clear();
 	// Get dead gameobjects
 	std::vector<GameObject*> deadActors;
-	for (GameObject* gameObject: mGameObjects) {
+	for (GameObject* gameObject : mGameObjects) {
 		if (gameObject->GetState() == GameObject::State::EDead) {
 			deadActors.emplace_back(gameObject);
 		}
@@ -209,6 +211,11 @@ std::vector<class Asteroid*> Game::GetAsteroids() const
 Ship* Game::GetShip() const
 {
 	return mShip;
+}
+
+CooldownManager* Game::GetCooldownManager() const
+{
+	return mCooldownManager;
 }
 
 int Game::GetWindowWidth() const

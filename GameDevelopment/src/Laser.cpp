@@ -38,7 +38,6 @@ void Laser::UpdateGameObject(float deltaTime)
 			}
 		}
 	}
-	
 	// Deactivate the laser if out of screen bounds
 	Vector2 position = GameObject::GetTransform()->GetPosition();
 	if (position.x < -mSpriteComponent->GetTextureWidth() || 

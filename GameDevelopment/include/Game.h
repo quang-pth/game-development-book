@@ -18,6 +18,7 @@ public:
 	SDL_Texture* GetTexture(const std::string& fileName);
 	class std::vector<class Asteroid*> GetAsteroids() const;
 	class Ship* GetShip() const;
+	class CooldownManager* GetCooldownManager() const;
 	int GetWindowWidth() const;
 	int GetWindowHeight() const;
 private:
@@ -37,6 +38,7 @@ private:
 	std::vector<class GameObject*> mGameObjects;
 	std::vector<class GameObject*> mPendingGameObjects;
 	std::vector<class Asteroid*> mAsteroids;
+	class CooldownManager* mCooldownManager;
 	bool mUpdatingGameObjects;
 	class Ship* mShip;
 	// Sprites

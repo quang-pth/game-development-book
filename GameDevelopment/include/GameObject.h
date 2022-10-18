@@ -24,7 +24,8 @@ public:
 	void ProcessInput(const uint8_t* keyState);
 	virtual void UpdateGameObject(float deltaTime);
 	virtual void ProcessGameObjectInput(const uint8_t* keyState);
-	void AddComponent(class Component* component);
+	// Add component in sorted order based-on its update order
+	void AddComponent(class Component* component);	
 	void RemoveComponent(class Component* component);
 	State GetState() const;
 	void SetState(State state);
@@ -33,11 +34,10 @@ public:
 	Vector2 GetForward() const;
 	class Game* GetGame() const;
 private:
+	void AddDefaultComponents();
 	State mState;
 	std::vector<class Component*> mComponents;
 	class Game* mGame;
 	class TransformComponent* mTransform;
-
-	void AddDefaultComponents();
 };
 

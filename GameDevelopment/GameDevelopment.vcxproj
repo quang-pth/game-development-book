@@ -145,6 +145,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ICooldownable.cpp" />
+    <ClCompile Include="src\CooldownManager.cpp" />
     <ClCompile Include="src\Laser.cpp" />
     <ClCompile Include="src\CircleComponent.cpp" />
     <ClCompile Include="src\InputComponent.cpp" />
@@ -166,6 +168,8 @@
     <ClCompile Include="src\TransformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\ICooldownable.h" />
+    <ClInclude Include="include\CooldownManager.h" />
     <ClInclude Include="include\CircleComponent.h" />
     <ClInclude Include="include\Asteroid.h" />
     <ClInclude Include="include\Animation.h" />
