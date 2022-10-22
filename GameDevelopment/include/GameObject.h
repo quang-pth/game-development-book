@@ -1,37 +1,43 @@
 #pragma once
 
 #include<vector>
-#include<include/CustomMath.h>
+#include<string>
+#include"CustomMath.h"
 
 class GameObject
 {
 public:
-	enum State {
+	enum class State {
 		EActive,
+		EDeactive,
 		EPaused,
 		EDead,
 	};
-	GameObject(class Game* game);
+	std::string mName;
+
+	GameObject();
+	GameObject(class Game* game, std::string name = "");
 	virtual ~GameObject();
 	
 	void Update(float deltaTime);
 	void UpdateComponents(float deltaTime);
+	void ProcessInput(const uint8_t* keyState);
 	virtual void UpdateGameObject(float deltaTime);
-	void AddComponent(class Component* component);
+	virtual void ProcessGameObjectInput(const uint8_t* keyState);
+	// Add component in sorted order based-on its update order
+	void AddComponent(class Component* component);	
 	void RemoveComponent(class Component* component);
-	State GetState() const { return mState; }
-	float GetScale() const { return mScale; }
-	void SetScale(float scale) { mScale = scale; }
-	float GetRotation() const { return mRotation; }
-	const Vector2& GetPosition() const { return mTransform; }
-	void SetPosition(Vector2 position) { mTransform.x = position.x; mTransform.y = position.y; }
-	class Game* GetGame() { return mGame; }
+	State GetState() const;
+	void SetState(State state);
+	class TransformComponent* GetTransform() const;
+	class Component* GetComponent(std::string name);
+	Vector2 GetForward() const;
+	class Game* GetGame() const;
 private:
+	void AddDefaultComponents();
 	State mState;
-	Vector2 mTransform; // Center point of the actor
-	float mScale; // Scale factor
-	float mRotation; // Rotation angle in radians
 	std::vector<class Component*> mComponents;
 	class Game* mGame;
+	class TransformComponent* mTransform;
 };
 

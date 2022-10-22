@@ -1,6 +1,8 @@
 #pragma once
 
 #include<cmath>
+#include<vector>
+#include<iostream>
 
 namespace EssentialMath 
 {
@@ -8,13 +10,59 @@ namespace EssentialMath
 	{
 	public:
 		float x, y, z;
-
-		Vector3() : x(), y(), z() {}
-		Vector3(float x, float y, float z) : x(x), y(y), z(z) {}
+		Vector3(float x = 0.0f, float y = 0.0f, float z = 0.0f) : x(x), y(y), z(z) {}
 
 		Vector3 operator*(float scalar) {
 			return Vector3(x * scalar, y * scalar, z * scalar);
 		}
+	};
+
+	class Vector2 
+	{
+	public:
+		float x, y;
+		Vector2(float x = 0.0f, float y = 0.0f) : x(x), y(y) {}
+		
+		Vector2 operator*(float scalar) const {
+			return Vector2(x * scalar, y * scalar);
+		}
+		Vector2 operator-(const Vector2& other) const {
+			return Vector2(x - other.x, y - other.y);
+		}
+		Vector2 operator+(const Vector2& other) const {
+			return Vector2(x + other.x, y + other.y);
+		}
+
+		Vector2 Normalize() const {
+			float length = this->LengthSquared();
+			
+			if (length < 0.001f) {
+				return *this;
+			}
+
+			return Vector2(x / length, y / length);
+		}
+
+		float Dot(const Vector2& other) {
+			Vector2 otherNormalized = other.Normalize();
+			Vector2 thisNormalized = this->Normalize();
+
+			return thisNormalized.x * otherNormalized.x + thisNormalized.y * otherNormalized.y;
+		}
+
+		float Length() const {
+			return x * x + y * y;
+		}
+
+		float LengthSquared() const {
+			return sqrtf(x * x + y * y);
+		}
+
+		static Vector2 GetForwardVector(float angle) {
+			// Return a unit forward vector
+			return Vector2(cosf(angle), sinf(angle));
+		}
+
 	};
 
 	/*
@@ -111,7 +159,7 @@ namespace EssentialMath
 
 			return Vector3(nx, ny, nz);
 		}
-
+		
 		float GetAlpha() const {
 			return acosf(w);
 		}
@@ -163,6 +211,89 @@ namespace EssentialMath
 			this->z = sinf(alpha) * z;
 			
 			magnitude = this->Magnitude();
+		}
+	};
+
+	#define PI 180.0f
+	
+	class EulerAngle
+	{
+	public:
+		float head, pitch, bank;
+
+		EulerAngle(float head = 0.0, float pitch = 0.0, float bank = 0.0) : 
+			head(head), pitch(pitch), bank(bank) {}
+
+		// Wrap theta in range (-180; 180] degrees
+		static float WrapPI(float theta) {
+			if (fabs(theta) > PI) {
+				float resolution = floor((theta + PI) / (2 * PI));
+				theta -= 2 * PI * resolution;
+			}
+			return theta;
+		};
+
+		static void ToCanonicalSet(float& head, float& pitch, float& bank)
+		{
+			// Head [-180, 180)
+			// Pitch [-90, 90]
+			// Bank [-180, 180)
+		}
+	};
+
+#define PI 3.14159265
+#define DEGREE_TO_RADIAN (PI / 180.0)
+
+	class ConvertHelper {
+	public:
+		// Convert an Euler Angle representation to Matrix form
+		// head, pitch and bank must be mesured in object's space 
+		static void ObjectToUprightRotationMatrix(const EulerAngle& angle, float matrix[3][3]) {
+			float cosHead = cosf(angle.head);
+			float sinHead = sinf(angle.head);
+			float cosPitch = cosf(angle.pitch);
+			float sinPitch = sinf(angle.pitch);
+			float cosBank = cosf(angle.bank);
+			float sinBank = sinf(angle.bank);
+			
+			matrix[0][0] = cosHead * cosBank + sinHead * sinPitch * sinBank;
+			matrix[0][1] = sinBank * cosPitch;
+			matrix[0][2] = -sinHead * cosBank + cosHead * sinPitch * sinBank;
+		
+			matrix[1][0] = -cosHead * sinBank + sinHead * sinPitch * cosBank;
+			matrix[1][1] = cosBank * cosPitch;
+			matrix[1][2] = sinBank * sinPitch + cosHead * sinPitch * cosBank;
+			
+			matrix[2][0] = sinHead * cosPitch;
+			matrix[2][1] = -sinPitch;
+			matrix[2][2] = cosHead * cosPitch;
+		}
+
+		static EulerAngle ObjectToUprightEulerAngle(float matrix[3][3]) {
+			float head, pitch, bank;
+
+			float sinPitch = -matrix[2][1];
+			if (sinPitch <= -1.0f) {
+				pitch = PI / 2;
+			}
+			else if (sinPitch >= 1.0f) {
+				pitch = -PI / 2;
+			}
+			else {
+				pitch = asin(sinPitch);
+			}
+
+			// Check for Glimbal lock case when pitch is 90 degree
+			if (fabs(sinPitch) > 0.9999f) {
+				bank = 0.0f;
+				head = atan2(-matrix[0][2], matrix[0][0]);
+			}
+			else {
+				head = atan2(matrix[2][0], matrix[2][2]);
+				bank = atan2(matrix[0][1], matrix[1][1]);
+			}
+
+			return EulerAngle(head, pitch, bank);
 		}
 	};
 }

@@ -1,4 +1,6 @@
+#include "include/GameObject.h";
 #include "include/TileMapComponent.h";
+#include "include/TransformComponent.h";
 #include "include/Game.h";
 #include<fstream>
 #include<sstream>
@@ -42,13 +44,13 @@ void TileMapComponent::Draw(SDL_Renderer* renderer)
 			srcrect.y = static_cast<int>(mTileHeight * (tile / mTilePerRow));
 
 			SDL_Rect destrect;
-			destrect.w = static_cast<int>(mTileWidth * mOwner->GetScale());
-			destrect.h = static_cast<int>(mTileHeight * mOwner->GetScale());
-			destrect.x = static_cast<int>(mOwner->GetPosition().x + destrect.w * col - mOffsetX);
-			destrect.y = static_cast<int>(mOwner->GetPosition().y + destrect.h * row);
+			destrect.w = static_cast<int>(mTileWidth * mOwner->GetTransform()->GetScale());
+			destrect.h = static_cast<int>(mTileHeight * mOwner->GetTransform()->GetScale());
+			destrect.x = static_cast<int>(mOwner->GetTransform()->GetPosition().x + destrect.w * col);
+			destrect.y = static_cast<int>(mOwner->GetTransform()->GetPosition().y + destrect.h * row);
 
 			SDL_RenderCopyEx(renderer, mTexture, &srcrect,
-				&destrect, -Math::ToDegrees(mOwner->GetRotation()), nullptr, SDL_FLIP_NONE);
+				&destrect, -Math::ToDegrees(mOwner->GetTransform()->GetRotation()), nullptr, SDL_FLIP_NONE);
 		}
 	}
 }
@@ -57,7 +59,7 @@ void TileMapComponent::Init(const char* filePath)
 {
 	this->LoadTileData(filePath);
 	this->SetTexture("MarioAssets/decorationsAndBlocks.png");
-	mXBound = mTilesData[0].size() * mTileWidth * mOwner->GetScale() - mOwner->GetGame()->GetWindowWidth();
+	mXBound = mTilesData[0].size() * mTileWidth * mOwner->GetTransform()->GetScale() - mOwner->GetGame()->GetWindowWidth();
 }
 
 void TileMapComponent::LoadTileData(const char* filePath)

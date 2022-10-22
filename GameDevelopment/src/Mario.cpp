@@ -1,71 +1,133 @@
 #include "include/Mario.h"
-#include "include/AnimatorComponent.h"
-#include "include/Animation.h"
 #include "include/Game.h"
+#include "include/CooldownManager.h"
+#include "include/TransformComponent.h"
+#include "include/SpriteComponent.h"
+#include "include/InputComponent.h"
+#include "include/CircleComponent.h"
+#include "include/Laser.h"
+#include "include/Asteroid.h"
+#include <SDL2/SDL.h>
+#include <iostream>
 
-Mario::Mario(Game* game) : GameObject(game), mRightSpeed(0.0f), mDownSpeed(0.0f)
+Mario::Mario(Game* game) :
+	GameObject(game, "Ship"),
+	mFireKey(SDL_SCANCODE_SPACE), mFireCooldown(0.3f),
+	mActivateLaserIdx(0), mSpawnCooldown(1.5f)
 {
-	mAnimator = new AnimatorComponent(this);
-	std::string walkingName = "Walk";
-	std::vector<SDL_Texture*> walkingTextures = {
-		game->GetTexture("MarioAssets/mario-1.png"),
-		game->GetTexture("MarioAssets/mario-2.png"),
-		game->GetTexture("MarioAssets/mario-3.png"),
-		game->GetTexture("MarioAssets/mario-4.png"),
-	};
-	Animation* walkingAnimation = new Animation(walkingName, walkingTextures);
-	walkingAnimation->SetFPS(8.0f);
-	
-	mAnimator->AddAnimation(walkingName, walkingAnimation);
-	mAnimator->SetAnimation(walkingName);
+	GameObject::GetTransform()->SetPosition(Vector2(game->GetWindowWidth() / 2, game->GetWindowHeight() / 2));
+
+	mSpriteComponent = new SpriteComponent(this);
+	mSpriteComponent->SetTexture(game->GetTexture("Assets/Chapter3/Ship.png"));
+
+	mInputComponent = new InputComponent(this);
+	mInputComponent->SetMaxForwardSpeed(300.0f);
+	mInputComponent->SetAngularSpeed(135.0f);
+
+	mCircleComponent = new CircleComponent(this);
+	mCircleComponent->SetRadius(mSpriteComponent->GetTextureWidth() * 0.3f);
+
+	this->InitLaserPool();
 }
 
 void Mario::UpdateGameObject(float deltaTime)
 {
-	Vector2 position = GetPosition();
-	position.x += mRightSpeed * deltaTime;
-	position.y += mDownSpeed * deltaTime;
-	
-	if (position.x < 4.0f) {
-		position.x = 4.0f;
-	}
-	if (position.x > 796.0f) {
-		position.x = 796.0f;
-	}
-	if (position.y < 4.0f) {
-		position.y = 4.0f;
-	}
-	if (position.y > 598.0f) {
-		position.y = 598.0f;
-	}
-
-	SetPosition(position);
+	mFireCooldown -= deltaTime;
+	this->ConstraintInScreenBounds();
+	this->CheckCollsision();
 }
 
-void Mario::ProcesKeyboard(const uint8_t* state)
+void Mario::ProcessGameObjectInput(const uint8_t* keyState)
 {
-	mRightSpeed = 0.0f;
-	mDownSpeed = 0.0f;
-	if (state[SDL_SCANCODE_D]) {
-		mRightSpeed += 250.0f;
+	if (keyState[mFireKey] && mFireCooldown < 0.0f) {
+		Laser* laser = mLasers[mActivateLaserIdx];
+		if (laser->GetState() == GameObject::State::EActive) return;
+
+		Vector2 offsetForward = GameObject::GetForward() * 10.0f;
+		laser->SetState(GameObject::State::EActive);
+		laser->GetTransform()->SetPosition(GameObject::GetTransform()->GetPosition() + offsetForward);
+		laser->GetTransform()->SetRotation(GameObject::GetTransform()->GetRotation());
+		laser->GetMoveComponent()->AddForce(GameObject::GetForward() * 2000.0f,
+			MoveComponent::ForceMode::Constant);
+
+		mFireCooldown = 0.3f;
+
+		mActivateLaserIdx++;
+		if (mActivateLaserIdx >= mLasers.size()) {
+			mActivateLaserIdx = 0;
+		}
 	}
-	if (state[SDL_SCANCODE_A]) {
-		mRightSpeed -= 250.0f;
+}
+
+void Mario::StartCooldown()
+{
+	GameObject::SetState(GameObject::State::EDeactive);
+	GameObject::GetGame()->GetCooldownManager()->Observe(this);
+}
+
+void Mario::Cooldown(float deltaTime)
+{
+	mSpawnCooldown -= deltaTime;
+	if (mSpawnCooldown <= 0) {
+		this->ActAfterCooldown();
 	}
-	if (state[SDL_SCANCODE_W]) {
-		mDownSpeed -= 250.0f;
+}
+
+void Mario::ActAfterCooldown()
+{
+	mSpawnCooldown = 1.5f;
+	// Reset ship position to the center of the screen if collided with asteroid
+	GameObject::GetTransform()->SetPosition(Vector2(
+		GameObject::GetGame()->GetWindowWidth() / 2.0f,
+		GameObject::GetGame()->GetWindowHeight() / 2.0f
+	));
+	// Reset game object states
+	GameObject::GetTransform()->SetRotation(0.0f);
+	GameObject::GetGame()->GetCooldownManager()->Release(this);
+	GameObject::SetState(GameObject::State::EActive);
+	mInputComponent->ResetForce();
+}
+
+void Mario::InitLaserPool()
+{
+	for (unsigned int idx = 0; idx < 6; idx++) {
+		Laser* laser = new Laser(GameObject::GetGame());
+		laser->SetState(GameObject::State::EDeactive);
+		mLasers.emplace_back(laser);
 	}
-	if (state[SDL_SCANCODE_S]) {
-		mDownSpeed += 250.0f;
+}
+
+void Mario::ConstraintInScreenBounds()
+{
+	float newXPos = GameObject::GetTransform()->GetPosition().x;
+	float newYPos = GameObject::GetTransform()->GetPosition().y;
+
+	if (GameObject::GetTransform()->GetPosition().x > GameObject::GetGame()->GetWindowWidth()) {
+		newXPos = GameObject::GetGame()->GetWindowWidth();
 	}
-	// State controller
-	if (state[SDL_SCANCODE_SPACE]) {
-		mAnimator->SetAnimation("Jump");
+	else if (GameObject::GetTransform()->GetPosition().x < 0.0f) {
+		newXPos = 0.0f;
 	}
-	if (state[SDL_SCANCODE_Q]) {
-		mAnimator->SetAnimation("Punch");
-	}	
-	if (state[SDL_SCANCODE_E]) {
-		mAnimator->SetAnimation("Walk");
+
+	if (GameObject::GetTransform()->GetPosition().y > GameObject::GetGame()->GetWindowHeight()) {
+		newYPos = GameObject::GetGame()->GetWindowHeight();
+	}
+	else if (GameObject::GetTransform()->GetPosition().y < 0.0f) {
+		newYPos = 0.0f;
+	}
+
+	GameObject::GetTransform()->SetPosition(Vector2(newXPos, newYPos));
+}
+
+void Mario::CheckCollsision()
+{
+	for (Asteroid* asteroid : GameObject::GetGame()->GetAsteroids()) {
+		if (asteroid->GetState() == GameObject::State::EActive) {
+			bool isCollided = CircleComponent::IsIntersect(this->mCircleComponent,
+				asteroid->GetCircleComponent());
+			if (isCollided) {
+				this->StartCooldown();
+			}
+		}
 	}
 }

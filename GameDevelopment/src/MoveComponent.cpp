@@ -24,12 +24,14 @@ void MoveComponent::Update(float deltaTime)
 {
 	TransformComponent* transformComponent = mOwner->GetTransform();
 
+	// Velocity of forces that applied on the gameobject
 	Vector2 acceleration = mSumOfForces * (1 / mMass);
 	mForceVelocity += acceleration * deltaTime;
 	if (mForceMode == ForceMode::Impulse) {
 		mSumOfForces = Vector2::Zero;
 	}
 	Vector2 position = transformComponent->GetPosition();
+
 	position += mForceVelocity * deltaTime;
 	transformComponent->SetPosition(position);
 

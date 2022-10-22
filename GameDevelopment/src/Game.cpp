@@ -1,15 +1,21 @@
 #include"include/Game.h"
 #include"include/GameObject.h"
+#include"include/CooldownManager.h"
 #include"include/SpriteComponent.h"
 #include"include/BackgroundSpriteComponent.h"
+#include"include/TransformComponent.h"
 #include"include/TileMapComponent.h"
 #include"include/Mario.h"
 #include<SDL2/SDL_image.h>
+#include"include/Asteroid.h"
 #include<iostream>
 
-Game::Game() : mWindow(nullptr), mIsRunning(true), mTicksCount(0.0f), 
-			mRenderer(), mUpdatingGameObjects(false), mWindowWidth(800), mWindowHeight(640), mShip(nullptr)
+Game::Game() : 
+	mWindow(nullptr), mIsRunning(true), 
+	mTicksCount(0.0f), mRenderer(), mUpdatingGameObjects(false), 
+	mWindowWidth(800), mWindowHeight(600), mMario(nullptr)
 {
+	mCooldownManager = new CooldownManager(this);
 }
 
 bool Game::Initialize()
@@ -73,9 +79,14 @@ void Game::ProcessInput()
 	// Process keyboard event
 	const Uint8* keyboardState = SDL_GetKeyboardState(NULL);
 	if (keyboardState[SDL_SCANCODE_ESCAPE]) {
-		mIsRunning = false;
+ 		mIsRunning = false;
 	}
-	mShip->ProcesKeyboard(keyboardState);
+
+	mUpdatingGameObjects = true;
+	for (GameObject* gameObject : mGameObjects) {
+		gameObject->ProcessInput(keyboardState);
+	}
+	mUpdatingGameObjects = false;
 }
 
 void Game::UpdateGame()
@@ -103,8 +114,8 @@ void Game::UpdateGame()
 	mPendingGameObjects.clear();
 	// Get dead gameobjects
 	std::vector<GameObject*> deadActors;
-	for (GameObject* gameObject: mGameObjects) {
-		if (gameObject->GetState() == GameObject::EDead) {
+	for (GameObject* gameObject : mGameObjects) {
+		if (gameObject->GetState() == GameObject::State::EDead) {
 			deadActors.emplace_back(gameObject);
 		}
 	}
@@ -128,18 +139,22 @@ void Game::GenerateOutput()
 
 void Game::LoadData()
 {
-	mShip = new Mario(this);
-	mShip->SetPosition(Vector2(100.0f, 384.0f));
-	mShip->SetScale(1.5f);
+	mMario = new Mario(this);
+	mMario->GetTransform()->SetPosition(Vector2(100.0f, 384.0f));
+	mMario->GetTransform()->SetScale(1.5f);
 	
-	GameObject* background = new GameObject(this);
-	background->SetPosition(Vector2(mWindowWidth / 2.0f, mWindowHeight / 2.0f));
+	for (unsigned int i = 0; i < 20; i++) {
+		mAsteroids.emplace_back(new Asteroid(this));
+	}
+
+	GameObject* background = new GameObject(this, "Background");
+	background->GetTransform()->SetPosition(Vector2(mWindowWidth / 2.0f, mWindowHeight / 2.0f));
 	// Far background
-	BackgroundSpriteComponent* farBackgroundComponent = new BackgroundSpriteComponent(background);
+	BackgroundSpriteComponent* farBackgroundComponent = new BackgroundSpriteComponent(background, 10);
 	farBackgroundComponent->SetScreenSize(Vector2(mWindowWidth, mWindowHeight));
 	std::vector<SDL_Texture*> farBackgroundTextures = {
-		GetTexture("Assets/Farback01.png"),
-		GetTexture("Assets/Farback02.png"),
+		GetTexture("Assets/Chapter2/Farback01.png"),
+		GetTexture("Assets/Chapter2/Farback02.png"),
 	};
 	farBackgroundComponent->SetBackgroundTextures(farBackgroundTextures);
 	farBackgroundComponent->SetScrollSpeed(-100.0f);
@@ -147,15 +162,15 @@ void Game::LoadData()
 	BackgroundSpriteComponent* nearBackgroundComponent = new BackgroundSpriteComponent(background, 50);
 	nearBackgroundComponent->SetScreenSize(Vector2(mWindowWidth, mWindowHeight));
 	std::vector<SDL_Texture*> nearBackgroundTextures = {
-		GetTexture("Assets/Stars.png"),
-		GetTexture("Assets/Stars.png"),
+		GetTexture("Assets/Chapter2/Stars.png"),
+		GetTexture("Assets/Chapter2/Stars.png"),
 	};
 	nearBackgroundComponent->SetBackgroundTextures(nearBackgroundTextures);
 	nearBackgroundComponent->SetScrollSpeed(-200.0f);
 
 	GameObject* tilemap = new GameObject(this);
-	tilemap->SetPosition(Vector2(0.0f, 0.0f));
-	tilemap->SetScale(2.0f);
+	tilemap->GetTransform()->SetPosition(Vector2(0.0f, 0.0f));
+	tilemap->GetTransform()->SetScale(2.0f);
 	TileMapComponent* tileMapLayer = new TileMapComponent(tilemap);
 	tileMapLayer->Init("Assets/level-platform.csv");
 }
@@ -194,6 +209,31 @@ SDL_Texture* Game::GetTexture(const std::string& fileName)
 
 	mTextures.emplace(fileName.c_str(), texture);
 	return texture;
+}
+
+std::vector<class Asteroid*> Game::GetAsteroids() const
+{
+	return mAsteroids;
+}
+
+Mario* Game::GetMario() const
+{
+	return mMario;
+}
+
+CooldownManager* Game::GetCooldownManager() const
+{
+	return mCooldownManager;
+}
+
+int Game::GetWindowWidth() const
+{
+	return mWindowWidth;
+}
+
+int Game::GetWindowHeight() const
+{
+	return mWindowHeight;
 }
 
 void Game::AddGameObject(GameObject* gameObject)

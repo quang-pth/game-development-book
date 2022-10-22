@@ -42,9 +42,6 @@
     <ClCompile Include="src\Mario.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\EulerAngle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="EsstenialMath.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -52,6 +49,33 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\TileMapComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TransformComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MoveComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Asteroid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Random.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\InputComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CircleComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Laser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CooldownManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ICooldownable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -80,9 +104,6 @@
     <ClInclude Include="include\Mario.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\EulerAngle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="EsstenialMath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -90,6 +111,33 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\TileMapComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TransformComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MoveComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Asteroid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Random.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\InputComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CircleComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Laser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CooldownManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ICooldownable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

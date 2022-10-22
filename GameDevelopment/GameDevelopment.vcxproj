@@ -145,9 +145,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ICooldownable.cpp" />
+    <ClCompile Include="src\CooldownManager.cpp" />
+    <ClCompile Include="src\Laser.cpp" />
+    <ClCompile Include="src\CircleComponent.cpp" />
+    <ClCompile Include="src\InputComponent.cpp" />
+    <ClCompile Include="src\Random.cpp" />
+    <ClCompile Include="src\Asteroid.cpp" />
+    <ClCompile Include="src\MoveComponent.cpp" />
     <ClCompile Include="src\Animation.cpp" />
     <ClCompile Include="EsstenialMath.cpp" />
-    <ClCompile Include="src\EulerAngle.cpp" />
     <ClCompile Include="src\Mario.cpp" />
     <ClCompile Include="src\BackgroundSpriteComponent.cpp" />
     <ClCompile Include="src\AnimatorComponent.cpp" />
@@ -158,11 +165,15 @@
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="src\TileMapComponent.cpp" />
+    <ClCompile Include="src\TransformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\ICooldownable.h" />
+    <ClInclude Include="include\CooldownManager.h" />
+    <ClInclude Include="include\CircleComponent.h" />
+    <ClInclude Include="include\Asteroid.h" />
     <ClInclude Include="include\Animation.h" />
     <ClInclude Include="EsstenialMath.h" />
-    <ClInclude Include="include\EulerAngle.h" />
     <ClInclude Include="include\BackgroundSpriteComponent.h" />
     <ClInclude Include="include\AnimatorComponent.h" />
     <ClInclude Include="include\Component.h" />
@@ -172,6 +183,11 @@
     <ClInclude Include="include\CustomMath.h" />
     <ClInclude Include="include\Mario.h" />
     <ClInclude Include="include\TileMapComponent.h" />
+    <ClInclude Include="include\TransformComponent.h" />
+    <ClInclude Include="include\MoveComponent.h" />
+    <ClInclude Include="include\Random.h" />
+    <ClInclude Include="include\InputComponent.h" />
+    <ClInclude Include="include\Laser.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
