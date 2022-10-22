@@ -1,4 +1,5 @@
 #pragma once
+
 #include "include/GameObject.h"
 #include "include/ICooldownable.h"
 #include<vector>
@@ -9,9 +10,11 @@ public:
 	Ship(class Game* game);
 	void UpdateGameObject(float deltaTime) override;
 	void ProcessGameObjectInput(const uint8_t* keyState) override;
-	void ActAfterCooldown() override;
+	void Cooldown(float deltaTime) override;
 private:
 	// Methods
+	void StartCooldown();
+	void ActAfterCooldown();
 	void InitLaserPool();
 	void ConstraintInScreenBounds();
 	void CheckCollsision();

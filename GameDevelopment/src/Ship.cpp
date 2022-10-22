@@ -11,7 +11,7 @@
 #include <iostream>
 
 Ship::Ship(Game* game) : 
-	GameObject(game, "Ship"), ICooldownable(1.5f),
+	GameObject(game, "Ship"),
 	mFireKey(SDL_SCANCODE_SPACE), mFireCooldown(0.3f), 
 	mActivateLaserIdx(0), mSpawnCooldown(1.5f)
 {
@@ -21,6 +21,8 @@ Ship::Ship(Game* game) :
 	mSpriteComponent->SetTexture(game->GetTexture("Assets/Chapter3/Ship.png"));
 	
 	mInputComponent = new InputComponent(this);
+	mInputComponent->SetMaxForwardSpeed(300.0f);
+	mInputComponent->SetAngularSpeed(135.0f);
 
 	mCircleComponent = new CircleComponent(this);
 	mCircleComponent->SetRadius(mSpriteComponent->GetTextureWidth() * 0.3f);
@@ -31,7 +33,6 @@ Ship::Ship(Game* game) :
 void Ship::UpdateGameObject(float deltaTime)
 {
 	mFireCooldown -= deltaTime;
-
 	this->ConstraintInScreenBounds();
 	this->CheckCollsision();
 }
@@ -46,8 +47,9 @@ void Ship::ProcessGameObjectInput(const uint8_t* keyState)
 		laser->SetState(GameObject::State::EActive);
 		laser->GetTransform()->SetPosition(GameObject::GetTransform()->GetPosition() + offsetForward);
 		laser->GetTransform()->SetRotation(GameObject::GetTransform()->GetRotation());
-		laser->GetMoveComponent()->SetForwardSpeed(400.0f);
-		
+		laser->GetMoveComponent()->AddForce(GameObject::GetForward() * 2000.0f, 
+			MoveComponent::ForceMode::Constant);
+
 		mFireCooldown = 0.3f;
 
 		mActivateLaserIdx++;
@@ -57,23 +59,38 @@ void Ship::ProcessGameObjectInput(const uint8_t* keyState)
 	}
 }
 
+void Ship::StartCooldown()
+{
+	GameObject::SetState(GameObject::State::EDeactive);
+	GameObject::GetGame()->GetCooldownManager()->Observe(this);
+}
+
+void Ship::Cooldown(float deltaTime)
+{
+	mSpawnCooldown -= deltaTime;
+	if (mSpawnCooldown <= 0) {
+		this->ActAfterCooldown();
+	}
+}
+
 void Ship::ActAfterCooldown()
 {
-	GameObject::SetState(GameObject::State::EActive);
-	ICooldownable::SetCooldown(1.5f);
-	ICooldownable::SetStartCooldown(GameObject::GetState() == GameObject::State::EDeactive);
+	mSpawnCooldown = 1.5f;
 	// Reset ship position to the center of the screen if collided with asteroid
 	GameObject::GetTransform()->SetPosition(Vector2(
 		GameObject::GetGame()->GetWindowWidth() / 2.0f,
 		GameObject::GetGame()->GetWindowHeight() / 2.0f
 	));
+	// Reset game object states
 	GameObject::GetTransform()->SetRotation(0.0f);
-	GameObject::GetGame()->GetCooldownManager()->UnSubscribe(this);
+	GameObject::GetGame()->GetCooldownManager()->Release(this);
+	GameObject::SetState(GameObject::State::EActive);
+	mInputComponent->ResetForce();
 }
 
 void Ship::InitLaserPool()
 {
-	for (unsigned int idx = 0; idx < 30; idx++) {
+	for (unsigned int idx = 0; idx < 6; idx++) {
 		Laser* laser = new Laser(GameObject::GetGame());
 		laser->SetState(GameObject::State::EDeactive);
 		mLasers.emplace_back(laser);
@@ -109,9 +126,7 @@ void Ship::CheckCollsision()
 			bool isCollided = CircleComponent::IsIntersect(this->mCircleComponent, 
 				asteroid->GetCircleComponent());
 			if (isCollided) {
-				GameObject::SetState(GameObject::State::EDeactive);
-				ICooldownable::SetStartCooldown(GameObject::GetState() == GameObject::State::EDeactive);
-				GameObject::GetGame()->GetCooldownManager()->Subscribe(this);
+				this->StartCooldown();
 			}
 		}
 	}

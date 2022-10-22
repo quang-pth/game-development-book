@@ -2,12 +2,12 @@
 #include "include/ICooldownable.h"
 
 CooldownManager::CooldownManager() : 
-	GameObject(), mCooldownableGameObjects(), mIsUpdating(false)
+	GameObject(), mCooldownableGameObjects()
 {
 }
 
 CooldownManager::CooldownManager(Game* game, std::string name) :
-	GameObject(game, name), mCooldownableGameObjects(), mIsUpdating(false)
+	GameObject(game, name), mCooldownableGameObjects()
 {
 }
 
@@ -18,9 +18,7 @@ CooldownManager::~CooldownManager()
 void CooldownManager::UpdateGameObject(float deltaTime)
 {
 	for (ICooldownable* gameObject : mCooldownableGameObjects) {
-		if (gameObject->CanCoolDown()) {
-			gameObject->Cooldown(deltaTime);
-		}
+		gameObject->Cooldown(deltaTime);
 	}
 	for (std::vector<ICooldownable*>::iterator iter : mDoneCooldownIters) {
 		mCooldownableGameObjects.erase(iter);
@@ -28,15 +26,17 @@ void CooldownManager::UpdateGameObject(float deltaTime)
 	mDoneCooldownIters.clear();
 }
 
-const void CooldownManager::Subscribe(ICooldownable* iCooldownable)
+const void CooldownManager::Observe(ICooldownable* gameObject)
 {
-	mCooldownableGameObjects.emplace_back(iCooldownable);
+	if (gameObject != nullptr) {
+		mCooldownableGameObjects.emplace_back(gameObject);
+	}
 }
 
-const void CooldownManager::UnSubscribe(ICooldownable* iCooldownable)
+const void CooldownManager::Release(ICooldownable* gameObject)
 {
 	std::vector<ICooldownable*>::iterator iter = std::find(mCooldownableGameObjects.begin(),
-		mCooldownableGameObjects.end(), iCooldownable);
+		mCooldownableGameObjects.end(), gameObject);
 	if (iter != mCooldownableGameObjects.end()) {
 		mDoneCooldownIters.emplace_back(iter);
 	}

@@ -1,4 +1,5 @@
 #include "include/InputComponent.h"
+#include "include/GameObject.h"
 #include "include/CustomMath.h"
 #include<SDL2/SDL.h>
 
@@ -12,7 +13,7 @@ InputComponent::InputComponent() :
 
 InputComponent::InputComponent(GameObject* owner, int updateOrder) : 
 	MoveComponent(owner, updateOrder),
-	mMaxForwardSpeed(200.0f), mMaxAngularSpeed(Math::Pi),
+	mMaxForwardSpeed(500.0f), mMaxAngularSpeed(Math::Pi),
 	mForwardKey(SDL_SCANCODE_W), mBackwardKey(SDL_SCANCODE_S),
 	mClockwiseKey(SDL_SCANCODE_A), mCounterClockwiseKey(SDL_SCANCODE_D)
 {
@@ -32,7 +33,8 @@ void InputComponent::ProcessInput(const uint8_t* keyState)
 	if (keyState[mBackwardKey]) {
 		forwardSpeed -= mMaxForwardSpeed;
 	}
-	MoveComponent::SetForwardSpeed(forwardSpeed);
+	Vector2 force = mOwner->GetForward() * forwardSpeed;
+	MoveComponent::AddForce(force, MoveComponent::ForceMode::Impulse);
 	// Set rotation
 	float angularSpeed = 0.0f;
 	if (keyState[mClockwiseKey]) {

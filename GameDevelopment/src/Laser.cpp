@@ -16,7 +16,7 @@ Laser::Laser(Game* game, std::string name) :
 	GameObject(game, name)
 {
 	mMoveComponent = new MoveComponent(this);
-	
+
 	mSpriteComponent = new SpriteComponent(this);
 	mSpriteComponent->SetTexture(GameObject::GetGame()->GetTexture("Assets/Chapter3/Laser.png"));
 
@@ -34,6 +34,7 @@ void Laser::UpdateGameObject(float deltaTime)
 			if (isIntersect) {
 				asteriod->SetState(GameObject::State::EDeactive);
 				GameObject::SetState(GameObject::State::EDeactive);
+				mMoveComponent->ResetForce();
 				break;
 			}
 		}
@@ -43,10 +44,12 @@ void Laser::UpdateGameObject(float deltaTime)
 	if (position.x < -mSpriteComponent->GetTextureWidth() || 
 		position.x > GameObject::GetGame()->GetWindowWidth() + mSpriteComponent->GetTextureWidth()) {
 		GameObject::SetState(GameObject::State::EDeactive);
+		mMoveComponent->ResetForce();
 	}
 	if (position.y < -mSpriteComponent->GetTextureHeight() || 
 		position.y > GameObject::GetGame()->GetWindowHeight() + mSpriteComponent->GetTextureHeight()) {
 		GameObject::SetState(GameObject::State::EDeactive);
+		mMoveComponent->ResetForce();
 	}
 }
 

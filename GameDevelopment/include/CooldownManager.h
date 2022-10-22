@@ -9,11 +9,10 @@ public:
 	CooldownManager(class Game* game, std::string = "CooldownManager");
 	~CooldownManager();
 	void UpdateGameObject(float deltaTime) override;
-	const void Subscribe(class ICooldownable* iCooldownable);
-	const void UnSubscribe(class ICooldownable* iCooldownable);
+	const void Observe(class ICooldownable* gameObject);
+	const void Release(class ICooldownable* gameObject);
 private:
 	std::vector<class ICooldownable*> mCooldownableGameObjects;
-	std::vector <std::vector<ICooldownable*>::iterator> mDoneCooldownIters;
-	bool mIsUpdating;
+	std::vector <std::vector<class ICooldownable*>::iterator> mDoneCooldownIters;
 };
 

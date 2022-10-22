@@ -17,7 +17,7 @@ Asteroid::Asteroid(Game* game, std::string name) : GameObject(game, name)
 	GameObject::GetTransform()->SetRotation(randomRotation);
 
 	mMoveComponent = new MoveComponent(this);
-	mMoveComponent->SetForwardSpeed(100.0f);
+	mMoveComponent->AddForce(GameObject::GetForward() * 1000.0f, MoveComponent::ForceMode::Impulse);
 	mSpriteComponent = new SpriteComponent(this, 20);
 	mSpriteComponent->SetTexture(game->GetTexture("Assets/Chapter3/Asteroid.png"));
 	
