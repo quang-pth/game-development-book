@@ -4,12 +4,15 @@
 #include "include/CustomMath.h"
 #include "include/Game.h"
 
-SpriteComponent::SpriteComponent() : mDrawOrder(), mTexture(), mTextureWidth(), mTextureHeight()
+SpriteComponent::SpriteComponent() :
+	mDrawOrder(), mTexture(),
+	mTextureWidth(), mTextureHeight()
 {
 }
 
-SpriteComponent::SpriteComponent(GameObject* owner, int drawOrder) : Component(owner), mTexture(nullptr),
-		mDrawOrder(drawOrder), mTextureWidth(0), mTextureHeight(0)
+SpriteComponent::SpriteComponent(GameObject* owner, int drawOrder) : 
+	Component(owner), mTexture(nullptr),
+	mDrawOrder(drawOrder), mTextureWidth(0), mTextureHeight(0)
 {
 	mOwner->GetGame()->AddSprite(this);
 }
@@ -29,12 +32,22 @@ void SpriteComponent::Draw(SDL_Renderer* renderer)
 	rect.x = static_cast<int>(mOwner->GetTransform()->GetPosition().x - rect.w / 2.0f);
 	rect.y = static_cast<int>(mOwner->GetTransform()->GetPosition().y - rect.h / 2.0f);
 	
-	SDL_RenderCopyEx(renderer, mTexture, nullptr,
-		&rect, -Math::ToDegrees(mOwner->GetTransform()->GetRotation()), nullptr, SDL_FLIP_NONE);
+	if (mFlipX) {
+		SDL_RenderCopyEx(renderer, mTexture, nullptr,
+			&rect, -Math::ToDegrees(mOwner->GetTransform()->GetRotation()), nullptr, SDL_FLIP_HORIZONTAL);
+	}
+	else {
+		SDL_RenderCopyEx(renderer, mTexture, nullptr,
+			&rect, -Math::ToDegrees(mOwner->GetTransform()->GetRotation()), nullptr, SDL_FLIP_NONE);
+	}
 }
 
-void SpriteComponent::SetTexture(SDL_Texture* texture)
+void SpriteComponent::SetTexture(SDL_Texture* texture, bool flipX)
 {
 	mTexture = texture;
 	SDL_QueryTexture(texture, nullptr, nullptr, &mTextureWidth, &mTextureHeight);
+}
+
+void SpriteComponent::FlipTexture(bool isFlip) {
+	mFlipX = isFlip;
 }

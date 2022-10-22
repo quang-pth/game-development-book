@@ -140,12 +140,6 @@ void Game::GenerateOutput()
 void Game::LoadData()
 {
 	mMario = new Mario(this);
-	mMario->GetTransform()->SetPosition(Vector2(100.0f, 384.0f));
-	mMario->GetTransform()->SetScale(1.5f);
-	
-	for (unsigned int i = 0; i < 20; i++) {
-		mAsteroids.emplace_back(new Asteroid(this));
-	}
 
 	GameObject* background = new GameObject(this, "Background");
 	background->GetTransform()->SetPosition(Vector2(mWindowWidth / 2.0f, mWindowHeight / 2.0f));
@@ -209,11 +203,6 @@ SDL_Texture* Game::GetTexture(const std::string& fileName)
 
 	mTextures.emplace(fileName.c_str(), texture);
 	return texture;
-}
-
-std::vector<class Asteroid*> Game::GetAsteroids() const
-{
-	return mAsteroids;
 }
 
 Mario* Game::GetMario() const

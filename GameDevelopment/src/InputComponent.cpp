@@ -1,21 +1,22 @@
 #include "include/InputComponent.h"
 #include "include/GameObject.h"
+#include "include/Game.h"
+#include "include/Mario.h"
 #include "include/CustomMath.h"
 #include<SDL2/SDL.h>
 
 InputComponent::InputComponent() : 
 	MoveComponent(), 
-	mMaxForwardSpeed(0.0f), mMaxAngularSpeed(0.0f),
-	mForwardKey(), mBackwardKey(), 
-	mClockwiseKey(), mCounterClockwiseKey()
+	mMaxForwardSpeed(0.0f),
+	mForwardLeftKey(), mForwardRightKey()
 {
 }
 
 InputComponent::InputComponent(GameObject* owner, int updateOrder) : 
 	MoveComponent(owner, updateOrder),
-	mMaxForwardSpeed(500.0f), mMaxAngularSpeed(Math::Pi),
-	mForwardKey(SDL_SCANCODE_W), mBackwardKey(SDL_SCANCODE_S),
-	mClockwiseKey(SDL_SCANCODE_A), mCounterClockwiseKey(SDL_SCANCODE_D)
+	mMaxForwardSpeed(500.0f),
+	mForwardLeftKey(SDL_SCANCODE_A), 
+	mForwardRightKey(SDL_SCANCODE_D)
 {
 }
 
@@ -27,23 +28,13 @@ void InputComponent::ProcessInput(const uint8_t* keyState)
 {
 	// Set movement
 	float forwardSpeed = 0.0f;
-	if (keyState[mForwardKey]) {
+	if (keyState[mForwardRightKey]) {
 		forwardSpeed += mMaxForwardSpeed;
 	}
-	if (keyState[mBackwardKey]) {
+	if (keyState[mForwardLeftKey]) {
 		forwardSpeed -= mMaxForwardSpeed;
 	}
-	Vector2 force = mOwner->GetForward() * forwardSpeed;
-	MoveComponent::AddForce(force, MoveComponent::ForceMode::Impulse);
-	// Set rotation
-	float angularSpeed = 0.0f;
-	if (keyState[mClockwiseKey]) {
-		angularSpeed += mMaxAngularSpeed;
-	}
-	if (keyState[mCounterClockwiseKey]) {
-		angularSpeed -= mMaxAngularSpeed;
-	}
-	MoveComponent::SetAngularSpeed(angularSpeed);
+	MoveComponent::SetForwardSpeed(forwardSpeed);
 }
 
 float InputComponent::GetMaxForwardSpeed() const
@@ -51,17 +42,17 @@ float InputComponent::GetMaxForwardSpeed() const
 	return mMaxForwardSpeed;
 }
 
-float InputComponent::GetMaxAngularSpeed() const
-{
-	return mMaxAngularSpeed;
-}
-
 void InputComponent::SetMaxForwardSpeed(float speed)
 {
 	mMaxForwardSpeed = speed;
 }
 
-void InputComponent::SetMaxAngularSpeed(float speed)
+int InputComponent::GetForwardLeftKey() const
 {
-	mMaxAngularSpeed = speed;
+	return mForwardLeftKey;
+}
+
+int InputComponent::GetForwardRightKey() const
+{
+	return mForwardRightKey;
 }

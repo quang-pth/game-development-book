@@ -9,13 +9,11 @@ public:
 	~InputComponent();
 	void ProcessInput(const uint8_t* keyState) override;
 	float GetMaxForwardSpeed() const;
-	float GetMaxAngularSpeed() const;
 	void SetMaxForwardSpeed(float speed);
-	void SetMaxAngularSpeed(float speed);
+	int GetForwardLeftKey() const;
+	int GetForwardRightKey() const;
 private:
 	float mMaxForwardSpeed;
-	float mMaxAngularSpeed;
-	int mForwardKey, mBackwardKey;
-	int mClockwiseKey, mCounterClockwiseKey;
+	int mForwardLeftKey, mForwardRightKey;
 };
 

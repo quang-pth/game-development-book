@@ -17,4 +17,3 @@ private:
 	float mAnimationFPS;
 	std::string mName;
 };
-

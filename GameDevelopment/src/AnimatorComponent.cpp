@@ -8,10 +8,6 @@ AnimatorComponent::AnimatorComponent(GameObject* owner, int drawOrder) :
 
 }
 
-AnimatorComponent::AnimatorComponent(const AnimatorComponent& other)
-{
-}
-
 AnimatorComponent::~AnimatorComponent()
 {
 }
@@ -35,11 +31,13 @@ void AnimatorComponent::Update(float deltaTime)
 		}
 	}
 
-	SetTexture(textures[static_cast<int>(mCurrentFrame)]);
+	SpriteComponent::SetTexture(textures[static_cast<int>(mCurrentFrame)]);
 }
 
 void AnimatorComponent::SetAnimation(const std::string& animationName)
 {
+	if (animationName == mAnimationName) return;
+	
 	if (mAnimationsMap.find(animationName) == mAnimationsMap.end()) {
 		std::cout << "No animation name found" << std::endl;
 		return;

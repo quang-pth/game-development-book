@@ -7,10 +7,16 @@
 class Mario : public GameObject, ICooldownable
 {
 public:
+	enum class Direction {
+		Left,
+		Right,
+	};
 	Mario(class Game* game);
 	void UpdateGameObject(float deltaTime) override;
 	void ProcessGameObjectInput(const uint8_t* keyState) override;
 	void Cooldown(float deltaTime) override;
+	Direction GetMoveDirection() const;
+	void SetMoveDirection(Direction direction);
 private:
 	// Methods
 	void StartCooldown();
@@ -19,14 +25,15 @@ private:
 	void ConstraintInScreenBounds();
 	void CheckCollsision();
 	// Weapon
-	class std::vector<class Laser*> mLasers;
 	unsigned int mActivateLaserIdx;
 	// Cooldown
 	float mFireCooldown;
 	float mSpawnCooldown;
 	// Component
 	class InputComponent* mInputComponent;
-	class SpriteComponent* mSpriteComponent;
 	class CircleComponent* mCircleComponent;
+	class AnimatorComponent* mAnimator;
 	uint8_t mFireKey;
+	// States
+	Direction mMoveDirection;
 };

@@ -16,14 +16,11 @@ public:
 
 	void Update(float deltaTime) override;
 	float GetForwardSpeed() const;
-	float GetAngularSpeed() const;
 	void SetForwardSpeed(float speed);
-	void SetAngularSpeed(float speed);
 	void AddForce(const Vector2& force, ForceMode forceMode = ForceMode::Impulse);
 	void ResetForce();
 protected:
 	float mForwardSpeed; // Velocity measured in units/second
-	float mAngularSpeed; // Rotation angle measured in radians/second
 	// Newtonian Physics
 	float mMass;
 	Vector2 mForceVelocity;
