@@ -1,10 +1,10 @@
 #pragma once
 #include "include/GameObject.h"
 
-class Ship : public GameObject
+class Mario : public GameObject
 {
 public:
-	Ship(class Game* game);
+	Mario(class Game* game);
 	void UpdateGameObject(float deltaTime) override;
 	void ProcesKeyboard(const uint8_t* state);
 	float GetRightSpeed() const { return mRightSpeed; }

@@ -35,7 +35,7 @@ private:
 	std::vector<class GameObject*> mGameObjects;
 	std::vector<class GameObject*> mPendingGameObjects;
 	bool mUpdatingGameObjects;
-	class Ship* mShip;
+	class Mario* mShip;
 	// Sprites
 	std::vector<class SpriteComponent*> mSprites;
 	std::unordered_map<std::string, SDL_Texture*> mTextures;

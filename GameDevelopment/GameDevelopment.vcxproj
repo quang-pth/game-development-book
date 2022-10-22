@@ -148,7 +148,7 @@
     <ClCompile Include="src\Animation.cpp" />
     <ClCompile Include="EsstenialMath.cpp" />
     <ClCompile Include="src\EulerAngle.cpp" />
-    <ClCompile Include="src\Ship.cpp" />
+    <ClCompile Include="src\Mario.cpp" />
     <ClCompile Include="src\BackgroundSpriteComponent.cpp" />
     <ClCompile Include="src\AnimatorComponent.cpp" />
     <ClCompile Include="src\CustomMath.cpp" />
@@ -170,7 +170,7 @@
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\SpriteComponent.h" />
     <ClInclude Include="include\CustomMath.h" />
-    <ClInclude Include="include\Ship.h" />
+    <ClInclude Include="include\Mario.h" />
     <ClInclude Include="include\TileMapComponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

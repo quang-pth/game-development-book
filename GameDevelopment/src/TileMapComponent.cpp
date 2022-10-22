@@ -6,7 +6,9 @@
 #include<string>
 
 TileMapComponent::TileMapComponent(GameObject* owner, int drawOrder)
-	: SpriteComponent(owner, drawOrder), mTileWidth(16), mTileHeight(16), mTilePerRow(7), mOffsetX(0.0f), mXBound(0.0f)
+	: SpriteComponent(owner, drawOrder), 
+	mTileWidth(16), mTileHeight(16), 
+	mTilePerRow(7), mOffsetX(0.0f), mXBound(0.0f)
 {
 }
 
@@ -16,7 +18,7 @@ TileMapComponent::~TileMapComponent()
 
 void TileMapComponent::Update(float dt)
 {
-	mOffsetX += dt * 400.0f;
+	//mOffsetX += dt * 400.0f;
 
 	if (mOffsetX >= mXBound) {
 		mOffsetX = mXBound;

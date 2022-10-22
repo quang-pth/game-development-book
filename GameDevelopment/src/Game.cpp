@@ -3,7 +3,7 @@
 #include"include/SpriteComponent.h"
 #include"include/BackgroundSpriteComponent.h"
 #include"include/TileMapComponent.h"
-#include"include/Ship.h"
+#include"include/Mario.h"
 #include<SDL2/SDL_image.h>
 #include<iostream>
 
@@ -128,7 +128,7 @@ void Game::GenerateOutput()
 
 void Game::LoadData()
 {
-	mShip = new Ship(this);
+	mShip = new Mario(this);
 	mShip->SetPosition(Vector2(100.0f, 384.0f));
 	mShip->SetScale(1.5f);
 	
