@@ -1,5 +1,6 @@
 #pragma once
 
+#include<memory>
 #include<SDL2/SDL.h>
 #include "Component.h"
 
@@ -7,9 +8,9 @@ class SpriteComponent : public Component
 {
 public:
 	SpriteComponent();
-	SpriteComponent(class GameObject* owner, int drawOrder = 100);
+	SpriteComponent(class GameObject* owner, int drawOrder = 100, std::string = "SpriteComponent");
 	~SpriteComponent();
-
+	
 	virtual void Draw(SDL_Renderer* renderer);
 	virtual void SetTexture(SDL_Texture* texture, bool flipX = false);
 	void FlipTexture(bool isFlip);

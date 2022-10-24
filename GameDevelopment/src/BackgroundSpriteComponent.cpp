@@ -2,8 +2,8 @@
 #include "include/TransformComponent.h"
 #include "include/BackgroundSpriteComponent.h"
 
-BackgroundSpriteComponent::BackgroundSpriteComponent(GameObject* owner, int drawOrder) :
-	SpriteComponent(owner, drawOrder), mScrollSpeed(0.0f)
+BackgroundSpriteComponent::BackgroundSpriteComponent(GameObject* owner, int drawOrder, std::string name) :
+	SpriteComponent(owner, drawOrder, name), mScrollSpeed(0.0f)
 {
 }
 

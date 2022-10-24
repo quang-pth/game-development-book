@@ -11,12 +11,13 @@ public:
 		Left,
 		Right,
 	};
-	Mario(class Game* game);
+	Mario(class Game* game, std::string = "Mario");
 	void UpdateGameObject(float deltaTime) override;
 	void ProcessGameObjectInput(const uint8_t* keyState) override;
 	void Cooldown(float deltaTime) override;
 	Direction GetMoveDirection() const;
 	void SetMoveDirection(Direction direction);
+	class InputComponent* GetInputComponent() const;
 private:
 	// Methods
 	void StartCooldown();

@@ -16,6 +16,7 @@ public:
 
 	void Update(float deltaTime) override;
 	float GetForwardSpeed() const;
+	Vector2 GetVelocity();
 	void SetForwardSpeed(float speed);
 	void AddForce(const Vector2& force, ForceMode forceMode = ForceMode::Impulse);
 	void ResetForce();

@@ -13,7 +13,7 @@
 Game::Game() : 
 	mWindow(nullptr), mIsRunning(true), 
 	mTicksCount(0.0f), mRenderer(), mUpdatingGameObjects(false), 
-	mWindowWidth(800), mWindowHeight(600), mMario(nullptr)
+	mWindowWidth(800), mWindowHeight(600), mMario(nullptr), mTilemap(nullptr)
 {
 	mCooldownManager = new CooldownManager(this);
 }
@@ -83,7 +83,7 @@ void Game::ProcessInput()
 	}
 
 	mUpdatingGameObjects = true;
-	for (GameObject* gameObject : mGameObjects) {
+	for (const auto& gameObject : mGameObjects) {
 		gameObject->ProcessInput(keyboardState);
 	}
 	mUpdatingGameObjects = false;
@@ -103,24 +103,24 @@ void Game::UpdateGame()
 	}
 	// Update game objects
 	mUpdatingGameObjects = true;
-	for (GameObject* gameObject : mGameObjects) {
+	for (const auto& gameObject : mGameObjects) {
 		gameObject->Update(deltaTime);
 	}
 	mUpdatingGameObjects = false;
 	// Add pending gameobject
-	for (GameObject* gameObject : mPendingGameObjects) {
+	for (const auto& gameObject : mPendingGameObjects) {
 		mGameObjects.emplace_back(gameObject);
 	}
 	mPendingGameObjects.clear();
 	// Get dead gameobjects
-	std::vector<GameObject*> deadActors;
-	for (GameObject* gameObject : mGameObjects) {
+	std::vector<GameObject*> deadGameObjects;
+	for (const auto& gameObject : mGameObjects) {
 		if (gameObject->GetState() == GameObject::State::EDead) {
-			deadActors.emplace_back(gameObject);
+			deadGameObjects.emplace_back(gameObject);
 		}
 	}
 	// Delete dead gameobjects
-	for (GameObject* gameObject : deadActors) {
+	for (const auto& gameObject : deadGameObjects) {
 		delete gameObject;
 	}
 }
@@ -130,7 +130,7 @@ void Game::GenerateOutput()
 	SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, 255);
 	SDL_RenderClear(mRenderer);
 	// Draw objects on the scene
-	for (auto sprite : mSprites) {
+	for (const auto& sprite : mSprites) {
 		sprite->Draw(mRenderer);
 	}
 	// Swap back and front color buffer
@@ -144,7 +144,8 @@ void Game::LoadData()
 	GameObject* background = new GameObject(this, "Background");
 	background->GetTransform()->SetPosition(Vector2(mWindowWidth / 2.0f, mWindowHeight / 2.0f));
 	// Far background
-	BackgroundSpriteComponent* farBackgroundComponent = new BackgroundSpriteComponent(background, 10);
+	BackgroundSpriteComponent* farBackgroundComponent = 
+		new BackgroundSpriteComponent(background, 10, "BackgroundSprite1");
 	farBackgroundComponent->SetScreenSize(Vector2(mWindowWidth, mWindowHeight));
 	std::vector<SDL_Texture*> farBackgroundTextures = {
 		GetTexture("Assets/Chapter2/Farback01.png"),
@@ -153,7 +154,8 @@ void Game::LoadData()
 	farBackgroundComponent->SetBackgroundTextures(farBackgroundTextures);
 	farBackgroundComponent->SetScrollSpeed(-100.0f);
 	// Near background
-	BackgroundSpriteComponent* nearBackgroundComponent = new BackgroundSpriteComponent(background, 50);
+	BackgroundSpriteComponent* nearBackgroundComponent = 
+		new BackgroundSpriteComponent(background, 50, "BackgroundSprite2");
 	nearBackgroundComponent->SetScreenSize(Vector2(mWindowWidth, mWindowHeight));
 	std::vector<SDL_Texture*> nearBackgroundTextures = {
 		GetTexture("Assets/Chapter2/Stars.png"),
@@ -162,11 +164,11 @@ void Game::LoadData()
 	nearBackgroundComponent->SetBackgroundTextures(nearBackgroundTextures);
 	nearBackgroundComponent->SetScrollSpeed(-200.0f);
 
-	GameObject* tilemap = new GameObject(this);
+	GameObject* tilemap = new GameObject(this, "Tilemap");
 	tilemap->GetTransform()->SetPosition(Vector2(0.0f, 0.0f));
 	tilemap->GetTransform()->SetScale(2.0f);
-	TileMapComponent* tileMapLayer = new TileMapComponent(tilemap);
-	tileMapLayer->Init("Assets/level-platform.csv");
+	mTilemap = new TileMapComponent(tilemap);
+	mTilemap->Init("Assets/level-platform.csv");
 }
 
 void Game::UnloadData()
@@ -174,9 +176,11 @@ void Game::UnloadData()
 	while (!mGameObjects.empty()) {
 		delete mGameObjects.back();
 	}
+
 	for (std::pair<const std::string&, SDL_Texture*> i : mTextures) {
 		SDL_DestroyTexture(i.second);
 	}
+
 	mTextures.clear();
 }
 
@@ -210,6 +214,11 @@ Mario* Game::GetMario() const
 	return mMario;
 }
 
+TileMapComponent* Game::GetTileMapComponent() const
+{
+	return mTilemap;
+}
+
 CooldownManager* Game::GetCooldownManager() const
 {
 	return mCooldownManager;
@@ -225,6 +234,11 @@ int Game::GetWindowHeight() const
 	return mWindowHeight;
 }
 
+Vector2 Game::GetCenterPoint() const
+{
+	return Vector2(mWindowWidth / 2, mWindowHeight / 2);
+}
+
 void Game::AddGameObject(GameObject* gameObject)
 {
 	if (mUpdatingGameObjects) {
@@ -237,11 +251,10 @@ void Game::AddGameObject(GameObject* gameObject)
 
 void Game::RemoveGameObject(GameObject* gameObject)
 {
-	std::vector<GameObject*>::iterator iter = std::find(mPendingGameObjects.begin(), mPendingGameObjects.end(), gameObject);
+	auto iter = std::find(mPendingGameObjects.begin(), mPendingGameObjects.end(), gameObject);
 	if (iter != mPendingGameObjects.end()) {
 		mPendingGameObjects.erase(iter);
 	}
-
 	iter = std::find(mGameObjects.begin(), mGameObjects.end(), gameObject);
 	if (iter != mGameObjects.end()) {
 		mGameObjects.erase(iter);
@@ -251,7 +264,7 @@ void Game::RemoveGameObject(GameObject* gameObject)
 void Game::AddSprite(SpriteComponent* sprite)
 {
 	int currentSpriteDrawOrder = sprite->GetDrawOrder();
-	std::vector<SpriteComponent*>::iterator iter = mSprites.begin();
+	auto iter = mSprites.begin();
 	for (; iter != mSprites.end(); iter++) {
 		if (currentSpriteDrawOrder < (*iter)->GetDrawOrder()) {
 			break;
@@ -262,7 +275,7 @@ void Game::AddSprite(SpriteComponent* sprite)
 
 void Game::RemoveSprite(SpriteComponent* sprite)
 {
-	std::vector<SpriteComponent*>::iterator iter = std::find(mSprites.begin(), mSprites.end(), sprite);
+	auto iter = std::find(mSprites.begin(), mSprites.end(), sprite);
 	if (iter != mSprites.end()) {
 		mSprites.erase(iter);
 	}

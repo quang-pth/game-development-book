@@ -30,15 +30,20 @@ void MoveComponent::Update(float deltaTime)
 	if (mForceMode == ForceMode::Impulse) {
 		mSumOfForces = Vector2::Zero;
 	}
+
 	Vector2 position = transformComponent->GetPosition();
-	
-	position += (mForceVelocity + mOwner->GetForward() * mForwardSpeed)* deltaTime;
+	position += (mForceVelocity + mOwner->GetForward() * mForwardSpeed) * deltaTime;
 	transformComponent->SetPosition(position);
 }
 
 float MoveComponent::GetForwardSpeed() const
 {
 	return mForwardSpeed;
+}
+
+Vector2 MoveComponent::GetVelocity()
+{
+	return mForceVelocity + mOwner->GetForward() * mForwardSpeed;
 }
 
 void MoveComponent::SetForwardSpeed(float speed)

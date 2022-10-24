@@ -1,8 +1,10 @@
 #pragma once
 
 #include<SDL2/SDL.h>
+#include<include/CustomMath.h>
 #include<vector>
 #include<unordered_map>
+#include<memory>
 
 class Game
 {
@@ -17,9 +19,11 @@ public:
 	void RemoveSprite(class SpriteComponent* sprite);
 	SDL_Texture* GetTexture(const std::string& fileName);
 	class Mario* GetMario() const;
+	class TileMapComponent* GetTileMapComponent() const;
 	class CooldownManager* GetCooldownManager() const;
 	int GetWindowWidth() const;
 	int GetWindowHeight() const;
+	Vector2 GetCenterPoint() const;
 private:
 	void ProcessInput();
 	void UpdateGame();
@@ -39,7 +43,8 @@ private:
 	class CooldownManager* mCooldownManager;
 	bool mUpdatingGameObjects;
 	class Mario* mMario;
+	class TileMapComponent* mTilemap;
 	// Sprites
-	std::vector<class SpriteComponent*> mSprites;
+	std::vector<SpriteComponent*> mSprites;
 	std::unordered_map<std::string, SDL_Texture*> mTextures;
 };

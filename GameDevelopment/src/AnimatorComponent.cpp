@@ -14,7 +14,7 @@ AnimatorComponent::~AnimatorComponent()
 
 void AnimatorComponent::Update(float deltaTime)
 {
-	const Animation* animation = mAnimationsMap[mAnimationName];
+	const std::shared_ptr<Animation> animation = mAnimationsMap[mAnimationName];
 	const std::vector<SDL_Texture*> textures = animation->mTextures;
 	const int animationFrames = textures.size();
 	
@@ -46,7 +46,7 @@ void AnimatorComponent::SetAnimation(const std::string& animationName)
 	ResetAnimation(animationName);
 }
 
-void AnimatorComponent::AddAnimation(const std::string& animationName, Animation* animation)
+void AnimatorComponent::AddAnimation(const std::string& animationName, std::shared_ptr<Animation> animation)
 {
 	mAnimationsMap.insert({animationName, animation});
 }

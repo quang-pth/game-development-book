@@ -11,9 +11,10 @@
 #include "include/Animation.h"
 #include <SDL2/SDL.h>
 #include <iostream>
+#include<memory>
 
-Mario::Mario(Game* game) :
-	GameObject(game, "Ship"),
+Mario::Mario(Game* game, std::string name) :
+	GameObject(game, name),
 	mFireKey(SDL_SCANCODE_SPACE), mFireCooldown(0.3f),
 	mActivateLaserIdx(0), mSpawnCooldown(1.5f),
 	mMoveDirection(Direction::Right)
@@ -28,13 +29,13 @@ Mario::Mario(Game* game) :
 		game->GetTexture("MarioAssets/mario-3.png"),
 		game->GetTexture("MarioAssets/mario-4.png"),
 	};
-	Animation* walkingAnimation = new Animation(walkingName, walkingTextures);
+	std::shared_ptr<Animation> walkingAnimation =  std::make_shared<Animation>(walkingName, walkingTextures);
 	walkingAnimation->SetFPS(8.0f);
 	std::string idleName = "Idle";
 	std::vector<SDL_Texture*> idleTextures = {
 		game->GetTexture("MarioAssets/mario-1.png"),
 	};
-	Animation* idleAnimation = new Animation(idleName, idleTextures);
+	std::shared_ptr<Animation> idleAnimation =  std::make_shared<Animation>(idleName, idleTextures);
 	idleAnimation->SetFPS(1.0f);
 	// Animator
 	mAnimator = new AnimatorComponent(this);
@@ -43,7 +44,7 @@ Mario::Mario(Game* game) :
 	mAnimator->SetAnimation(walkingName);
 
 	mInputComponent = new InputComponent(this);
-	mInputComponent->SetMaxForwardSpeed(200.0f);
+	mInputComponent->SetForwardSpeed(50.0f);
 
 	mCircleComponent = new CircleComponent(this);
 	mCircleComponent->SetRadius(20.0f * GameObject::GetTransform()->GetScale());
@@ -96,6 +97,11 @@ Mario::Direction Mario::GetMoveDirection() const
 void Mario::SetMoveDirection(Mario::Direction direction)
 {
 	mMoveDirection = direction;
+}
+
+InputComponent* Mario::GetInputComponent() const
+{
+	return mInputComponent;
 }
 
 void Mario::ActAfterCooldown()

@@ -1,29 +1,45 @@
 #include "include/GameObject.h";
 #include "include/TileMapComponent.h";
 #include "include/TransformComponent.h";
+#include "include/InputComponent.h";
 #include "include/Game.h";
+#include "include/Mario.h";
 #include<fstream>
 #include<sstream>
 #include <iostream>
 #include<string>
 
-TileMapComponent::TileMapComponent(GameObject* owner, int drawOrder)
-	: SpriteComponent(owner, drawOrder), 
-	mTileWidth(16), mTileHeight(16), 
-	mTilePerRow(7), mOffsetX(0.0f), mXBound(0.0f)
+TileMapComponent::TileMapComponent(GameObject* owner, int drawOrder, std::string name)
+	: SpriteComponent(owner, drawOrder, name),
+	mTileWidth(16), mTileHeight(16),
+	mTilePerRow(7), mOffset(Vector2::Zero), mXBound(0.0f),
+	mState(State::EMoveable)
 {
 }
 
-TileMapComponent::~TileMapComponent()
-{
-}
-
-void TileMapComponent::Update(float dt)
-{
-	//mOffsetX += dt * 400.0f;
-
-	if (mOffsetX >= mXBound) {
-		mOffsetX = mXBound;
+void TileMapComponent::Update(float deltaTime)
+{	
+	if (mState == State::EMoveable) {
+		Mario* mario = mOwner->GetGame()->GetMario();
+		Vector2 distance = mario->GetTransform()->GetPosition();
+		Vector2 center = mOwner->GetGame()->GetCenterPoint();
+	
+		mOffset += mario->GetInputComponent()->GetVelocity() * deltaTime;
+		
+		if (mOffset.x > mXBound) {
+			mOffset.x = mXBound;
+			mState = State::EUnMoveable;
+		}
+		else if (mOffset.x < 0.0f) {
+			mOffset.x = 0.0f;
+			mState = State::EUnMoveable;
+		}
+	}
+	else if (mState == State::EUnMoveable) {
+		if (mOwner->GetGame()->GetMario()->GetInputComponent()->GetState() == 
+			InputComponent::State::EUnMoveable) {
+			mState == State::EMoveable;
+		}
 	}
 }
 
@@ -46,7 +62,7 @@ void TileMapComponent::Draw(SDL_Renderer* renderer)
 			SDL_Rect destrect;
 			destrect.w = static_cast<int>(mTileWidth * mOwner->GetTransform()->GetScale());
 			destrect.h = static_cast<int>(mTileHeight * mOwner->GetTransform()->GetScale());
-			destrect.x = static_cast<int>(mOwner->GetTransform()->GetPosition().x + destrect.w * col);
+			destrect.x = static_cast<int>(mOwner->GetTransform()->GetPosition().x + destrect.w * col - mOffset.x);
 			destrect.y = static_cast<int>(mOwner->GetTransform()->GetPosition().y + destrect.h * row);
 
 			SDL_RenderCopyEx(renderer, mTexture, &srcrect,
@@ -60,6 +76,16 @@ void TileMapComponent::Init(const char* filePath)
 	this->LoadTileData(filePath);
 	this->SetTexture("MarioAssets/decorationsAndBlocks.png");
 	mXBound = mTilesData[0].size() * mTileWidth * mOwner->GetTransform()->GetScale() - mOwner->GetGame()->GetWindowWidth();
+}
+
+void TileMapComponent::SetState(TileMapComponent::State state)
+{
+	mState = state;
+}
+
+TileMapComponent::State TileMapComponent::GetState() const
+{
+	return mState;
 }
 
 void TileMapComponent::LoadTileData(const char* filePath)

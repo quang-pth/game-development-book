@@ -15,6 +15,7 @@ public:
 
 	virtual void Update(float deltaTime);
 	virtual void ProcessInput(const uint8_t* keyState);
+	class GameObject* GetOwner() const;
 	int GetUpdateOrder() const { return mUpdateOrder; }
 protected:
 	class GameObject* mOwner;

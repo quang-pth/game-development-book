@@ -3,16 +3,17 @@
 #include "include/TransformComponent.h"
 #include "include/CustomMath.h"
 #include "include/Game.h"
+#include <iostream>
 
 SpriteComponent::SpriteComponent() :
 	mDrawOrder(), mTexture(),
-	mTextureWidth(), mTextureHeight()
+	mTextureWidth(), mTextureHeight(), mFlipX()
 {
 }
 
-SpriteComponent::SpriteComponent(GameObject* owner, int drawOrder) : 
-	Component(owner), mTexture(nullptr),
-	mDrawOrder(drawOrder), mTextureWidth(0), mTextureHeight(0)
+SpriteComponent::SpriteComponent(GameObject* owner, int drawOrder, std::string name) : 
+	Component(owner, drawOrder, name), mTexture(nullptr),
+	mDrawOrder(drawOrder), mTextureWidth(0), mTextureHeight(0), mFlipX(false)
 {
 	mOwner->GetGame()->AddSprite(this);
 }

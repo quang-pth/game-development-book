@@ -12,8 +12,8 @@ GameObject::GameObject() : mGame(), mName(), mState(), mTransform()
 GameObject::GameObject(Game* game, std::string name) :
 	mGame(game), mName(name), mState(GameObject::State::EActive)
 {
-	mGame->AddGameObject(this);
 	this->AddDefaultComponents();
+	mGame->AddGameObject(this);
 }
 
 GameObject::~GameObject()
@@ -72,10 +72,15 @@ void GameObject::AddComponent(Component* component)
 
 void GameObject::RemoveComponent(Component* component)
 {
-	std::vector<Component*>::iterator iter = std::find(mComponents.begin(), mComponents.end(), component);
-	if (iter != mComponents.end()) {
+	std::vector<Component*>::iterator iter = std::find(mComponents.begin(), 
+		mComponents.end(), component);
+ 	if (iter != mComponents.end()) {
 		mComponents.erase(iter);
 	}
+}
+
+void GameObject::RemoveGameObjectComponent(Component* component)
+{
 }
 
 GameObject::State GameObject::GetState() const
