@@ -4,8 +4,12 @@
 #include<vector>
 #include<iostream>
 
-namespace EssentialMath 
+namespace EssentialMath
 {
+#define PI 3.14159265
+#define DEGREE_TO_RADIAN (PI / 180.0)
+#define RADIAN_TO_DEGREE (180.0 / PI)
+
 	class Vector3
 	{
 	public:
@@ -162,15 +166,19 @@ namespace EssentialMath
 		}
 	};
 
-	#define PI 180.0f
-	
 	class EulerAngle
 	{
 	public:
 		float head, pitch, bank;
 
-		EulerAngle(float head = 0.0, float pitch = 0.0, float bank = 0.0) : 
-			head(head), pitch(pitch), bank(bank) {}
+		EulerAngle(float head, float pitch, float bank) : 
+			head(head), pitch(pitch), bank(bank) 
+		{
+		}
+
+		EulerAngle(float angle) : head(angle), pitch(angle), bank(angle) 
+		{
+		}
 
 		// Wrap theta in range (-180; 180] degrees
 		static float WrapPI(float theta) {
@@ -180,23 +188,13 @@ namespace EssentialMath
 			}
 			return theta;
 		};
-
-		static void ToCanonicalSet(float& head, float& pitch, float& bank)
-		{
-			// Head [-180, 180)
-			// Pitch [-90, 90]
-			// Bank [-180, 180)
-		}
 	};
 
-#define PI 3.14159265
-#define DEGREE_TO_RADIAN (PI / 180.0)
-
-	class ConvertHelper {
+	class RepresentationConverter {
 	public:
-		// Convert an Euler Angle representation to Matrix form
+		// Convert an Euler Angle to a Matrix
 		// head, pitch and bank must be mesured in object's space 
-		static void ObjectToUprightRotationMatrix(const EulerAngle& angle, float matrix[3][3]) {
+		static void EulerAngleToObjectToUpRightMatrix(const EulerAngle& angle, float matrix[3][3]) {
 			float cosHead = cosf(angle.head);
 			float sinHead = sinf(angle.head);
 			float cosPitch = cosf(angle.pitch);
@@ -217,8 +215,8 @@ namespace EssentialMath
 			matrix[2][2] = cosHead * cosPitch;
 		}
 
-		// Convert an Object-To-Upright Matrix to its Euler Angle presentation
-		static EulerAngle EulerAngleFromObjectToUpRightMatrix(float matrix[3][3]) {
+		// Convert an Object-To-Upright Matrix to an Euler Angle
+		static EulerAngle MatrixToEulerAngle(float matrix[3][3]) {
 			float head, pitch, bank;
 
 			float sinPitch = -matrix[2][1];
@@ -245,7 +243,7 @@ namespace EssentialMath
 			return EulerAngle(head, pitch, bank);
 		}
 
-		// Convert a unit quaternion to its matrix presentation
+		// Convert a Unit Quaternion to a Matrix
 		static void QuaternionToMatrix(const Quaternion& quaternion, float matrix[3][3]) {
 			matrix[0][0] = 1 - 2 * std::pow(quaternion.y, 2) - 2 * std::pow(quaternion.z, 2);
 			matrix[0][1] = 2 * quaternion.x * quaternion.y + 2 * quaternion.w * quaternion.z;
@@ -260,7 +258,7 @@ namespace EssentialMath
 			matrix[2][2] = 1 - 2 * std::pow(quaternion.x, 2) - 2 * std::pow(quaternion.y, 2);
 		}
 
-		// Convert a matrix to its unit quaternion presentation
+		// Convert a Matrix to an Unit Quaternion
 		static Quaternion MatrixToQuaternion(float matrix[3][3]) {
 			float w = std::sqrtf(matrix[0][0] + matrix[1][1] + matrix[2][2] + 1) / 2;
 			float x = std::sqrtf(matrix[0][0] - matrix[1][1] - matrix[2][2] + 1) / 2;
@@ -298,6 +296,52 @@ namespace EssentialMath
 			}
 
 			return { w, x, y , z };
+		}
+
+		// Convert an Euler Angle to an unit Object-To-UpRight Quaternion
+		static Quaternion EulerAngleToObjectToUpRightQuaternion(const EulerAngle& angle, bool objToUpRight = true) {
+			Quaternion head = Quaternion(cosf(angle.head * 0.5f), 0.0f, sinf(angle.head * 0.5f), 0.0f);
+			Quaternion pitch = Quaternion(cosf(angle.pitch * 0.5f), sinf(angle.pitch * 0.5f), 0.0f, 0.0f);
+			Quaternion bank = Quaternion(cosf(angle.bank * 0.5f), 0.0f, 0.0f, sinf(angle.bank * 0.5f));
+
+			if (objToUpRight) {
+				return head * pitch * bank;
+			}
+
+			return (head * pitch * bank).Conjungate();
+		}
+
+		// Convert an Unit Quaternion to an Euler Angle
+		static EulerAngle QuaternionToEulerAngle(const Quaternion& quaternion, bool objToUpright = true) {
+			float w, x, y, z;
+			w = quaternion.w;
+
+			if (objToUpright) {
+				x = quaternion.x;
+				y = quaternion.y;
+				z = quaternion.z;
+			}
+			else {
+				x = -quaternion.x;
+				y = -quaternion.y;
+				z = -quaternion.z;
+			}
+		
+			float head, pitch, bank;
+			float sinPitch = -2 * (y * z - w * x);
+			// Avoid Glimbal lock
+			if (abs(sinPitch) > 0.9999f) {
+				pitch = (PI / 2) * sinPitch; // Look straight up or down
+				head = atan2(-x * z + w * y, 0.5 - y * y - z * z);
+				bank = 0;
+			}
+			else {
+				pitch = asinf(sinPitch);
+				head = atan2(x * z + w * y, 0.5 - x * x - y * y);
+				bank = atan2(x * y + w * z, 0.5 - x * x - z * z);
+			}
+
+			return { head, pitch, bank };
 		}
 	};
 }
