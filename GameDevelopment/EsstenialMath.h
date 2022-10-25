@@ -61,17 +61,6 @@ namespace EssentialMath
 			return w * other.w + x * other.x + y * other.y + z * other.z;
 		}
 
-		// Return a quaternion in form of exponential map
-		Quaternion Log() {
-			Vector3 originalUnitVector = this->GetOriginalUnitVector();
-			float alpha = this->GetAlpha();
-			float x = originalUnitVector.x * alpha;
-			float y = originalUnitVector.y * alpha;
-			float z = originalUnitVector.z * alpha;
-
-			return Quaternion(0.0f, x, y, z);
-		}
-
 		Quaternion Exp(float exponent) {
 			// Avoid divided by zero
 			if (fabs(w) < 0.9999f) {
@@ -103,15 +92,6 @@ namespace EssentialMath
 		// Return an angular displacement from this quaternion to other quaternion
 		Quaternion Difference(Quaternion other) {
 			return other * Inverse();
-		}
-
-		Vector3 GetOriginalUnitVector() const {
-			float alpha = this->GetAlpha();
-			float nx = x / sinf(alpha);
-			float ny = y / sinf(alpha);
-			float nz = z / sinf(alpha);
-
-			return Vector3(nx, ny, nz);
 		}
 		
 		float GetAlpha() const {
@@ -223,7 +203,7 @@ namespace EssentialMath
 			matrix[2][2] = cosHead * cosPitch;
 		}
 
-		static EulerAngle ObjectToUprightEulerAngle(float matrix[3][3]) {
+		static EulerAngle EulerAngleFromObjectToUpRightMatrix(float matrix[3][3]) {
 			float head, pitch, bank;
 
 			float sinPitch = -matrix[2][1];
@@ -248,6 +228,21 @@ namespace EssentialMath
 			}
 
 			return EulerAngle(head, pitch, bank);
+		}
+
+		// Convert a unit quaternion to its matrix form
+		static void QuaternionToMatrix(const Quaternion& quaternion, float matrix[3][3]) {
+			matrix[0][0] = 1 - 2 * std::pow(quaternion.y, 2) - 2 * std::pow(quaternion.z, 2);
+			matrix[0][1] = 2 * quaternion.x * quaternion.y + 2 * quaternion.w * quaternion.z;
+			matrix[0][2] = 2 * quaternion.x * quaternion.z - 2 * quaternion.w * quaternion.y;
+
+			matrix[1][0] = 2 * quaternion.x * quaternion.y - 2 * quaternion.w * quaternion.z;
+			matrix[1][1] = 1 - 2 * std::pow(quaternion.x, 2) - 2 * std::pow(quaternion.z, 2);
+			matrix[1][1] = 2 * quaternion.y * quaternion.z + 2 * quaternion.w * quaternion.x;
+
+			matrix[2][0] = 2 * quaternion.x * quaternion.z + 2 * quaternion.w * quaternion.y;
+			matrix[2][1] = 2 * quaternion.y * quaternion.z - 2 * quaternion.w * quaternion.x;
+			matrix[2][2] = 1 - 2 * std::pow(quaternion.x, 2) - 2 * std::pow(quaternion.y, 2);
 		}
 	};
 }
