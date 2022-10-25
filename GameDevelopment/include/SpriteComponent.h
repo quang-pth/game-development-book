@@ -9,7 +9,7 @@ class SpriteComponent : public Component
 public:
 	SpriteComponent();
 	SpriteComponent(class GameObject* owner, int drawOrder = 100, std::string = "SpriteComponent");
-	~SpriteComponent();
+	virtual ~SpriteComponent();
 	
 	virtual void Draw(SDL_Renderer* renderer);
 	virtual void SetTexture(SDL_Texture* texture, bool flipX = false);

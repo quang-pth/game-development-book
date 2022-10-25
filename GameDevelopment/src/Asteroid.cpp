@@ -27,6 +27,7 @@ Asteroid::Asteroid(Game* game, std::string name) : GameObject(game, name)
 
 Asteroid::~Asteroid()
 {
+
 }
 
 void Asteroid::UpdateGameObject(float deltaTime)
