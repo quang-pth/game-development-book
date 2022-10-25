@@ -17,6 +17,20 @@ namespace EssentialMath
 		Vector3 operator*(float scalar) {
 			return Vector3(x * scalar, y * scalar, z * scalar);
 		}
+
+		Vector3 Normalize() {
+			float magnitude = this->Magnitude();
+
+			return Vector3(x / magnitude, y / magnitude, z / magnitude);
+		}
+
+		float Magnitude() {
+			return sqrtf(x * x + y * y + z * z);
+		}
+
+		float MagnitudeSquared() {
+			return x * x + y * y + z * z;
+		}
 	};
 
 	/*
@@ -203,6 +217,7 @@ namespace EssentialMath
 			matrix[2][2] = cosHead * cosPitch;
 		}
 
+		// Convert an Object-To-Upright Matrix to its Euler Angle presentation
 		static EulerAngle EulerAngleFromObjectToUpRightMatrix(float matrix[3][3]) {
 			float head, pitch, bank;
 
@@ -230,7 +245,7 @@ namespace EssentialMath
 			return EulerAngle(head, pitch, bank);
 		}
 
-		// Convert a unit quaternion to its matrix form
+		// Convert a unit quaternion to its matrix presentation
 		static void QuaternionToMatrix(const Quaternion& quaternion, float matrix[3][3]) {
 			matrix[0][0] = 1 - 2 * std::pow(quaternion.y, 2) - 2 * std::pow(quaternion.z, 2);
 			matrix[0][1] = 2 * quaternion.x * quaternion.y + 2 * quaternion.w * quaternion.z;
@@ -238,11 +253,51 @@ namespace EssentialMath
 
 			matrix[1][0] = 2 * quaternion.x * quaternion.y - 2 * quaternion.w * quaternion.z;
 			matrix[1][1] = 1 - 2 * std::pow(quaternion.x, 2) - 2 * std::pow(quaternion.z, 2);
-			matrix[1][1] = 2 * quaternion.y * quaternion.z + 2 * quaternion.w * quaternion.x;
+			matrix[1][2] = 2 * quaternion.y * quaternion.z + 2 * quaternion.w * quaternion.x;
 
 			matrix[2][0] = 2 * quaternion.x * quaternion.z + 2 * quaternion.w * quaternion.y;
 			matrix[2][1] = 2 * quaternion.y * quaternion.z - 2 * quaternion.w * quaternion.x;
 			matrix[2][2] = 1 - 2 * std::pow(quaternion.x, 2) - 2 * std::pow(quaternion.y, 2);
+		}
+
+		// Convert a matrix to its unit quaternion presentation
+		static Quaternion MatrixToQuaternion(float matrix[3][3]) {
+			float w = std::sqrtf(matrix[0][0] + matrix[1][1] + matrix[2][2] + 1) / 2;
+			float x = std::sqrtf(matrix[0][0] - matrix[1][1] - matrix[2][2] + 1) / 2;
+			float y = std::sqrtf(-matrix[0][0] + matrix[1][1] - matrix[2][2] + 1) / 2;
+			float z = std::sqrtf(-matrix[0][0] - matrix[1][1] + matrix[2][2] + 1) / 2;
+			float temp[] = { w, x, y, z };
+
+			float maxValue = w;
+			for (unsigned int i = 0; i < 4; i++) {
+				if (temp[i] > maxValue) {
+					maxValue = temp[i];
+				}
+			}
+
+			float delimeter = 4 * maxValue;
+			if (maxValue == w) {
+				x = (matrix[1][2] - matrix[2][1]) / delimeter;
+				y = (matrix[2][0] - matrix[0][2]) / delimeter;
+				z = (matrix[0][1] - matrix[1][0]) / delimeter;
+			}
+			else if (maxValue == x) {
+				w = (matrix[1][2] - matrix[2][1]) / delimeter;
+				y = (matrix[0][1] + matrix[1][0]) / delimeter;
+				z = (matrix[2][0] + matrix[0][2]) / delimeter;
+			}
+			else if (maxValue == y) {
+				w = (matrix[2][0] - matrix[0][2]) / delimeter;
+				x = (matrix[0][1] + matrix[1][0]) / delimeter;
+				z = (matrix[1][2] + matrix[2][1]) / delimeter;
+			}
+			else {
+				w = (matrix[0][1] - matrix[1][0]) / delimeter;
+				x = (matrix[2][0] + matrix[0][2]) / delimeter;
+				y = (matrix[1][2] + matrix[2][1]) / delimeter;
+			}
+
+			return { w, x, y , z };
 		}
 	};
 }

@@ -14,17 +14,19 @@ int main(int argc, char* args[])
 
 void TestQuaternionAndMatrix() 
 {
-	Quaternion quaterion = Quaternion(45.0f * DEGREE_TO_RADIAN, Vector3(0.0f, 1.0f, 0.0f));
-	std::cout << "Quaternion " << quaterion.w << ", " << quaterion.x << ", " << quaterion.y << ", " << quaterion.z << std::endl;
-
+	Quaternion quaterion = Quaternion(-56.0f * DEGREE_TO_RADIAN, Vector3(-2.2f, 3.001f, 56.3005f).Normalize());
+	std::cout << "Original quaternion: " << quaterion.w << ", " << quaterion.x << ", " << quaterion.y << ", " << quaterion.z << std::endl;
+	std::cout << "====================================\n";
 	float matrix[3][3] = { 0 };
 	ConvertHelper::QuaternionToMatrix(quaterion, matrix);
 	PrintMatrix(matrix);
-
+	std::cout << "====================================\n";
 	// Matrix to quaternion
+	quaterion = ConvertHelper::MatrixToQuaternion(matrix);
+	std::cout << "Converted-back quaternion: " << quaterion.w << ", " << quaterion.x << ", " << quaterion.y << ", " << quaterion.z << std::endl;
 }
 
-void TestEulerAngleAndMatrix() 
+void TestEulerAngleAndMatrix()
 {
 	float matrix[3][3] = {
 		{0, 0, 0},
