@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Enums.cpp" />
     <ClCompile Include="src\ICooldownable.cpp" />
     <ClCompile Include="src\CooldownManager.cpp" />
     <ClCompile Include="src\Laser.cpp" />
@@ -166,8 +167,10 @@
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="src\TileMapComponent.cpp" />
     <ClCompile Include="src\TransformComponent.cpp" />
+    <ClCompile Include="src\StateManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Enums.h" />
     <ClInclude Include="include\ICooldownable.h" />
     <ClInclude Include="include\CooldownManager.h" />
     <ClInclude Include="include\CircleComponent.h" />
@@ -188,6 +191,7 @@
     <ClInclude Include="include\Random.h" />
     <ClInclude Include="include\InputComponent.h" />
     <ClInclude Include="include\Laser.h" />
+    <ClInclude Include="include\StateManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

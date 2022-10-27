@@ -13,13 +13,13 @@ TileMapComponent::TileMapComponent(GameObject* owner, int drawOrder, std::string
 	: SpriteComponent(owner, drawOrder, name),
 	mTileWidth(16), mTileHeight(16),
 	mTilePerRow(7), mOffset(Vector2::Zero), mXBound(0.0f),
-	mState(State::EMoveable)
+	mState(EMovement::EMoveable)
 {
 }
 
 void TileMapComponent::Update(float deltaTime)
 {	
-	if (mState == State::EMoveable) {
+	if (mState == EMovement::EMoveable) {
 		Mario* mario = mOwner->GetGame()->GetMario();
 		Vector2 distance = mario->GetTransform()->GetPosition();
 		Vector2 center = mOwner->GetGame()->GetCenterPoint();
@@ -28,17 +28,9 @@ void TileMapComponent::Update(float deltaTime)
 		
 		if (mOffset.x > mXBound) {
 			mOffset.x = mXBound;
-			mState = State::EUnMoveable;
 		}
 		else if (mOffset.x < 0.0f) {
 			mOffset.x = 0.0f;
-			mState = State::EUnMoveable;
-		}
-	}
-	else if (mState == State::EUnMoveable) {
-		if (mOwner->GetGame()->GetMario()->GetInputComponent()->GetState() == 
-			InputComponent::State::EUnMoveable) {
-			mState == State::EMoveable;
 		}
 	}
 }
@@ -78,14 +70,24 @@ void TileMapComponent::Init(const char* filePath)
 	mXBound = mTilesData[0].size() * mTileWidth * mOwner->GetTransform()->GetScale() - mOwner->GetGame()->GetWindowWidth();
 }
 
-void TileMapComponent::SetState(TileMapComponent::State state)
+void TileMapComponent::SetState(EMovement state)
 {
 	mState = state;
 }
 
-TileMapComponent::State TileMapComponent::GetState() const
+EMovement TileMapComponent::GetState() const
 {
 	return mState;
+}
+
+bool TileMapComponent::AtRightBounds()
+{
+	return mOffset.x >= mXBound;
+}
+
+bool TileMapComponent::AtLeftBounds()
+{
+	return mOffset.x <= 0;
 }
 
 void TileMapComponent::LoadTileData(const char* filePath)

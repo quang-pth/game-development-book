@@ -44,6 +44,7 @@ private:
 	bool mUpdatingGameObjects;
 	class Mario* mMario;
 	class TileMapComponent* mTilemap;
+	class StateManager* mStateManager;
 	// Sprites
 	std::vector<SpriteComponent*> mSprites;
 	std::unordered_map<std::string, SDL_Texture*> mTextures;

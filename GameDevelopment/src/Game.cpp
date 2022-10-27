@@ -5,6 +5,7 @@
 #include"include/BackgroundSpriteComponent.h"
 #include"include/TransformComponent.h"
 #include"include/TileMapComponent.h"
+#include"include/StateManager.h"
 #include"include/Mario.h"
 #include<SDL2/SDL_image.h>
 #include"include/Asteroid.h"
@@ -169,6 +170,8 @@ void Game::LoadData()
 	tilemap->GetTransform()->SetScale(2.0f);
 	mTilemap = new TileMapComponent(tilemap);
 	mTilemap->Init("Assets/level-platform.csv");
+
+	mStateManager = new StateManager(this);
 }
 
 void Game::UnloadData()

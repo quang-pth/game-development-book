@@ -19,7 +19,8 @@ Mario::Mario(Game* game, std::string name) :
 	mActivateLaserIdx(0), mSpawnCooldown(1.5f),
 	mMoveDirection(Direction::Right)
 {
-	GameObject::GetTransform()->SetPosition(Vector2(game->GetWindowWidth() / 2, game->GetWindowHeight() / 2));
+	mCenterPosition = Vector2(game->GetWindowWidth() / 2 , game->GetWindowHeight() / 2);
+	GameObject::GetTransform()->SetPosition(mCenterPosition);
 	GameObject::GetTransform()->SetScale(2.0f);
 	
 	// Animations
@@ -30,7 +31,7 @@ Mario::Mario(Game* game, std::string name) :
 		game->GetTexture("MarioAssets/mario-4.png"),
 	};
 	std::shared_ptr<Animation> walkingAnimation =  std::make_shared<Animation>(walkingName, walkingTextures);
-	walkingAnimation->SetFPS(8.0f);
+	walkingAnimation->SetFPS(10.0f);
 	std::string idleName = "Idle";
 	std::vector<SDL_Texture*> idleTextures = {
 		game->GetTexture("MarioAssets/mario-1.png"),
@@ -104,6 +105,19 @@ InputComponent* Mario::GetInputComponent() const
 	return mInputComponent;
 }
 
+bool Mario::MoveRightExceedCenterPoint()
+{
+	bool atCenter = GameObject::GetTransform()->GetPosition().x > mCenterPosition.x;
+	bool isMovingRight = mInputComponent->RightKeyIsClicked();
+	return atCenter && isMovingRight;
+}
+
+bool Mario::MoveLeftExceedCenterPoint()
+{
+	bool atCenter = GameObject::GetTransform()->GetPosition().x <= mCenterPosition.x;
+	bool isMovingLeft = !mInputComponent->RightKeyIsClicked();
+	return atCenter && isMovingLeft;
+}
 void Mario::ActAfterCooldown()
 {
 	mSpawnCooldown = 1.5f;
@@ -141,6 +155,10 @@ void Mario::ConstraintInScreenBounds()
 	}
 	else if (GameObject::GetTransform()->GetPosition().y < 0.0f) {
 		newYPos = 0.0f;
+	}
+
+	if (mInputComponent->GetState() == EMovement::EUnMoveable) {
+		newXPos = mCenterPosition.x;
 	}
 
 	GameObject::GetTransform()->SetPosition(Vector2(newXPos, newYPos));

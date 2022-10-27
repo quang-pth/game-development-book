@@ -18,6 +18,8 @@ public:
 	Direction GetMoveDirection() const;
 	void SetMoveDirection(Direction direction);
 	class InputComponent* GetInputComponent() const;
+	bool MoveRightExceedCenterPoint();
+	bool MoveLeftExceedCenterPoint();
 private:
 	// Methods
 	void StartCooldown();
@@ -37,4 +39,5 @@ private:
 	uint8_t mFireKey;
 	// States
 	Direction mMoveDirection;
+	Vector2 mCenterPosition;
 };

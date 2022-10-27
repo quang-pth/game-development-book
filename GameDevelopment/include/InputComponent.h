@@ -1,14 +1,11 @@
 #pragma once
+
 #include "include/MoveComponent.h"
+#include "include/Enums.h"
 
 class InputComponent : public MoveComponent
 {
 public:
-	enum class State {
-		EMoveable,
-		EUnMoveable,
-	};
-	InputComponent();
 	InputComponent(class GameObject* owner, int updateOrder = 4);
 	~InputComponent();
 	void Update(float deltaTime) override;
@@ -17,11 +14,13 @@ public:
 	void SetMaxForwardSpeed(float speed);
 	int GetForwardLeftKey() const;
 	int GetForwardRightKey() const;
-	void SetState(State state);
-	State GetState() const;
+	void SetState(EMovement state);
+	EMovement GetState() const;
+	bool RightKeyIsClicked();
 private:
 	float mMaxForwardSpeed;
+	bool mRightKeyIsClicked;
 	int mForwardLeftKey, mForwardRightKey;
-	State mState;
+	EMovement mState;
 };
 
