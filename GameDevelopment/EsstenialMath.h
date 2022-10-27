@@ -53,11 +53,11 @@ namespace EssentialMath
 		}
 
 		// Set Quaternion component with an angle and an unit vector
-		Quaternion(float theta, Vector3 n) {
+		Quaternion(float theta, const Vector3& n) {
 			InitQuaternion(theta, n.x, n.y, n.z);
 		}
 		
-		Quaternion operator*(Quaternion other) {
+		Quaternion operator*(const Quaternion& other) {
 			float w = this->w * other.w - this->x * other.x - this->y * other.y - this->z * other.z;
 			float x = this->w * other.x + this->x * other.w + this->y * other.z - this->z * other.y;
 			float y = this->w * other.y + this->y * other.w + this->z * other.x - this->x * other.z;
@@ -66,15 +66,15 @@ namespace EssentialMath
 			return Quaternion(w, x, y, z);
 		}
 		
-		Quaternion operator*(float scalar) {
+		Quaternion operator*(float scalar) const {
 			return Quaternion(w * scalar, x * scalar, y * scalar, z * scalar);
 		}
 
-		Quaternion operator+(Quaternion other) {
+		Quaternion operator+(const Quaternion& other) {
 			return Quaternion(this->w + other.w, this->x + other.x, this->y + other.y, this->z + other.z);
 		}
 
-		float Dot(Quaternion other) {
+		float Dot(const Quaternion& other) const {
 			// Dot product of two unit quaternions varies in range [-1, 1]
 			return w * other.w + x * other.x + y * other.y + z * other.z;
 		}
@@ -98,18 +98,18 @@ namespace EssentialMath
 			return *this;
 		}
 
-		Quaternion Conjungate() {
+		Quaternion Conjungate() const {
 			return Quaternion(w, -x, -y, -z);
 		}
 
-		Quaternion Inverse() {
+		Quaternion Inverse() const {
 			// This property only works with Unit Quaternion
 			return this->Conjungate();
 		}
 		
 		// Return an angular displacement from this quaternion to other quaternion
-		Quaternion Difference(Quaternion other) {
-			return other * Inverse();
+		Quaternion Difference(const Quaternion& other) {
+			return this->Inverse() * other;
 		}
 		
 		float GetAlpha() const {
@@ -120,16 +120,17 @@ namespace EssentialMath
 			return Quaternion(1.0f, 0.0f, 0.0f, 0.0f);
 		}
 
-		static Quaternion Slerp(Quaternion startQuaterion, Quaternion endQuaternion, float t) {
+		static Quaternion Slerp(const Quaternion& startQuaterion, const Quaternion& endQuaternion, float t) {
 			// Omega is the difference angular displacement between two quaternions
 			float cosOmega = startQuaterion.Dot(endQuaternion);
 			// Negate one of the input quaternion to take the shortest arc in 4D
+			Quaternion quaternion = startQuaterion;
 			if (cosOmega < 0.0f) {
 				cosOmega = -cosOmega;
-				startQuaterion.w = -startQuaterion.w;
-				startQuaterion.x = -startQuaterion.x;
-				startQuaterion.y = -startQuaterion.y;
-				startQuaterion.z = -startQuaterion.z;
+				quaternion.w = -startQuaterion.w;
+				quaternion.x = -startQuaterion.x;
+				quaternion.y = -startQuaterion.y;
+				quaternion.z = -startQuaterion.z;
 			}
 
 			float k0, k1;
@@ -147,7 +148,7 @@ namespace EssentialMath
 				k1 = sin(t) * omega * oneOverSinOmega;
 			}
 
-			return startQuaterion * k0 + endQuaternion * k1;
+			return quaternion * k0 + endQuaternion * k1;
 		}
 	private:
 		float Magnitude() {
