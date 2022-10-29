@@ -28,7 +28,6 @@ void InputComponent::Update(float deltaTime)
 
 void InputComponent::ProcessInput(const uint8_t* keyState)
 {
-	// Set movement
 	float forwardSpeed = 0.0f;
 	if (keyState[mForwardRightKey]) {
 		forwardSpeed += mMaxForwardSpeed;

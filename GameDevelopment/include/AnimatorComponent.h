@@ -18,4 +18,3 @@ private:
 	std::string mAnimationName;
 	float mCurrentFrame;
 };
-

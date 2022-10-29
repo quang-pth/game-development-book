@@ -9,6 +9,8 @@
 #include "include/Asteroid.h"
 #include "include/AnimatorComponent.h"
 #include "include/Animation.h"
+#include "include/WalkState.h"
+#include "include/IdleState.h"
 #include <SDL2/SDL.h>
 #include <iostream>
 #include<memory>
@@ -24,25 +26,23 @@ Mario::Mario(Game* game, std::string name) :
 	GameObject::GetTransform()->SetScale(2.0f);
 	
 	// Animations
-	std::string walkingName = "Walk";
 	std::vector<SDL_Texture*> walkingTextures = {
 		game->GetTexture("MarioAssets/mario-2.png"),
 		game->GetTexture("MarioAssets/mario-3.png"),
 		game->GetTexture("MarioAssets/mario-4.png"),
 	};
-	std::shared_ptr<Animation> walkingAnimation =  std::make_shared<Animation>(walkingName, walkingTextures);
+	std::shared_ptr<Animation> walkingAnimation =  std::make_shared<Animation>("Walk", walkingTextures);
 	walkingAnimation->SetFPS(10.0f);
-	std::string idleName = "Idle";
 	std::vector<SDL_Texture*> idleTextures = {
 		game->GetTexture("MarioAssets/mario-1.png"),
 	};
-	std::shared_ptr<Animation> idleAnimation =  std::make_shared<Animation>(idleName, idleTextures);
+	std::shared_ptr<Animation> idleAnimation =  std::make_shared<Animation>("Idle", idleTextures);
 	idleAnimation->SetFPS(1.0f);
 	// Animator
 	mAnimator = new AnimatorComponent(this);
-	mAnimator->AddAnimation(walkingName, walkingAnimation);
-	mAnimator->AddAnimation(idleName, idleAnimation);
-	mAnimator->SetAnimation(walkingName);
+	mAnimator->AddAnimation(walkingAnimation->mName, walkingAnimation);
+	mAnimator->AddAnimation(idleAnimation->mName, idleAnimation);
+	mAnimator->SetAnimation(walkingAnimation->mName);
 
 	mInputComponent = new InputComponent(this);
 	mInputComponent->SetForwardSpeed(50.0f);
@@ -50,29 +50,23 @@ Mario::Mario(Game* game, std::string name) :
 	mCircleComponent = new CircleComponent(this);
 	mCircleComponent->SetRadius(20.0f * GameObject::GetTransform()->GetScale());
 
-	this->InitLaserPool();
+	mState = new IdleState();
+	mState->Enter(this);
 }
 
 void Mario::UpdateGameObject(float deltaTime)
 {
+	mState->Update(this);
 	this->ConstraintInScreenBounds();
-	this->CheckCollsision();
 }
 
 void Mario::ProcessGameObjectInput(const uint8_t* keyState)
 {
-	if (keyState[mInputComponent->GetForwardLeftKey()]) {
-		mMoveDirection = Direction::Left;
-		mAnimator->FlipTexture(false);
-		mAnimator->SetAnimation("Walk");
-	}
-	else if (keyState[mInputComponent->GetForwardRightKey()]) {
-		mMoveDirection = Direction::Right;
-		mAnimator->FlipTexture(true);
-		mAnimator->SetAnimation("Walk");
-	}
-	else {
-		mAnimator->SetAnimation("Idle");
+	GameObjectState* state = mState->HandleInput(this, keyState);
+	if (state != nullptr) {
+		delete mState;
+		mState = state;
+		mState->Enter(this);
 	}
 }
 
@@ -95,9 +89,14 @@ Mario::Direction Mario::GetMoveDirection() const
 	return mMoveDirection;
 }
 
-void Mario::SetMoveDirection(Mario::Direction direction)
+void Mario::SetMoveDirection(bool toTheRight)
 {
-	mMoveDirection = direction;
+	if (toTheRight) {
+		mMoveDirection = Direction::Right;
+	}
+	else {
+		mMoveDirection = Direction::Left;
+	}
 }
 
 InputComponent* Mario::GetInputComponent() const
@@ -105,19 +104,25 @@ InputComponent* Mario::GetInputComponent() const
 	return mInputComponent;
 }
 
-bool Mario::MoveRightExceedCenterPoint()
+bool Mario::MoveExceedCenterPoint(bool toTheRight)
 {
-	bool atCenter = GameObject::GetTransform()->GetPosition().x > mCenterPosition.x;
-	bool isMovingRight = mInputComponent->RightKeyIsClicked();
-	return atCenter && isMovingRight;
+	if (toTheRight) {
+		bool atCenter = GameObject::GetTransform()->GetPosition().x > mCenterPosition.x;
+		bool isMovingRight = mInputComponent->RightKeyIsClicked();
+		return atCenter && isMovingRight;
+	}
+	else {
+		bool atCenter = GameObject::GetTransform()->GetPosition().x <= mCenterPosition.x;
+		bool isMovingLeft = !mInputComponent->RightKeyIsClicked();
+		return atCenter && isMovingLeft;
+	}
 }
 
-bool Mario::MoveLeftExceedCenterPoint()
+bool Mario::FlipImage()
 {
-	bool atCenter = GameObject::GetTransform()->GetPosition().x <= mCenterPosition.x;
-	bool isMovingLeft = !mInputComponent->RightKeyIsClicked();
-	return atCenter && isMovingLeft;
+	return mMoveDirection == Direction::Right;
 }
+
 void Mario::ActAfterCooldown()
 {
 	mSpawnCooldown = 1.5f;
@@ -131,11 +136,6 @@ void Mario::ActAfterCooldown()
 	GameObject::GetGame()->GetCooldownManager()->Release(this);
 	GameObject::SetState(GameObject::State::EActive);
 	mInputComponent->ResetForce();
-}
-
-void Mario::InitLaserPool()
-{
-	
 }
 
 void Mario::ConstraintInScreenBounds()
@@ -162,9 +162,4 @@ void Mario::ConstraintInScreenBounds()
 	}
 
 	GameObject::GetTransform()->SetPosition(Vector2(newXPos, newYPos));
-}
-
-void Mario::CheckCollsision()
-{
-
 }

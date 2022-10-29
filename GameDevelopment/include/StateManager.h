@@ -5,7 +5,7 @@
 class StateManager : public GameObject
 {
 public:
-	StateManager(class Game* game, std::string name = "StateManger");
+	StateManager(class Game* game, const std::string& name = "StateManger");
 	~StateManager();
 	void UpdateGameObject(float deltaTime) override;
 private:

@@ -16,28 +16,28 @@ public:
 	void ProcessGameObjectInput(const uint8_t* keyState) override;
 	void Cooldown(float deltaTime) override;
 	Direction GetMoveDirection() const;
-	void SetMoveDirection(Direction direction);
+	void SetMoveDirection(bool toTheRight);
 	class InputComponent* GetInputComponent() const;
-	bool MoveRightExceedCenterPoint();
-	bool MoveLeftExceedCenterPoint();
+	bool MoveExceedCenterPoint(bool toTheRight);
+	bool FlipImage();
+	// Components
+	class InputComponent* mInputComponent;
+	class CircleComponent* mCircleComponent;
+	class AnimatorComponent* mAnimator;
 private:
 	// Methods
 	void StartCooldown();
 	void ActAfterCooldown();
-	void InitLaserPool();
 	void ConstraintInScreenBounds();
-	void CheckCollsision();
 	// Weapon
 	unsigned int mActivateLaserIdx;
 	// Cooldown
 	float mFireCooldown;
 	float mSpawnCooldown;
 	// Component
-	class InputComponent* mInputComponent;
-	class CircleComponent* mCircleComponent;
-	class AnimatorComponent* mAnimator;
 	uint8_t mFireKey;
 	// States
 	Direction mMoveDirection;
 	Vector2 mCenterPosition;
+	class GameObjectState* mState;
 };

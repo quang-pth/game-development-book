@@ -145,6 +145,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\IdleState.cpp" />
+    <ClCompile Include="src\GameObjectState.cpp" />
     <ClCompile Include="src\Enums.cpp" />
     <ClCompile Include="src\ICooldownable.cpp" />
     <ClCompile Include="src\CooldownManager.cpp" />
@@ -168,8 +170,11 @@
     <ClCompile Include="src\TileMapComponent.cpp" />
     <ClCompile Include="src\TransformComponent.cpp" />
     <ClCompile Include="src\StateManager.cpp" />
+    <ClCompile Include="src\WalkState.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\IdleState.h" />
+    <ClInclude Include="include\GameObjectState.h" />
     <ClInclude Include="include\Enums.h" />
     <ClInclude Include="include\ICooldownable.h" />
     <ClInclude Include="include\CooldownManager.h" />
@@ -192,6 +197,7 @@
     <ClInclude Include="include\InputComponent.h" />
     <ClInclude Include="include\Laser.h" />
     <ClInclude Include="include\StateManager.h" />
+    <ClInclude Include="include\WalkState.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

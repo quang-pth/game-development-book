@@ -13,7 +13,7 @@ public:
 	void SetFPS(float fps) { mAnimationFPS = fps; }
 	bool mIsLoop;
 	std::vector<SDL_Texture*> mTextures;
+	std::string mName;
 private:
 	float mAnimationFPS;
-	std::string mName;
 };

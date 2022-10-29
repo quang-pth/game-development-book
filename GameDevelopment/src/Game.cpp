@@ -14,9 +14,10 @@
 Game::Game() : 
 	mWindow(nullptr), mIsRunning(true), 
 	mTicksCount(0.0f), mRenderer(), mUpdatingGameObjects(false), 
-	mWindowWidth(800), mWindowHeight(600), mMario(nullptr), mTilemap(nullptr)
+	mWindowWidth(800), mWindowHeight(600), 
+	mMario(nullptr), mTilemap(nullptr), mCooldownManager(nullptr), mStateManager(nullptr)
 {
-	mCooldownManager = new CooldownManager(this);
+
 }
 
 bool Game::Initialize()
@@ -42,7 +43,7 @@ bool Game::Initialize()
 	// Init Load Sprite format
 	IMG_Init(IMG_INIT_PNG);
 
-	LoadData();
+	this->LoadData();
 
 	return true;
 }
@@ -171,7 +172,8 @@ void Game::LoadData()
 	mTilemap = new TileMapComponent(tilemap);
 	mTilemap->Init("Assets/level-platform.csv");
 
-	mStateManager = new StateManager(this);
+	mStateManager = new StateManager(this, "StateManager");
+	mCooldownManager = new CooldownManager(this);
 }
 
 void Game::UnloadData()

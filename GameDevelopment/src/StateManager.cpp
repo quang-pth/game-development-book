@@ -8,7 +8,7 @@
 #include "include/Enums.h"
 #include<iostream>
 
-StateManager::StateManager(Game* game, std::string name) : GameObject(game, name)
+StateManager::StateManager(Game* game, const std::string& name) : GameObject(game, name)
 {
 	mMario = game->GetMario();
 	mTileMapComponent = game->GetTileMapComponent();
@@ -22,13 +22,13 @@ void StateManager::UpdateGameObject(float deltaTime)
 {
 	if (mTileMapComponent->AtLeftBounds()) {
 		this->SetMoveMario();
-		if (mMario->MoveRightExceedCenterPoint()) {
+		if (mMario->MoveExceedCenterPoint(true)) {
 			this->SetMoveTilemap();
 		}
 	}
 	else if (mTileMapComponent->AtRightBounds()) {
 		this->SetMoveMario();
-		if (mMario->MoveLeftExceedCenterPoint()) {
+		if (mMario->MoveExceedCenterPoint(false)) {
 			this->SetMoveTilemap();
 		}
 	}
