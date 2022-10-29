@@ -15,7 +15,7 @@ CircleComponent::CircleComponent(GameObject* owner, int updateOrder) :
 
 const Vector2& CircleComponent::GetCenter() const
 {
-	return mOwner->GetTransform()->GetPosition();
+	return mOwner->pTransform->GetPosition();
 }
 
 float CircleComponent::GetRadius() const

@@ -23,8 +23,7 @@ public:
 private:
 	void LoadTileData(const char* filePath);
 	void SetTexture(const char* filePath);
-	void CheckTileMapContent(const char* filePath);
-	std::vector<std::vector<int>> mTilesData;
+	std::vector<class TileDataComponent*> mTilesData;
 	unsigned int mTileWidth, mTileHeight, mTilePerRow;
 	Vector2 mOffset;
 	float mXBound;

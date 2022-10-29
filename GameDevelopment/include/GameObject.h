@@ -14,7 +14,7 @@ public:
 		EPaused,
 		EDead,
 	};
-	std::string mName;
+	std::string name;
 
 	GameObject();
 	GameObject(class Game* game, std::string name = "");
@@ -30,15 +30,14 @@ public:
 	virtual void RemoveGameObjectComponent(class Component* component);
 	State GetState() const;
 	void SetState(State state);
-	class TransformComponent* GetTransform() const;
 	class Component* GetComponent(std::string name);
 	Vector2 GetForward() const;
 	class Game* GetGame() const;
+	class TransformComponent *pTransform;
 private:
 	void AddDefaultComponents();
 	State mState;
-	std::vector<class Component*> mComponents;
-	class Game* mGame;
-	class TransformComponent* mTransform;
+	std::vector<class Component*> mpComponents;
+	class Game *mpGame;
 };
 

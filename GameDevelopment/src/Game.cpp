@@ -12,10 +12,10 @@
 #include<iostream>
 
 Game::Game() : 
-	mWindow(nullptr), mIsRunning(true), 
-	mTicksCount(0.0f), mRenderer(), mUpdatingGameObjects(false), 
+	mpWindow(nullptr), mIsRunning(true), 
+	mTicksCount(0.0f), mpRenderer(), mpUpdatingGameObjects(false), 
 	mWindowWidth(800), mWindowHeight(600), 
-	mMario(nullptr), mTilemap(nullptr), mCooldownManager(nullptr), mStateManager(nullptr)
+	mpMario(nullptr), mpTilemap(nullptr), mpCooldownManager(nullptr), mpStateManager(nullptr)
 {
 
 }
@@ -29,14 +29,14 @@ bool Game::Initialize()
 		return false;
 	}
 	// Init Window
-	mWindow = SDL_CreateWindow("Rocket To The Moon", 100, 40, mWindowWidth, mWindowHeight, 0);
-	if (!mWindow) {
+	mpWindow = SDL_CreateWindow("Rocket To The Moon", 100, 40, mWindowWidth, mWindowHeight, 0);
+	if (!mpWindow) {
 		SDL_Log("Failed to create window: %s", SDL_GetError());
 		return false;
 	}
 	// Init Renderer
-	mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	if (!mRenderer) {
+	mpRenderer = SDL_CreateRenderer(mpWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	if (!mpRenderer) {
 		SDL_Log("Failed to create renderer: %s", SDL_GetError());
 		return false;
 	}
@@ -61,8 +61,8 @@ void Game::ShutDown()
 {
 	UnloadData();
 	IMG_Quit();
-	SDL_DestroyRenderer(mRenderer);
-	SDL_DestroyWindow(mWindow);
+	SDL_DestroyRenderer(mpRenderer);
+	SDL_DestroyWindow(mpWindow);
 	SDL_Quit();
 }
 
@@ -84,11 +84,11 @@ void Game::ProcessInput()
  		mIsRunning = false;
 	}
 
-	mUpdatingGameObjects = true;
-	for (const auto& gameObject : mGameObjects) {
+	mpUpdatingGameObjects = true;
+	for (const auto& gameObject : mpGameObjects) {
 		gameObject->ProcessInput(keyboardState);
 	}
-	mUpdatingGameObjects = false;
+	mpUpdatingGameObjects = false;
 }
 
 void Game::UpdateGame()
@@ -104,19 +104,19 @@ void Game::UpdateGame()
 		deltaTime = 0.05f;
 	}
 	// Update game objects
-	mUpdatingGameObjects = true;
-	for (const auto& gameObject : mGameObjects) {
+	mpUpdatingGameObjects = true;
+	for (const auto& gameObject : mpGameObjects) {
 		gameObject->Update(deltaTime);
 	}
-	mUpdatingGameObjects = false;
+	mpUpdatingGameObjects = false;
 	// Add pending gameobject
-	for (const auto& gameObject : mPendingGameObjects) {
-		mGameObjects.emplace_back(gameObject);
+	for (const auto& gameObject : mpPendingGameObjects) {
+		mpGameObjects.emplace_back(gameObject);
 	}
-	mPendingGameObjects.clear();
+	mpPendingGameObjects.clear();
 	// Get dead gameobjects
 	std::vector<GameObject*> deadGameObjects;
-	for (const auto& gameObject : mGameObjects) {
+	for (const auto& gameObject : mpGameObjects) {
 		if (gameObject->GetState() == GameObject::State::EDead) {
 			deadGameObjects.emplace_back(gameObject);
 		}
@@ -129,22 +129,22 @@ void Game::UpdateGame()
 
 void Game::GenerateOutput()
 {
-	SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, 255);
-	SDL_RenderClear(mRenderer);
+	SDL_SetRenderDrawColor(mpRenderer, 0, 0, 0, 255);
+	SDL_RenderClear(mpRenderer);
 	// Draw objects on the scene
-	for (const auto& sprite : mSprites) {
-		sprite->Draw(mRenderer);
+	for (const auto& sprite : mpSprites) {
+		sprite->Draw(mpRenderer);
 	}
 	// Swap back and front color buffer
-	SDL_RenderPresent(mRenderer);
+	SDL_RenderPresent(mpRenderer);
 }
 
 void Game::LoadData()
 {
-	mMario = new Mario(this);
+	mpMario = new Mario(this);
 
 	GameObject* background = new GameObject(this, "Background");
-	background->GetTransform()->SetPosition(Vector2(mWindowWidth / 2.0f, mWindowHeight / 2.0f));
+	background->pTransform->SetPosition(Vector2(mWindowWidth / 2.0f, mWindowHeight / 2.0f));
 	// Far background
 	BackgroundSpriteComponent* farBackgroundComponent = 
 		new BackgroundSpriteComponent(background, 10, "BackgroundSprite1");
@@ -167,34 +167,34 @@ void Game::LoadData()
 	nearBackgroundComponent->SetScrollSpeed(-200.0f);
 
 	GameObject* tilemap = new GameObject(this, "Tilemap");
-	tilemap->GetTransform()->SetPosition(Vector2(0.0f, 0.0f));
-	tilemap->GetTransform()->SetScale(2.0f);
-	mTilemap = new TileMapComponent(tilemap);
-	mTilemap->Init("Assets/level-platform.csv");
+	tilemap->pTransform->SetPosition(Vector2(0.0f, 0.0f));
+	tilemap->pTransform->SetScale(2.0f);
+	mpTilemap = new TileMapComponent(tilemap);
+	mpTilemap->Init("Assets/level-platform.csv");
 
-	mStateManager = new StateManager(this, "StateManager");
-	mCooldownManager = new CooldownManager(this);
+	mpStateManager = new StateManager(this, "StateManager");
+	mpCooldownManager = new CooldownManager(this);
 }
 
 void Game::UnloadData()
 {
-	while (!mGameObjects.empty()) {
-		delete mGameObjects.back();
+	while (!mpGameObjects.empty()) {
+		delete mpGameObjects.back();
 	}
 
-	for (std::pair<const std::string&, SDL_Texture*> i : mTextures) {
+	for (std::pair<const std::string&, SDL_Texture*> i : mpTextures) {
 		SDL_DestroyTexture(i.second);
 	}
 
-	mTextures.clear();
+	mpTextures.clear();
 }
 
 SDL_Texture* Game::GetTexture(const std::string& fileName)
 {
 	// Get texture if already loaded
-	std::unordered_map<std::string, SDL_Texture*>::iterator iter = mTextures.find(fileName);
-	if (iter != mTextures.end()) {
-		return mTextures[fileName];
+	std::unordered_map<std::string, SDL_Texture*>::iterator iter = mpTextures.find(fileName);
+	if (iter != mpTextures.end()) {
+		return mpTextures[fileName];
 	}
 	// Else load new texture
 	SDL_Surface* surf = IMG_Load(fileName.c_str());
@@ -203,30 +203,30 @@ SDL_Texture* Game::GetTexture(const std::string& fileName)
 		return nullptr;
 	}
 
-	SDL_Texture* texture = SDL_CreateTextureFromSurface(mRenderer, surf);
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(mpRenderer, surf);
 	SDL_FreeSurface(surf);
 	if (!texture) {
 		SDL_Log("Failed to convert from surface to texture %s: ", SDL_GetError());
 		return nullptr;
 	}
 
-	mTextures.emplace(fileName.c_str(), texture);
+	mpTextures.emplace(fileName.c_str(), texture);
 	return texture;
 }
 
 Mario* Game::GetMario() const
 {
-	return mMario;
+	return mpMario;
 }
 
 TileMapComponent* Game::GetTileMapComponent() const
 {
-	return mTilemap;
+	return mpTilemap;
 }
 
 CooldownManager* Game::GetCooldownManager() const
 {
-	return mCooldownManager;
+	return mpCooldownManager;
 }
 
 int Game::GetWindowWidth() const
@@ -246,42 +246,42 @@ Vector2 Game::GetCenterPoint() const
 
 void Game::AddGameObject(GameObject* gameObject)
 {
-	if (mUpdatingGameObjects) {
-		mPendingGameObjects.emplace_back(gameObject);
+	if (mpUpdatingGameObjects) {
+		mpPendingGameObjects.emplace_back(gameObject);
 	}
 	else {
-		mGameObjects.emplace_back(gameObject);
+		mpGameObjects.emplace_back(gameObject);
 	}
 }
 
 void Game::RemoveGameObject(GameObject* gameObject)
 {
-	auto iter = std::find(mPendingGameObjects.begin(), mPendingGameObjects.end(), gameObject);
-	if (iter != mPendingGameObjects.end()) {
-		mPendingGameObjects.erase(iter);
+	auto iter = std::find(mpPendingGameObjects.begin(), mpPendingGameObjects.end(), gameObject);
+	if (iter != mpPendingGameObjects.end()) {
+		mpPendingGameObjects.erase(iter);
 	}
-	iter = std::find(mGameObjects.begin(), mGameObjects.end(), gameObject);
-	if (iter != mGameObjects.end()) {
-		mGameObjects.erase(iter);
+	iter = std::find(mpGameObjects.begin(), mpGameObjects.end(), gameObject);
+	if (iter != mpGameObjects.end()) {
+		mpGameObjects.erase(iter);
 	}	
 }
 
 void Game::AddSprite(SpriteComponent* sprite)
 {
 	int currentSpriteDrawOrder = sprite->GetDrawOrder();
-	auto iter = mSprites.begin();
-	for (; iter != mSprites.end(); iter++) {
+	auto iter = mpSprites.begin();
+	for (; iter != mpSprites.end(); iter++) {
 		if (currentSpriteDrawOrder < (*iter)->GetDrawOrder()) {
 			break;
 		}
 	}
-	mSprites.insert(iter, sprite);
+	mpSprites.insert(iter, sprite);
 }
 
 void Game::RemoveSprite(SpriteComponent* sprite)
 {
-	auto iter = std::find(mSprites.begin(), mSprites.end(), sprite);
-	if (iter != mSprites.end()) {
-		mSprites.erase(iter);
+	auto iter = std::find(mpSprites.begin(), mpSprites.end(), sprite);
+	if (iter != mpSprites.end()) {
+		mpSprites.erase(iter);
 	}
 }

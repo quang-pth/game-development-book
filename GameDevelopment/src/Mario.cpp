@@ -22,8 +22,8 @@ Mario::Mario(Game* game, std::string name) :
 	mMoveDirection(Direction::Right)
 {
 	mCenterPosition = Vector2(game->GetWindowWidth() / 2 , game->GetWindowHeight() / 2);
-	GameObject::GetTransform()->SetPosition(mCenterPosition);
-	GameObject::GetTransform()->SetScale(2.0f);
+	pTransform->SetPosition(mCenterPosition);
+	pTransform->SetScale(2.0f);
 	
 	// Animations
 	std::vector<SDL_Texture*> walkingTextures = {
@@ -39,34 +39,34 @@ Mario::Mario(Game* game, std::string name) :
 	std::shared_ptr<Animation> idleAnimation =  std::make_shared<Animation>("Idle", idleTextures);
 	idleAnimation->SetFPS(1.0f);
 	// Animator
-	mAnimator = new AnimatorComponent(this);
-	mAnimator->AddAnimation(walkingAnimation->mName, walkingAnimation);
-	mAnimator->AddAnimation(idleAnimation->mName, idleAnimation);
-	mAnimator->SetAnimation(walkingAnimation->mName);
+	pAnimator = new AnimatorComponent(this);
+	pAnimator->AddAnimation(walkingAnimation->mName, walkingAnimation);
+	pAnimator->AddAnimation(idleAnimation->mName, idleAnimation);
+	pAnimator->SetAnimation(walkingAnimation->mName);
 
-	mInputComponent = new InputComponent(this);
-	mInputComponent->SetForwardSpeed(50.0f);
+	pInputComponent = new InputComponent(this);
+	pInputComponent->SetForwardSpeed(50.0f);
 
-	mCircleComponent = new CircleComponent(this);
-	mCircleComponent->SetRadius(20.0f * GameObject::GetTransform()->GetScale());
+	pCircleComponent = new CircleComponent(this);
+	pCircleComponent->SetRadius(20.0f * pTransform->GetScale());
 
-	mState = new IdleState();
-	mState->Enter(this);
+	mpState = new IdleState();
+	mpState->Enter(this);
 }
 
 void Mario::UpdateGameObject(float deltaTime)
 {
-	mState->Update(this);
+	mpState->Update(this);
 	this->ConstraintInScreenBounds();
 }
 
 void Mario::ProcessGameObjectInput(const uint8_t* keyState)
 {
-	GameObjectState* state = mState->HandleInput(this, keyState);
+	GameObjectState* state = mpState->HandleInput(this, keyState);
 	if (state != nullptr) {
-		delete mState;
-		mState = state;
-		mState->Enter(this);
+		delete mpState;
+		mpState = state;
+		mpState->Enter(this);
 	}
 }
 
@@ -101,24 +101,24 @@ void Mario::SetMoveDirection(bool toTheRight)
 
 InputComponent* Mario::GetInputComponent() const
 {
-	return mInputComponent;
+	return pInputComponent;
 }
 
 bool Mario::MoveExceedCenterPoint(bool toTheRight)
 {
 	if (toTheRight) {
-		bool atCenter = GameObject::GetTransform()->GetPosition().x > mCenterPosition.x;
-		bool isMovingRight = mInputComponent->RightKeyIsClicked();
+		bool atCenter = pTransform->GetPosition().x > mCenterPosition.x;
+		bool isMovingRight = pInputComponent->RightKeyIsClicked();
 		return atCenter && isMovingRight;
 	}
 	else {
-		bool atCenter = GameObject::GetTransform()->GetPosition().x <= mCenterPosition.x;
-		bool isMovingLeft = !mInputComponent->RightKeyIsClicked();
+		bool atCenter = pTransform->GetPosition().x <= mCenterPosition.x;
+		bool isMovingLeft = !pInputComponent->RightKeyIsClicked();
 		return atCenter && isMovingLeft;
 	}
 }
 
-bool Mario::FlipImage()
+bool Mario::IsImageFlipped()
 {
 	return mMoveDirection == Direction::Right;
 }
@@ -127,39 +127,39 @@ void Mario::ActAfterCooldown()
 {
 	mSpawnCooldown = 1.5f;
 	// Reset ship position to the center of the screen if collided with asteroid
-	GameObject::GetTransform()->SetPosition(Vector2(
+	pTransform->SetPosition(Vector2(
 		GameObject::GetGame()->GetWindowWidth() / 2.0f,
 		GameObject::GetGame()->GetWindowHeight() / 2.0f
 	));
 	// Reset game object states
-	GameObject::GetTransform()->SetRotation(0.0f);
+	pTransform->SetRotation(0.0f);
 	GameObject::GetGame()->GetCooldownManager()->Release(this);
 	GameObject::SetState(GameObject::State::EActive);
-	mInputComponent->ResetForce();
+	pInputComponent->ResetForce();
 }
 
 void Mario::ConstraintInScreenBounds()
 {
-	float newXPos = GameObject::GetTransform()->GetPosition().x;
-	float newYPos = GameObject::GetTransform()->GetPosition().y;
+	float newXPos = pTransform->GetPosition().x;
+	float newYPos = pTransform->GetPosition().y;
 
-	if (GameObject::GetTransform()->GetPosition().x > GameObject::GetGame()->GetWindowWidth()) {
+	if (pTransform->GetPosition().x > GameObject::GetGame()->GetWindowWidth()) {
 		newXPos = GameObject::GetGame()->GetWindowWidth();
 	}
-	else if (GameObject::GetTransform()->GetPosition().x < 0.0f) {
+	else if (pTransform->GetPosition().x < 0.0f) {
 		newXPos = 0.0f;
 	}
 
-	if (GameObject::GetTransform()->GetPosition().y > GameObject::GetGame()->GetWindowHeight()) {
+	if (pTransform->GetPosition().y > GameObject::GetGame()->GetWindowHeight()) {
 		newYPos = GameObject::GetGame()->GetWindowHeight();
 	}
-	else if (GameObject::GetTransform()->GetPosition().y < 0.0f) {
+	else if (pTransform->GetPosition().y < 0.0f) {
 		newYPos = 0.0f;
 	}
 
-	if (mInputComponent->GetState() == EMovement::EUnMoveable) {
+	if (pInputComponent->GetState() == EMovement::EUnMoveable) {
 		newXPos = mCenterPosition.x;
 	}
 
-	GameObject::GetTransform()->SetPosition(Vector2(newXPos, newYPos));
+	pTransform->SetPosition(Vector2(newXPos, newYPos));
 }

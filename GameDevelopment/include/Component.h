@@ -5,7 +5,7 @@
 class Component
 {
 public:
-	std::string mName;
+	std::string name;
 	Component();
 	/*
 	* updateOrder: component with smaller updateOrder is updated first

@@ -10,8 +10,8 @@ IdleState::~IdleState()
 
 GameObjectState* IdleState::HandleInput(Mario* mOwner, const uint8_t* keyState)
 {
-	bool isWalked = keyState[mOwner->mInputComponent->GetForwardLeftKey()]
-		|| keyState[mOwner->mInputComponent->GetForwardRightKey()];
+	bool isWalked = keyState[mOwner->pInputComponent->GetForwardLeftKey()]
+		|| keyState[mOwner->pInputComponent->GetForwardRightKey()];
 	
 	if (isWalked) {
 		return new WalkState();
@@ -26,7 +26,7 @@ void IdleState::Update(Mario* mOwner)
 
 void IdleState::Enter(Mario* mOwner)
 {
-	mOwner->mAnimator->SetAnimation("Idle");
+	mOwner->pAnimator->SetAnimation("Idle");
 }
 
 void IdleState::Exit()

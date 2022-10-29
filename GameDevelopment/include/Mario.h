@@ -19,11 +19,11 @@ public:
 	void SetMoveDirection(bool toTheRight);
 	class InputComponent* GetInputComponent() const;
 	bool MoveExceedCenterPoint(bool toTheRight);
-	bool FlipImage();
+	bool IsImageFlipped();
 	// Components
-	class InputComponent* mInputComponent;
-	class CircleComponent* mCircleComponent;
-	class AnimatorComponent* mAnimator;
+	class InputComponent *pInputComponent;
+	class CircleComponent *pCircleComponent;
+	class AnimatorComponent *pAnimator;
 private:
 	// Methods
 	void StartCooldown();
@@ -39,5 +39,5 @@ private:
 	// States
 	Direction mMoveDirection;
 	Vector2 mCenterPosition;
-	class GameObjectState* mState;
+	class GameObjectState *mpState;
 };

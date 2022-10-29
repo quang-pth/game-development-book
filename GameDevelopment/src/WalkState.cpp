@@ -10,7 +10,7 @@ WalkState::~WalkState()
 
 GameObjectState* WalkState::HandleInput(Mario* mOwner, const uint8_t* keyState)
 {
-	bool remainInWalkState = keyState[mOwner->mInputComponent->GetForwardLeftKey()] || keyState[mOwner->mInputComponent->GetForwardRightKey()];
+	bool remainInWalkState = keyState[mOwner->pInputComponent->GetForwardLeftKey()] || keyState[mOwner->pInputComponent->GetForwardRightKey()];
 	
 	if (remainInWalkState) {
 		return nullptr;
@@ -21,20 +21,20 @@ GameObjectState* WalkState::HandleInput(Mario* mOwner, const uint8_t* keyState)
 
 void WalkState::Update(class Mario* mOwner)
 {
-	if (mOwner->mInputComponent->RightKeyIsClicked()) {
+	if (mOwner->pInputComponent->RightKeyIsClicked()) {
 		mOwner->SetMoveDirection(true);
-		mOwner->mAnimator->FlipTexture(true);
+		mOwner->pAnimator->FlipTexture(true);
 	}
 	else {
 		mOwner->SetMoveDirection(false);
-		mOwner->mAnimator->FlipTexture(false);
+		mOwner->pAnimator->FlipTexture(false);
 	}
 }
 
 void WalkState::Enter(Mario* mOwner)
 {
-	mOwner->mAnimator->FlipTexture(mOwner->FlipImage());
-	mOwner->mAnimator->SetAnimation("Walk");
+	mOwner->pAnimator->FlipTexture(mOwner->IsImageFlipped());
+	mOwner->pAnimator->SetAnimation("Walk");
 }
 
 void WalkState::Exit()

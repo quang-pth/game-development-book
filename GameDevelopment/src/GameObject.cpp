@@ -5,22 +5,22 @@
 #include"include/CustomMath.h"
 #include <iostream>
 
-GameObject::GameObject() : mGame(), mName(), mState(), mTransform()
+GameObject::GameObject() : mpGame(), name(), mState(), pTransform()
 {
 }
 
 GameObject::GameObject(Game* game, std::string name) :
-	mGame(game), mName(name), mState(GameObject::State::EActive)
+	mpGame(game), name(name), mState(GameObject::State::EActive)
 {
 	this->AddDefaultComponents();
-	mGame->AddGameObject(this);
+	mpGame->AddGameObject(this);
 }
 
 GameObject::~GameObject()
 {
-	mGame->RemoveGameObject(this);
-	while (!mComponents.empty()) {
-		delete mComponents.back();
+	mpGame->RemoveGameObject(this);
+	while (!mpComponents.empty()) {
+		delete mpComponents.back();
 	}
 }
 
@@ -34,7 +34,7 @@ void GameObject::Update(float deltaTime)
 
 void GameObject::UpdateComponents(float deltaTime)
 {
-	for (Component* component : mComponents) {
+	for (Component* component : mpComponents) {
 		component->Update(deltaTime);
 	}
 }
@@ -42,7 +42,7 @@ void GameObject::UpdateComponents(float deltaTime)
 void GameObject::ProcessInput(const uint8_t* keyState)
 {
 	if (mState == GameObject::State::EActive) {
-		for (Component* component : mComponents) {
+		for (Component* component : mpComponents) {
 			component->ProcessInput(keyState);
 		}
 	
@@ -61,21 +61,21 @@ void GameObject::ProcessGameObjectInput(const uint8_t* keyState)
 
 void GameObject::AddComponent(Component* component)
 {
-	std::vector<Component*>::iterator iter = mComponents.begin();
-	for (; iter != mComponents.end(); iter++) {
+	std::vector<Component*>::iterator iter = mpComponents.begin();
+	for (; iter != mpComponents.end(); iter++) {
 		if ((*iter)->GetUpdateOrder() > component->GetUpdateOrder()) {
 			break;
 		}
 	}
-	mComponents.insert(iter, component);
+	mpComponents.insert(iter, component);
 }
 
 void GameObject::RemoveComponent(Component* component)
 {
-	std::vector<Component*>::iterator iter = std::find(mComponents.begin(), 
-		mComponents.end(), component);
- 	if (iter != mComponents.end()) {
-		mComponents.erase(iter);
+	std::vector<Component*>::iterator iter = std::find(mpComponents.begin(), 
+		mpComponents.end(), component);
+ 	if (iter != mpComponents.end()) {
+		mpComponents.erase(iter);
 	}
 }
 
@@ -93,17 +93,12 @@ void GameObject::SetState(State state)
 	mState = state;
 }
 
-TransformComponent* GameObject::GetTransform() const
-{
-	return mTransform;
-}
-
 Component* GameObject::GetComponent(std::string name)
 {
-	std::vector<Component*>::iterator iter = std::find_if(mComponents.begin(), mComponents.end(),
-		[&](const Component* component){ return component->mName == name; });
+	std::vector<Component*>::iterator iter = std::find_if(mpComponents.begin(), mpComponents.end(),
+		[&](const Component* component){ return component->name == name; });
 	
-	if (iter != mComponents.end()) {
+	if (iter != mpComponents.end()) {
 		return (*iter);
 	}
 
@@ -113,15 +108,15 @@ Component* GameObject::GetComponent(std::string name)
 
 Vector2 GameObject::GetForward() const
 {
-	return Vector2(Math::Cos(mTransform->GetRotation()), -Math::Sin(mTransform->GetRotation()));
+	return Vector2(Math::Cos(pTransform->GetRotation()), -Math::Sin(pTransform->GetRotation()));
 }
 
 Game* GameObject::GetGame() const
 {
-	return mGame;
+	return mpGame;
 }
 
 void GameObject::AddDefaultComponents()
 {
-	mTransform = new TransformComponent(this, 0, "TransformComponent");
+	pTransform = new TransformComponent(this, 0, "TransformComponent");
 }

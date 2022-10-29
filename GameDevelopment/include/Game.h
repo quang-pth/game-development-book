@@ -31,21 +31,21 @@ private:
 	void LoadData();
 	void UnloadData();
 	// Game Window
-	SDL_Window* mWindow;
+	SDL_Window *mpWindow;
 	int mWindowWidth;
 	int mWindowHeight;
-	SDL_Renderer* mRenderer;
+	SDL_Renderer *mpRenderer;
 	bool mIsRunning;
 	float mTicksCount; // Measured in miliseconds
 	// Game Objects
-	std::vector<class GameObject*> mGameObjects;
-	std::vector<class GameObject*> mPendingGameObjects;
-	class CooldownManager* mCooldownManager;
-	bool mUpdatingGameObjects;
-	class Mario* mMario;
-	class TileMapComponent* mTilemap;
-	class StateManager* mStateManager;
+	std::vector<class GameObject*> mpGameObjects;
+	std::vector<class GameObject*> mpPendingGameObjects;
+	class CooldownManager* mpCooldownManager;
+	bool mpUpdatingGameObjects;
+	class Mario *mpMario;
+	class TileMapComponent *mpTilemap;
+	class StateManager *mpStateManager;
 	// Sprites
-	std::vector<SpriteComponent*> mSprites;
-	std::unordered_map<std::string, SDL_Texture*> mTextures;
+	std::vector<SpriteComponent*> mpSprites;
+	std::unordered_map<std::string, SDL_Texture*> mpTextures;
 };

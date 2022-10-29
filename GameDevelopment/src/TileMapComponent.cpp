@@ -1,5 +1,6 @@
 #include "include/GameObject.h";
 #include "include/TileMapComponent.h";
+#include "include/TileDataComponent.h";
 #include "include/TransformComponent.h";
 #include "include/InputComponent.h";
 #include "include/Game.h";
@@ -21,10 +22,10 @@ void TileMapComponent::Update(float deltaTime)
 {	
 	if (mState == EMovement::EMoveable) {
 		Mario* mario = mOwner->GetGame()->GetMario();
-		Vector2 distance = mario->GetTransform()->GetPosition();
+		Vector2 distance = mario->pTransform->GetPosition();
 		Vector2 center = mOwner->GetGame()->GetCenterPoint();
 	
-		mOffset += mario->GetInputComponent()->GetVelocity() * deltaTime;
+		mOffset += mario->pInputComponent->GetVelocity() * deltaTime;
 		
 		if (mOffset.x > mXBound) {
 			mOffset.x = mXBound;
@@ -37,37 +38,16 @@ void TileMapComponent::Update(float deltaTime)
 
 void TileMapComponent::Draw(SDL_Renderer* renderer)
 {
-	if (mTexture == nullptr) return;
-
-	for (unsigned int row = 0; row < mTilesData.size(); row++) {
-		for (unsigned int col = 0; col < mTilesData[row].size(); col++) {
-			int tile = mTilesData[row][col];
-			
-			if (tile == -1) continue;
-
-			SDL_Rect srcrect;
-			srcrect.w = static_cast<int>(mTileWidth);
-			srcrect.h = static_cast<int>(mTileHeight);
-			srcrect.x = static_cast<int>(mTileWidth * (tile % mTilePerRow));
-			srcrect.y = static_cast<int>(mTileHeight * (tile / mTilePerRow));
-
-			SDL_Rect destrect;
-			destrect.w = static_cast<int>(mTileWidth * mOwner->GetTransform()->GetScale());
-			destrect.h = static_cast<int>(mTileHeight * mOwner->GetTransform()->GetScale());
-			destrect.x = static_cast<int>(mOwner->GetTransform()->GetPosition().x + destrect.w * col - mOffset.x);
-			destrect.y = static_cast<int>(mOwner->GetTransform()->GetPosition().y + destrect.h * row);
-
-			SDL_RenderCopyEx(renderer, mTexture, &srcrect,
-				&destrect, -Math::ToDegrees(mOwner->GetTransform()->GetRotation()), nullptr, SDL_FLIP_NONE);
-		}
+	for (TileDataComponent* tileData : mTilesData) {
+		tileData->SetOffset(mOffset);
+		tileData->Draw(renderer);
 	}
 }
 
 void TileMapComponent::Init(const char* filePath)
 {
-	this->LoadTileData(filePath);
 	this->SetTexture("MarioAssets/decorationsAndBlocks.png");
-	mXBound = mTilesData[0].size() * mTileWidth * mOwner->GetTransform()->GetScale() - mOwner->GetGame()->GetWindowWidth();
+	this->LoadTileData(filePath);
 }
 
 void TileMapComponent::SetState(EMovement state)
@@ -92,6 +72,7 @@ bool TileMapComponent::AtLeftBounds()
 
 void TileMapComponent::LoadTileData(const char* filePath)
 {
+	std::vector<std::vector<int>> tiles = std::vector<std::vector<int>>();
 	std::ifstream fstream(filePath);
 	std::string line;
 
@@ -99,7 +80,7 @@ void TileMapComponent::LoadTileData(const char* filePath)
 	{
 		std::cout << "Could not open the file - '" << filePath << "'" << std::endl;
 	}
-
+	// Get tiles layout from csv file
 	while (std::getline(fstream, line))
 	{
 		std::stringstream lineStream(line);
@@ -111,7 +92,25 @@ void TileMapComponent::LoadTileData(const char* filePath)
 			row.push_back(stoi(col));
 		}
 
-		mTilesData.push_back(row);
+		tiles.push_back(row);
+	}
+	mXBound = tiles[0].size() * mTileWidth * mOwner->pTransform->GetScale() - 
+		mOwner->GetGame()->GetWindowWidth();
+	// Generate tile data
+	for (unsigned int row = 0; row < tiles.size(); row++) {
+		for (unsigned int col = 0; col < tiles[row].size(); col++) {
+			int tile = tiles[row][col];
+
+			if (tile == -1) continue;
+
+			TileDataComponent* tileData = new TileDataComponent(mOwner);
+			Vector2 dimension = Vector2(mTileWidth, mTileHeight);
+			Vector2 srcPosition = Vector2(mTileWidth * (tile % mTilePerRow),
+				mTileHeight * (tile / mTilePerRow));
+			Vector2 layout = Vector2(col, row);
+			tileData->SetData(dimension, srcPosition, layout);
+			mTilesData.emplace_back(tileData);
+		}
 	}
 }
 
@@ -119,17 +118,4 @@ void TileMapComponent::SetTexture(const char* filePath)
 {
 	SDL_Texture* texture = this->mOwner->GetGame()->GetTexture(filePath);
 	SpriteComponent::SetTexture(texture);
-}
-
-void TileMapComponent::CheckTileMapContent(const char* filePath)
-{
-	std::cout << "================================" << std::endl;
-	std::cout << "TILEMAP CONTENT: " << filePath << std::endl;
-	std::cout << "================================" << std::endl;
-	for (unsigned int row = 0; row < mTilesData.size(); row++) {
-		for (unsigned int col = 0; col < mTilesData[row].size(); col++) {
-			std::cout << mTilesData[row][col] << " ";
-		}
-		std::cout << std::endl;
-	}
 }

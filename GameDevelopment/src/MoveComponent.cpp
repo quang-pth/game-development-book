@@ -22,8 +22,6 @@ MoveComponent::MoveComponent(GameObject* owner, int updateOrder, std::string nam
 
 void MoveComponent::Update(float deltaTime)
 {
-	TransformComponent* transformComponent = mOwner->GetTransform();
-
 	// Velocity of forces that applied on the gameobject
 	Vector2 acceleration = mSumOfForces * (1 / mMass);
 	mForceVelocity += acceleration * deltaTime;
@@ -31,9 +29,9 @@ void MoveComponent::Update(float deltaTime)
 		mSumOfForces = Vector2::Zero;
 	}
 
-	Vector2 position = transformComponent->GetPosition();
+	Vector2 position = mOwner->pTransform->GetPosition();
 	position += (mForceVelocity + mOwner->GetForward() * mForwardSpeed) * deltaTime;
-	transformComponent->SetPosition(position);
+	mOwner->pTransform->SetPosition(position);
 }
 
 float MoveComponent::GetForwardSpeed() const

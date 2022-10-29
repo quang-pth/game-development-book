@@ -171,6 +171,7 @@
     <ClCompile Include="src\TransformComponent.cpp" />
     <ClCompile Include="src\StateManager.cpp" />
     <ClCompile Include="src\WalkState.cpp" />
+    <ClCompile Include="src\TileDataComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\IdleState.h" />
@@ -198,6 +199,7 @@
     <ClInclude Include="include\Laser.h" />
     <ClInclude Include="include\StateManager.h" />
     <ClInclude Include="include\WalkState.h" />
+    <ClInclude Include="include\TileDataComponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

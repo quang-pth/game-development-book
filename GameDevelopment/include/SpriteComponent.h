@@ -13,6 +13,7 @@ public:
 	
 	virtual void Draw(SDL_Renderer* renderer);
 	virtual void SetTexture(SDL_Texture* texture, bool flipX = false);
+	SDL_Texture* GetTexture() const;
 	void FlipTexture(bool isFlip);
 	int GetDrawOrder() const { return mDrawOrder; }
 	int GetTextureWidth() const { return mTextureWidth; }
