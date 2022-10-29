@@ -1,7 +1,7 @@
 #include "include/StateManager.h"
 #include "include/Game.h"
 #include "include/Mario.h"
-#include "include/TileMapComponent.h"
+#include "include/TileMap.h"
 #include "include/TransformComponent.h"
 #include "include/InputComponent.h"
 #include "include/CustomMath.h"
@@ -10,8 +10,8 @@
 
 StateManager::StateManager(Game* game, const std::string& name) : GameObject(game, name)
 {
-	mMario = game->GetMario();
-	mTileMapComponent = game->GetTileMapComponent();
+	mpMario = game->GetMario();
+	mpTileMap = game->GetTileMap();
 }
 
 StateManager::~StateManager()
@@ -20,15 +20,15 @@ StateManager::~StateManager()
 
 void StateManager::UpdateGameObject(float deltaTime)
 {
-	if (mTileMapComponent->AtLeftBounds()) {
+	if (mpTileMap->AtLeftBounds()) {
 		this->SetMoveMario();
-		if (mMario->MoveExceedCenterPoint(true)) {
+		if (mpMario->MoveExceedCenterPoint(true)) {
 			this->SetMoveTilemap();
 		}
 	}
-	else if (mTileMapComponent->AtRightBounds()) {
+	else if (mpTileMap->AtRightBounds()) {
 		this->SetMoveMario();
-		if (mMario->MoveExceedCenterPoint(false)) {
+		if (mpMario->MoveExceedCenterPoint(false)) {
 			this->SetMoveTilemap();
 		}
 	}
@@ -36,14 +36,14 @@ void StateManager::UpdateGameObject(float deltaTime)
 
 void StateManager::SetMoveMario()
 {
-	mMario->GetInputComponent()->SetState(EMovement::EMoveable);
-	mTileMapComponent->SetState(EMovement::EUnMoveable);
+	mpMario->GetInputComponent()->SetState(EMovement::EMoveable);
+	mpTileMap->SetState(EMovement::EUnMoveable);
 }
 
 void StateManager::SetMoveTilemap()
 {
-	mMario->GetInputComponent()->SetState(EMovement::EUnMoveable);
-	mTileMapComponent->SetState(EMovement::EMoveable);
+	mpMario->GetInputComponent()->SetState(EMovement::EUnMoveable);
+	mpTileMap->SetState(EMovement::EMoveable);
 }
 
 bool StateManager::TileMapCanMove()

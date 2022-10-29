@@ -167,11 +167,12 @@
     <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="Source.cpp" />
-    <ClCompile Include="src\TileMapComponent.cpp" />
     <ClCompile Include="src\TransformComponent.cpp" />
     <ClCompile Include="src\StateManager.cpp" />
     <ClCompile Include="src\WalkState.cpp" />
     <ClCompile Include="src\TileDataComponent.cpp" />
+    <ClCompile Include="src\Tile.cpp" />
+    <ClCompile Include="src\TileMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\IdleState.h" />
@@ -191,7 +192,6 @@
     <ClInclude Include="include\SpriteComponent.h" />
     <ClInclude Include="include\CustomMath.h" />
     <ClInclude Include="include\Mario.h" />
-    <ClInclude Include="include\TileMapComponent.h" />
     <ClInclude Include="include\TransformComponent.h" />
     <ClInclude Include="include\MoveComponent.h" />
     <ClInclude Include="include\Random.h" />
@@ -200,6 +200,8 @@
     <ClInclude Include="include\StateManager.h" />
     <ClInclude Include="include\WalkState.h" />
     <ClInclude Include="include\TileDataComponent.h" />
+    <ClInclude Include="include\Tile.h" />
+    <ClInclude Include="include\TileMap.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

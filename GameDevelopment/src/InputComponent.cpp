@@ -1,6 +1,6 @@
 #include "include/InputComponent.h"
 #include "include/TransformComponent.h"
-#include "include/TileMapComponent.h"
+#include "include/TileMap.h"
 #include "include/GameObject.h"
 #include "include/Game.h"
 #include "include/Mario.h"

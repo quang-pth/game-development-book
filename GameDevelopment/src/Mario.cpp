@@ -5,7 +5,6 @@
 #include "include/SpriteComponent.h"
 #include "include/InputComponent.h"
 #include "include/CircleComponent.h"
-#include "include/Laser.h"
 #include "include/Asteroid.h"
 #include "include/AnimatorComponent.h"
 #include "include/Animation.h"

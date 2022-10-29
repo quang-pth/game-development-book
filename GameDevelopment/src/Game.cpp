@@ -4,7 +4,7 @@
 #include"include/SpriteComponent.h"
 #include"include/BackgroundSpriteComponent.h"
 #include"include/TransformComponent.h"
-#include"include/TileMapComponent.h"
+#include"include/TileMap.h"
 #include"include/StateManager.h"
 #include"include/Mario.h"
 #include<SDL2/SDL_image.h>
@@ -141,6 +141,8 @@ void Game::GenerateOutput()
 
 void Game::LoadData()
 {
+	mpCooldownManager = new CooldownManager(this);
+
 	mpMario = new Mario(this);
 
 	GameObject* background = new GameObject(this, "Background");
@@ -166,14 +168,12 @@ void Game::LoadData()
 	nearBackgroundComponent->SetBackgroundTextures(nearBackgroundTextures);
 	nearBackgroundComponent->SetScrollSpeed(-200.0f);
 
-	GameObject* tilemap = new GameObject(this, "Tilemap");
-	tilemap->pTransform->SetPosition(Vector2(0.0f, 0.0f));
-	tilemap->pTransform->SetScale(2.0f);
-	mpTilemap = new TileMapComponent(tilemap);
+	mpTilemap = new TileMap(this);
+	mpTilemap->pTransform->SetPosition(Vector2(0.0f, 0.0f));
+	mpTilemap->pTransform->SetScale(2.0f);
 	mpTilemap->Init("Assets/level-platform.csv");
 
 	mpStateManager = new StateManager(this, "StateManager");
-	mpCooldownManager = new CooldownManager(this);
 }
 
 void Game::UnloadData()
@@ -219,7 +219,7 @@ Mario* Game::GetMario() const
 	return mpMario;
 }
 
-TileMapComponent* Game::GetTileMapComponent() const
+TileMap* Game::GetTileMap() const
 {
 	return mpTilemap;
 }

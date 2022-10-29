@@ -1,20 +1,20 @@
 #pragma once
 
-#include "include/SpriteComponent.h"
+#include "include/GameObject.h"
 #include "include/Enums.h"
+#include<SDL2/SDL.h>
 #include<vector>
 #include <string>
 
-class TileMapComponent : public SpriteComponent
+class TileMap : public GameObject
 {
 public:
 	enum class State {
 		EMoveable,
 		EUnMoveable,
 	};
-	TileMapComponent(class GameObject* owner, int drawOrder = 100, std::string name = "TileMapComponent");
-	void Update(float deltaTime) override;
-	void Draw(SDL_Renderer* renderer) override;
+	TileMap(class Game* game, const std::string& name = "TileMap");
+	void UpdateGameObject(float deltaTime) override;
 	void Init(const char* filePath);
 	void SetState(EMovement state);
 	EMovement GetState() const;
@@ -23,7 +23,8 @@ public:
 private:
 	void LoadTileData(const char* filePath);
 	void SetTexture(const char* filePath);
-	std::vector<class TileDataComponent*> mTilesData;
+	SDL_Texture* mTexture;
+	std::vector<class Tile*> mTiles;
 	unsigned int mTileWidth, mTileHeight, mTilePerRow;
 	Vector2 mOffset;
 	float mXBound;

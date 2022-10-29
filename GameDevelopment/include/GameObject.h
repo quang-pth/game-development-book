@@ -38,6 +38,7 @@ private:
 	void AddDefaultComponents();
 	State mState;
 	std::vector<class Component*> mpComponents;
+protected:
 	class Game *mpGame;
 };
 

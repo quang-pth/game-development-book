@@ -1,6 +1,6 @@
-#include "include/GameObject.h";
-#include "include/TileMapComponent.h";
+#include "include/TileMap.h";
 #include "include/TileDataComponent.h";
+#include "include/Tile.h";
 #include "include/TransformComponent.h";
 #include "include/InputComponent.h";
 #include "include/Game.h";
@@ -10,67 +10,63 @@
 #include <iostream>
 #include<string>
 
-TileMapComponent::TileMapComponent(GameObject* owner, int drawOrder, std::string name)
-	: SpriteComponent(owner, drawOrder, name),
+TileMap::TileMap(Game* game, const std::string& name)
+	: GameObject(game, name),
 	mTileWidth(16), mTileHeight(16),
 	mTilePerRow(7), mOffset(Vector2::Zero), mXBound(0.0f),
 	mState(EMovement::EMoveable)
 {
 }
 
-void TileMapComponent::Update(float deltaTime)
-{	
+void TileMap::UpdateGameObject(float deltaTime)
+{
 	if (mState == EMovement::EMoveable) {
-		Mario* mario = mOwner->GetGame()->GetMario();
+		Mario* mario = GameObject::GetGame()->GetMario();
 		Vector2 distance = mario->pTransform->GetPosition();
-		Vector2 center = mOwner->GetGame()->GetCenterPoint();
-	
+		Vector2 center = GameObject::GetGame()->GetCenterPoint();
+
 		mOffset += mario->pInputComponent->GetVelocity() * deltaTime;
-		
+
 		if (mOffset.x > mXBound) {
 			mOffset.x = mXBound;
 		}
 		else if (mOffset.x < 0.0f) {
 			mOffset.x = 0.0f;
 		}
+
+		for (Tile* tile : mTiles) {
+			tile->GetTileDataComponent()->SetOffset(mOffset);
+		}
 	}
 }
 
-void TileMapComponent::Draw(SDL_Renderer* renderer)
-{
-	for (TileDataComponent* tileData : mTilesData) {
-		tileData->SetOffset(mOffset);
-		tileData->Draw(renderer);
-	}
-}
-
-void TileMapComponent::Init(const char* filePath)
+void TileMap::Init(const char* filePath)
 {
 	this->SetTexture("MarioAssets/decorationsAndBlocks.png");
 	this->LoadTileData(filePath);
 }
 
-void TileMapComponent::SetState(EMovement state)
+void TileMap::SetState(EMovement state)
 {
 	mState = state;
 }
 
-EMovement TileMapComponent::GetState() const
+EMovement TileMap::GetState() const
 {
 	return mState;
 }
 
-bool TileMapComponent::AtRightBounds()
+bool TileMap::AtRightBounds()
 {
 	return mOffset.x >= mXBound;
 }
 
-bool TileMapComponent::AtLeftBounds()
+bool TileMap::AtLeftBounds()
 {
 	return mOffset.x <= 0;
 }
 
-void TileMapComponent::LoadTileData(const char* filePath)
+void TileMap::LoadTileData(const char* filePath)
 {
 	std::vector<std::vector<int>> tiles = std::vector<std::vector<int>>();
 	std::ifstream fstream(filePath);
@@ -94,28 +90,32 @@ void TileMapComponent::LoadTileData(const char* filePath)
 
 		tiles.push_back(row);
 	}
-	mXBound = tiles[0].size() * mTileWidth * mOwner->pTransform->GetScale() - 
-		mOwner->GetGame()->GetWindowWidth();
+	mXBound = tiles[0].size() * mTileWidth * pTransform->GetScale() -
+		GameObject::GetGame()->GetWindowWidth();
 	// Generate tile data
 	for (unsigned int row = 0; row < tiles.size(); row++) {
 		for (unsigned int col = 0; col < tiles[row].size(); col++) {
-			int tile = tiles[row][col];
+			int index = tiles[row][col];
 
-			if (tile == -1) continue;
-
-			TileDataComponent* tileData = new TileDataComponent(mOwner);
+			if (index == -1) continue;
+			// Setup tile data
+			TileDataComponent* tileDataComponent = new TileDataComponent(this);
 			Vector2 dimension = Vector2(mTileWidth, mTileHeight);
-			Vector2 srcPosition = Vector2(mTileWidth * (tile % mTilePerRow),
-				mTileHeight * (tile / mTilePerRow));
+			Vector2 srcPosition = Vector2(mTileWidth * (index % mTilePerRow),
+				mTileHeight * (index / mTilePerRow));
 			Vector2 layout = Vector2(col, row);
-			tileData->SetData(dimension, srcPosition, layout);
-			mTilesData.emplace_back(tileData);
+			tileDataComponent->SetData(dimension, srcPosition, layout);
+			tileDataComponent->SetTexture(mTexture);
+			// Create tile game object
+			Tile* tile = new Tile(GameObject::GetGame());
+			tile->SetTileData(tileDataComponent);
+
+			mTiles.emplace_back(tile);
 		}
 	}
 }
 
-void TileMapComponent::SetTexture(const char* filePath)
+void TileMap::SetTexture(const char* filePath)
 {
-	SDL_Texture* texture = this->mOwner->GetGame()->GetTexture(filePath);
-	SpriteComponent::SetTexture(texture);
+	mTexture = GameObject::GetGame()->GetTexture(filePath);
 }
