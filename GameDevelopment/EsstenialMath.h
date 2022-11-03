@@ -6,7 +6,7 @@
 
 namespace EssentialMath
 {
-#define PI 3.14159265
+#define PI 3.14
 #define DEGREE_TO_RADIAN (PI / 180.0)
 #define RADIAN_TO_DEGREE (180.0 / PI)
 
@@ -57,7 +57,7 @@ namespace EssentialMath
 			InitQuaternion(theta, n.x, n.y, n.z);
 		}
 		
-		Quaternion operator*(const Quaternion& other) {
+		Quaternion operator*(const Quaternion& other) const {
 			float w = this->w * other.w - this->x * other.x - this->y * other.y - this->z * other.z;
 			float x = this->w * other.x + this->x * other.w + this->y * other.z - this->z * other.y;
 			float y = this->w * other.y + this->y * other.w + this->z * other.x - this->x * other.z;
@@ -66,6 +66,15 @@ namespace EssentialMath
 			return Quaternion(w, x, y, z);
 		}
 		
+		Quaternion mult(const Quaternion& other) const {
+			float w = this->w * other.w - this->x * other.x - this->y * other.y - this->z * other.z;
+			float x = this->w * other.x + this->x * other.w + this->y * other.z - this->z * other.y;
+			float y = this->w * other.y + this->y * other.w + this->z * other.x - this->x * other.z;
+			float z = this->w * other.z + this->z * other.w + this->x * other.y - this->y * other.x;
+			
+			return Quaternion(w, x, y, z);
+		}
+
 		Quaternion operator*(float scalar) const {
 			return Quaternion(w * scalar, x * scalar, y * scalar, z * scalar);
 		}
@@ -98,18 +107,19 @@ namespace EssentialMath
 			return *this;
 		}
 
-		Quaternion Conjungate() const {
-			return Quaternion(w, -x, -y, -z);
+		Quaternion* Conjungate() const {
+			Quaternion result = Quaternion(w, -x, -y, -z);
+			return &result;
 		}
 
-		Quaternion Inverse() const {
+		Quaternion* Inverse() const {
 			// This property only works with Unit Quaternion
 			return this->Conjungate();
 		}
 		
 		// Return an angular displacement from this quaternion to other quaternion
-		Quaternion Difference(const Quaternion& other) {
-			return this->Inverse() * other;
+		Quaternion Difference(const Quaternion* other) {
+			return other->mult(*this->Inverse());
 		}
 		
 		float GetAlpha() const {
@@ -189,6 +199,26 @@ namespace EssentialMath
 			}
 			return theta;
 		};
+
+		static bool IsCanonical(const EulerAngle& angle) {
+			if (angle.head > PI || angle.head <= -PI) {
+				return false;
+			}
+
+			if (angle.bank > PI || angle.bank <= -PI) {
+				return false;
+			}
+
+			if (abs(angle.pitch) > PI / 2.0f) {
+				return false;
+			}
+
+			if (abs(angle.pitch) == PI / 2.0f && angle.bank != 0.0f) {
+				return false;
+			}
+
+			return true;
+		}
 	};
 
 	class RepresentationConverter {
@@ -300,16 +330,18 @@ namespace EssentialMath
 		}
 
 		// Convert an Euler Angle to an unit Object-To-UpRight Quaternion
-		static Quaternion EulerAngleToObjectToUpRightQuaternion(const EulerAngle& angle, bool objToUpRight = true) {
+		static Quaternion* EulerAngleToObjectToUpRightQuaternion(const EulerAngle& angle, bool objToUpRight = true) {
 			Quaternion head = Quaternion(cosf(angle.head * 0.5f), 0.0f, sinf(angle.head * 0.5f), 0.0f);
 			Quaternion pitch = Quaternion(cosf(angle.pitch * 0.5f), sinf(angle.pitch * 0.5f), 0.0f, 0.0f);
 			Quaternion bank = Quaternion(cosf(angle.bank * 0.5f), 0.0f, 0.0f, sinf(angle.bank * 0.5f));
 
 			if (objToUpRight) {
-				return head * pitch * bank;
+				Quaternion result = head * pitch * bank;
+				return &result;
 			}
 
-			return (head * pitch * bank).Conjungate();
+			Quaternion *result = (head * pitch * bank).Conjungate();
+			return result;
 		}
 
 		// Convert an Unit Quaternion to an Euler Angle
