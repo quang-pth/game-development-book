@@ -2,39 +2,45 @@
 #include "include/Mario.h"
 #include "include/InputComponent.h"
 #include "include/AnimatorComponent.h"
+#include "include/JumpState.h"
 #include "include/IdleState.h"
 
 WalkState::~WalkState()
 {
 }
 
-GameObjectState* WalkState::HandleInput(Mario* mOwner, const uint8_t* keyState)
+GameObjectState* WalkState::HandleInput(Hero* mOwner, const uint8_t* keyState)
 {
-	bool remainInWalkState = keyState[mOwner->pInputComponent->GetForwardLeftKey()] || keyState[mOwner->pInputComponent->GetForwardRightKey()];
+	bool remainInWalkState = keyState[mOwner->inputComponent->GetInputKey("Left")]
+		|| keyState[mOwner->inputComponent->GetInputKey("Right")];
 	
 	if (remainInWalkState) {
 		return nullptr;
 	}
 
+	if (keyState[mOwner->inputComponent->GetInputKey("Jump")]) {
+		return new JumpState();
+	}
+
 	return new IdleState();
 }
 
-void WalkState::Update(class Mario* mOwner)
+void WalkState::Update(Hero* mOwner)
 {
-	if (mOwner->pInputComponent->RightKeyIsClicked()) {
-		mOwner->SetMoveDirection(true);
-		mOwner->pAnimator->FlipTexture(true);
+	if (mOwner->inputComponent->RightKeyIsClicked()) {
+		mOwner->SetMoveDirection(Hero::Direction::Right);
+		mOwner->animator->FlipTexture(false);
 	}
 	else {
-		mOwner->SetMoveDirection(false);
-		mOwner->pAnimator->FlipTexture(false);
+		mOwner->SetMoveDirection(Hero::Direction::Left);
+		mOwner->animator->FlipTexture(true);
 	}
 }
 
-void WalkState::Enter(Mario* mOwner)
+void WalkState::Enter(Hero* mOwner)
 {
-	mOwner->pAnimator->FlipTexture(mOwner->IsImageFlipped());
-	mOwner->pAnimator->SetAnimation("Walk");
+	mOwner->animator->FlipTexture(mOwner->IsImageFlipped());
+	mOwner->animator->SetAnimation("Walk");
 }
 
 void WalkState::Exit()

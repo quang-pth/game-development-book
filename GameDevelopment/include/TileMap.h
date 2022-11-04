@@ -15,8 +15,10 @@ public:
 	};
 	TileMap(class Game* game, const std::string& name = "TileMap");
 	void UpdateGameObject(float deltaTime) override;
-	void Init(const char* filePath);
+	void Init(const char* srcTextureFilePath, const char* layoutFilePath);
 	void SetState(EMovement state);
+	void SetTileDimension(const Vector2& dimension);
+	void SetTilePerRow(unsigned int numOfTiles);
 	EMovement GetState() const;
 	bool AtRightBounds();
 	bool AtLeftBounds();

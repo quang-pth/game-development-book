@@ -10,7 +10,7 @@
 InputComponent::InputComponent(GameObject* owner, int updateOrder) :
 	MoveComponent(owner, updateOrder),
 	mMaxForwardSpeed(200.0f),
-	mForwardLeftKey(SDL_SCANCODE_A), mForwardRightKey(SDL_SCANCODE_D),
+	mForwardLeftKey(SDL_SCANCODE_A), mForwardRightKey(SDL_SCANCODE_D), mJumpKey(SDL_SCANCODE_SPACE),
 	mState(EMovement::EUnMoveable), mRightKeyIsClicked(false)
 {
 }
@@ -50,14 +50,19 @@ void InputComponent::SetMaxForwardSpeed(float speed)
 	mMaxForwardSpeed = speed;
 }
 
-int InputComponent::GetForwardLeftKey() const
+int InputComponent::GetInputKey(const std::string& keyName) const
 {
-	return mForwardLeftKey;
-}
+	if (keyName == "Left") {
+		return mForwardLeftKey;
+	}
+	else if (keyName == "Right") {
+		return mForwardRightKey;
+	}
+	else if (keyName == "Jump") {
+		return mJumpKey;
+	}
 
-int InputComponent::GetForwardRightKey() const
-{
-	return mForwardRightKey;
+	return -1;
 }
 
 void InputComponent::SetState(EMovement state)

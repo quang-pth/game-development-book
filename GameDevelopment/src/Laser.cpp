@@ -18,10 +18,10 @@ Laser::Laser(Game* game, std::string name) :
 	mMoveComponent = new MoveComponent(this);
 
 	mSpriteComponent = new SpriteComponent(this);
-	mSpriteComponent->SetTexture(GameObject::GetGame()->GetTexture("Assets/Chapter3/Laser.png"));
+	mSpriteComponent->SetTexture(GameObject::GetGame()->GetTexture("Assets/Shooter/Hero/Bullet/tile000.png"));
 
 	mCircleComponent = new CircleComponent(this);
-	mCircleComponent->SetRadius(mSpriteComponent->GetTextureWidth() - 3.0f);
+	mCircleComponent->SetRadius(mSpriteComponent->GetTextureWidth());
 }
 
 void Laser::UpdateGameObject(float deltaTime)

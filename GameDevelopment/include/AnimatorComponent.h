@@ -11,7 +11,7 @@ public:
 	~AnimatorComponent();
 	void Update(float deltaTime) override;
 	void SetAnimation(const std::string& animationName);
-	void AddAnimation(const std::string& animationName, std::shared_ptr<class Animation> animation);
+	void AddAnimation(std::shared_ptr<class Animation> animation);
 	void ResetAnimation(std::string animationName);
 private:
 	std::unordered_map <std::string, std::shared_ptr<class Animation>> mAnimationsMap;

@@ -39,6 +39,6 @@ private:
 	State mState;
 	std::vector<class Component*> mpComponents;
 protected:
-	class Game *mpGame;
+	class Game *mGame;
 };
 

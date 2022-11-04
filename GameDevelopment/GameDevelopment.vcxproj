@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\JumpState.cpp" />
     <ClCompile Include="src\IdleState.cpp" />
     <ClCompile Include="src\GameObjectState.cpp" />
     <ClCompile Include="src\Enums.cpp" />
@@ -202,6 +203,7 @@
     <ClInclude Include="include\TileDataComponent.h" />
     <ClInclude Include="include\Tile.h" />
     <ClInclude Include="include\TileMap.h" />
+    <ClInclude Include="include\JumpState.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

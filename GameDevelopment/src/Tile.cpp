@@ -4,11 +4,12 @@
 #include "include/TileDataComponent.h"
 #include "include/TransformComponent.h"
 #include "include/CooldownManager.h"
+#include <iostream>
 
 Tile::Tile(Game* game, const std::string& name) :
 	GameObject(game, name)
 {
-	mpTileData = new TileDataComponent(this);
+	mTileData = new TileDataComponent(this);
 	game->GetCooldownManager()->Observe(this);
 }
 
@@ -24,7 +25,7 @@ void Tile::UpdateGameObject(float deltaTime)
 void Tile::SetTileData(TileDataComponent* data)
 {
 	if (data != nullptr) {
-		mpTileData = data;
+		mTileData = data;
 	}
 }
 
@@ -40,13 +41,13 @@ void Tile::Cooldown(float deltaTime)
 
 TileDataComponent* Tile::GetTileDataComponent() const
 {
-	return mpTileData;
+	return mTileData;
 }
 
 bool Tile::IsInBound()
 {
-	Vector2 position = mpTileData->GetCurrentPosition();
-	bool inBoundX = position.x >= 0 && position.x <= mpGame->GetWindowWidth();
-	bool inBoundY = position.y >= 0 && position.y <= mpGame->GetWindowHeight();
+	Vector2 position = mTileData->GetCurrentPosition();
+	bool inBoundX = position.x >= 0 && position.x <= mGame->GetWindowWidth();
+	bool inBoundY = position.y >= 0 && position.y <= mGame->GetWindowHeight();
 	return inBoundX && inBoundY;
 }

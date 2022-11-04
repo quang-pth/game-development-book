@@ -14,7 +14,7 @@
 #include <iostream>
 #include<memory>
 
-Mario::Mario(Game* game, std::string name) :
+Hero::Hero(Game* game, std::string name) :
 	GameObject(game, name),
 	mFireKey(SDL_SCANCODE_SPACE), mFireCooldown(0.3f),
 	mActivateLaserIdx(0), mSpawnCooldown(1.5f),
@@ -24,58 +24,75 @@ Mario::Mario(Game* game, std::string name) :
 	pTransform->SetPosition(mCenterPosition);
 	pTransform->SetScale(2.0f);
 	
-	// Animations
+	/*
+	* ANIMATIONS
+	*/
+	// Walking
 	std::vector<SDL_Texture*> walkingTextures = {
-		game->GetTexture("MarioAssets/mario-2.png"),
-		game->GetTexture("MarioAssets/mario-3.png"),
-		game->GetTexture("MarioAssets/mario-4.png"),
+		game->GetTexture("Assets/Shooter/Hero/Running/tile000.png"),
+		game->GetTexture("Assets/Shooter/Hero/Running/tile001.png"),
+		game->GetTexture("Assets/Shooter/Hero/Running/tile002.png"),
+		game->GetTexture("Assets/Shooter/Hero/Running/tile003.png"),
+		game->GetTexture("Assets/Shooter/Hero/Running/tile004.png"),
+		game->GetTexture("Assets/Shooter/Hero/Running/tile005.png"),
 	};
 	std::shared_ptr<Animation> walkingAnimation =  std::make_shared<Animation>("Walk", walkingTextures);
 	walkingAnimation->SetFPS(10.0f);
+	// Idle
 	std::vector<SDL_Texture*> idleTextures = {
-		game->GetTexture("MarioAssets/mario-1.png"),
+		game->GetTexture("Assets/Shooter/Hero/Idle/tile000.png"),
+		game->GetTexture("Assets/Shooter/Hero/Idle/tile001.png"),
 	};
 	std::shared_ptr<Animation> idleAnimation =  std::make_shared<Animation>("Idle", idleTextures);
-	idleAnimation->SetFPS(1.0f);
+	idleAnimation->SetFPS(1.5f);
+	// Jump
+	std::vector<SDL_Texture*> jumpTextures = {
+		game->GetTexture("Assets/Shooter/Hero/Jump/tile000.png"),
+		game->GetTexture("Assets/Shooter/Hero/Jump/tile001.png"),
+	};
+	std::shared_ptr<Animation> jumpAnimation = std::make_shared<Animation>("Jump", jumpTextures, false);
+	idleAnimation->SetFPS(1.5f);
+
 	// Animator
-	pAnimator = new AnimatorComponent(this);
-	pAnimator->AddAnimation(walkingAnimation->mName, walkingAnimation);
-	pAnimator->AddAnimation(idleAnimation->mName, idleAnimation);
-	pAnimator->SetAnimation(walkingAnimation->mName);
+	animator = new AnimatorComponent(this);
+	animator->AddAnimation(walkingAnimation);
+	animator->AddAnimation(idleAnimation);
+	animator->AddAnimation(jumpAnimation);
+	animator->SetAnimation(walkingAnimation->name);
 
-	pInputComponent = new InputComponent(this);
-	pInputComponent->SetForwardSpeed(50.0f);
+	inputComponent = new InputComponent(this);
+	inputComponent->SetForwardSpeed(50.0f);
 
-	pCircleComponent = new CircleComponent(this);
-	pCircleComponent->SetRadius(20.0f * pTransform->GetScale());
+	circleComponent = new CircleComponent(this);
+	circleComponent->SetRadius(20.0f * pTransform->GetScale());
 
-	mpState = new IdleState();
-	mpState->Enter(this);
+	mState = new IdleState();
+	mState->Enter(this);
 }
 
-void Mario::UpdateGameObject(float deltaTime)
+void Hero::UpdateGameObject(float deltaTime)
 {
-	mpState->Update(this);
+	mState->Update(this);
 	this->ConstraintInScreenBounds();
 }
 
-void Mario::ProcessGameObjectInput(const uint8_t* keyState)
+void Hero::ProcessGameObjectInput(const uint8_t* keyState)
 {
-	GameObjectState* state = mpState->HandleInput(this, keyState);
+	GameObjectState* state = mState->HandleInput(this, keyState);
 	if (state != nullptr) {
-		delete mpState;
-		mpState = state;
-		mpState->Enter(this);
+		delete mState;
+		mState = state;
+		mState->Enter(this);
 	}
 }
 
-void Mario::StartCooldown()
+void Hero::StartCooldown()
 {
 	GameObject::SetState(GameObject::State::EDeactive);
 	GameObject::GetGame()->GetCooldownManager()->Observe(this);
 }
 
-void Mario::Cooldown(float deltaTime)
+void Hero::Cooldown(float deltaTime)
 {
 	mSpawnCooldown -= deltaTime;
 	if (mSpawnCooldown <= 0) {
@@ -83,46 +100,41 @@ void Mario::Cooldown(float deltaTime)
 	}
 }
 
-Mario::Direction Mario::GetMoveDirection() const
+Hero::Direction Hero::GetMoveDirection() const
 {
 	return mMoveDirection;
 }
 
-void Mario::SetMoveDirection(bool toTheRight)
+void Hero::SetMoveDirection(Hero::Direction direction)
 {
-	if (toTheRight) {
-		mMoveDirection = Direction::Right;
-	}
-	else {
-		mMoveDirection = Direction::Left;
-	}
+	mMoveDirection = direction;
 }
 
-InputComponent* Mario::GetInputComponent() const
+InputComponent* Hero::GetInputComponent() const
 {
-	return pInputComponent;
+	return inputComponent;
 }
 
-bool Mario::MoveExceedCenterPoint(bool toTheRight)
+bool Hero::MoveExceedCenterPoint(bool toTheRight)
 {
 	if (toTheRight) {
 		bool atCenter = pTransform->GetPosition().x > mCenterPosition.x;
-		bool isMovingRight = pInputComponent->RightKeyIsClicked();
+		bool isMovingRight = inputComponent->RightKeyIsClicked();
 		return atCenter && isMovingRight;
 	}
 	else {
 		bool atCenter = pTransform->GetPosition().x <= mCenterPosition.x;
-		bool isMovingLeft = !pInputComponent->RightKeyIsClicked();
+		bool isMovingLeft = !inputComponent->RightKeyIsClicked();
 		return atCenter && isMovingLeft;
 	}
 }
 
-bool Mario::IsImageFlipped()
+bool Hero::IsImageFlipped()
 {
 	return mMoveDirection == Direction::Right;
 }
 
-void Mario::ActAfterCooldown()
+void Hero::ActAfterCooldown()
 {
 	mSpawnCooldown = 1.5f;
 	// Reset ship position to the center of the screen if collided with asteroid
@@ -134,10 +146,10 @@ void Mario::ActAfterCooldown()
 	pTransform->SetRotation(0.0f);
 	GameObject::GetGame()->GetCooldownManager()->Release(this);
 	GameObject::SetState(GameObject::State::EActive);
-	pInputComponent->ResetForce();
+	inputComponent->ResetForce();
 }
 
-void Mario::ConstraintInScreenBounds()
+void Hero::ConstraintInScreenBounds()
 {
 	float newXPos = pTransform->GetPosition().x;
 	float newYPos = pTransform->GetPosition().y;
@@ -156,7 +168,7 @@ void Mario::ConstraintInScreenBounds()
 		newYPos = 0.0f;
 	}
 
-	if (pInputComponent->GetState() == EMovement::EUnMoveable) {
+	if (inputComponent->GetState() == EMovement::EUnMoveable) {
 		newXPos = mCenterPosition.x;
 	}
 

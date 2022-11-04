@@ -18,7 +18,7 @@ public:
 	void AddSprite(class SpriteComponent* sprite);
 	void RemoveSprite(class SpriteComponent* sprite);
 	SDL_Texture* GetTexture(const std::string& fileName);
-	class Mario* GetMario() const;
+	class Hero* GetMario() const;
 	class TileMap* GetTileMap() const;
 	class CooldownManager* GetCooldownManager() const;
 	int GetWindowWidth() const;
@@ -40,12 +40,12 @@ private:
 	// Game Objects
 	std::vector<class GameObject*> mpGameObjects;
 	std::vector<class GameObject*> mpPendingGameObjects;
-	class CooldownManager* mpCooldownManager;
+	class CooldownManager* mCooldownManager;
 	bool mpUpdatingGameObjects;
-	class Mario *mpMario;
-	class TileMap *mpTilemap;
-	class StateManager *mpStateManager;
+	class Hero *mHero;
+	class TileMap *mTilemap;
+	class StateManager *mStateManager;
 	// Sprites
-	std::vector<SpriteComponent*> mpSprites;
+	std::vector<class SpriteComponent*> mpSprites;
 	std::unordered_map<std::string, SDL_Texture*> mpTextures;
 };

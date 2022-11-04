@@ -15,6 +15,6 @@ public:
 	TileDataComponent* GetTileDataComponent() const;
 private:
 	bool IsInBound();
-	class TileDataComponent *mpTileData;
+	class TileDataComponent *mTileData;
 };
 

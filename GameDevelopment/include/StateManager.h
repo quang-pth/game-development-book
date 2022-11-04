@@ -12,7 +12,7 @@ private:
 	void SetMoveMario();
 	void SetMoveTilemap();
 	bool TileMapCanMove();
-	class Mario *mpMario;
+	class Hero *mpMario;
 	class TileMap *mpTileMap;
 };
 

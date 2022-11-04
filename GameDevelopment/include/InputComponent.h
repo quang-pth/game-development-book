@@ -12,15 +12,14 @@ public:
 	void ProcessInput(const uint8_t* keyState) override;
 	float GetMaxForwardSpeed() const;
 	void SetMaxForwardSpeed(float speed);
-	int GetForwardLeftKey() const;
-	int GetForwardRightKey() const;
+	int GetInputKey(const std::string& keyName) const;
 	void SetState(EMovement state);
 	EMovement GetState() const;
 	bool RightKeyIsClicked();
 private:
 	float mMaxForwardSpeed;
 	bool mRightKeyIsClicked;
-	int mForwardLeftKey, mForwardRightKey;
+	int mForwardLeftKey, mForwardRightKey, mJumpKey;
 	EMovement mState;
 };
 

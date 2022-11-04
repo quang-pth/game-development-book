@@ -2,7 +2,7 @@
 
 Animation::Animation(const std::string& name, 
 	const std::vector<SDL_Texture*>& textures, bool isLoop)
-	: mName(name), mTextures(textures), mIsLoop(isLoop), mAnimationFPS(24.0f)
+	: name(name), textures(textures), isLoop(isLoop), mAnimationFPS(24.0f)
 {
 
 }

@@ -5,20 +5,20 @@
 #include"include/CustomMath.h"
 #include <iostream>
 
-GameObject::GameObject() : mpGame(), name(), mState(), pTransform()
+GameObject::GameObject() : mGame(), name(), mState(), pTransform()
 {
 }
 
 GameObject::GameObject(Game* game, std::string name) :
-	mpGame(game), name(name), mState(GameObject::State::EActive)
+	mGame(game), name(name), mState(GameObject::State::EActive)
 {
 	this->AddDefaultComponents();
-	mpGame->AddGameObject(this);
+	mGame->AddGameObject(this);
 }
 
 GameObject::~GameObject()
 {
-	mpGame->RemoveGameObject(this);
+	mGame->RemoveGameObject(this);
 	while (!mpComponents.empty()) {
 		delete mpComponents.back();
 	}
@@ -113,7 +113,7 @@ Vector2 GameObject::GetForward() const
 
 Game* GameObject::GetGame() const
 {
-	return mpGame;
+	return mGame;
 }
 
 void GameObject::AddDefaultComponents()

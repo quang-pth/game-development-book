@@ -10,8 +10,8 @@
 #include <iostream>
 #include<string>
 
-TileMap::TileMap(Game* game, const std::string& name)
-	: GameObject(game, name),
+TileMap::TileMap(Game* game, const std::string& name) : 
+	GameObject(game, name), mTexture(),
 	mTileWidth(16), mTileHeight(16),
 	mTilePerRow(7), mOffset(Vector2::Zero), mXBound(0.0f),
 	mState(EMovement::EMoveable)
@@ -21,11 +21,11 @@ TileMap::TileMap(Game* game, const std::string& name)
 void TileMap::UpdateGameObject(float deltaTime)
 {
 	if (mState == EMovement::EMoveable) {
-		Mario* mario = GameObject::GetGame()->GetMario();
+		Hero* mario = GameObject::GetGame()->GetMario();
 		Vector2 distance = mario->pTransform->GetPosition();
 		Vector2 center = GameObject::GetGame()->GetCenterPoint();
 
-		mOffset += mario->pInputComponent->GetVelocity() * deltaTime;
+		mOffset += mario->inputComponent->GetVelocity() * deltaTime;
 
 		if (mOffset.x > mXBound) {
 			mOffset.x = mXBound;
@@ -40,15 +40,26 @@ void TileMap::UpdateGameObject(float deltaTime)
 	}
 }
 
-void TileMap::Init(const char* filePath)
+void TileMap::Init(const char* srcTextureFilePath, const char* layoutFilePath)
 {
-	this->SetTexture("MarioAssets/decorationsAndBlocks.png");
-	this->LoadTileData(filePath);
+	this->SetTexture(srcTextureFilePath);
+	this->LoadTileData(layoutFilePath);
 }
 
 void TileMap::SetState(EMovement state)
 {
 	mState = state;
+}
+
+void TileMap::SetTileDimension(const Vector2& dimension)
+{
+	mTileWidth = dimension.x;
+	mTileHeight = dimension.y;
+}
+
+void TileMap::SetTilePerRow(unsigned int numOfTiles)
+{
+	mTilePerRow = numOfTiles;
 }
 
 EMovement TileMap::GetState() const

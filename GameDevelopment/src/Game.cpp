@@ -15,7 +15,7 @@ Game::Game() :
 	mpWindow(nullptr), mIsRunning(true), 
 	mTicksCount(0.0f), mpRenderer(), mpUpdatingGameObjects(false), 
 	mWindowWidth(800), mWindowHeight(600), 
-	mpMario(nullptr), mpTilemap(nullptr), mpCooldownManager(nullptr), mpStateManager(nullptr)
+	mHero(nullptr), mTilemap(nullptr), mCooldownManager(nullptr), mStateManager(nullptr)
 {
 
 }
@@ -141,9 +141,10 @@ void Game::GenerateOutput()
 
 void Game::LoadData()
 {
-	mpCooldownManager = new CooldownManager(this);
+	mCooldownManager = new CooldownManager(this);
 
-	mpMario = new Mario(this);
+	mHero = new Hero(this);
+	mHero->pTransform->SetScale(1.5f);
 
 	GameObject* background = new GameObject(this, "Background");
 	background->pTransform->SetPosition(Vector2(mWindowWidth / 2.0f, mWindowHeight / 2.0f));
@@ -168,12 +169,14 @@ void Game::LoadData()
 	nearBackgroundComponent->SetBackgroundTextures(nearBackgroundTextures);
 	nearBackgroundComponent->SetScrollSpeed(-200.0f);
 
-	mpTilemap = new TileMap(this);
-	mpTilemap->pTransform->SetPosition(Vector2(0.0f, 0.0f));
-	mpTilemap->pTransform->SetScale(2.0f);
-	mpTilemap->Init("Assets/level-platform.csv");
+	mTilemap = new TileMap(this);
+	mTilemap->pTransform->SetPosition(Vector2(0.0f, -32.0f));
+	mTilemap->pTransform->SetScale(1.0f);
+	mTilemap->SetTileDimension(Vector2(16, 16));
+	mTilemap->SetTilePerRow(94);
+	mTilemap->Init("Assets/Shooter/spritesheet.png", "Assets/Shooter/misc-universal.csv");
 
-	mpStateManager = new StateManager(this, "StateManager");
+	mStateManager = new StateManager(this, "StateManager");
 }
 
 void Game::UnloadData()
@@ -214,19 +217,19 @@ SDL_Texture* Game::GetTexture(const std::string& fileName)
 	return texture;
 }
 
-Mario* Game::GetMario() const
+Hero* Game::GetMario() const
 {
-	return mpMario;
+	return mHero;
 }
 
 TileMap* Game::GetTileMap() const
 {
-	return mpTilemap;
+	return mTilemap;
 }
 
 CooldownManager* Game::GetCooldownManager() const
 {
-	return mpCooldownManager;
+	return mCooldownManager;
 }
 
 int Game::GetWindowWidth() const
