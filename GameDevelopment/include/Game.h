@@ -1,6 +1,7 @@
 #pragma once
 
 #include<SDL2/SDL.h>
+#include<box2d/b2_world.h>
 #include<include/CustomMath.h>
 #include<vector>
 #include<unordered_map>
@@ -24,6 +25,7 @@ public:
 	int GetWindowWidth() const;
 	int GetWindowHeight() const;
 	Vector2 GetCenterPoint() const;
+	b2World* GetPhysicWorld();
 private:
 	void ProcessInput();
 	void UpdateGame();
@@ -48,4 +50,8 @@ private:
 	// Sprites
 	std::vector<class SpriteComponent*> mpSprites;
 	std::unordered_map<std::string, SDL_Texture*> mpTextures;
+	// Physic WORLD
+	int32 mVelocityIterations;
+	int32 mPositionIterations;
+	b2World mPhysicWorld;
 };

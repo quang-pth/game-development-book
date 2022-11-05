@@ -3,13 +3,17 @@
 #include "include/Game.h"
 #include "include/TileDataComponent.h"
 #include "include/TransformComponent.h"
+#include "include/RigidBodyComponent.h"
 #include "include/CooldownManager.h"
+#include "include/Unit.h"
 #include <iostream>
 
-Tile::Tile(Game* game, const std::string& name) :
-	GameObject(game, name)
+Tile::Tile(Game* game, TileDataComponent* tileDataComponent, const std::string& name) :
+	GameObject(game, name),
+	mRigidBodyComponent()
 {
-	mTileData = new TileDataComponent(this);
+	mTileDataComponent = new TileDataComponent(this);
+	this->SetTileData(tileDataComponent);
 	game->GetCooldownManager()->Observe(this);
 }
 
@@ -19,13 +23,16 @@ Tile::~Tile()
 
 void Tile::UpdateGameObject(float deltaTime)
 {
-
 }
 
 void Tile::SetTileData(TileDataComponent* data)
 {
 	if (data != nullptr) {
-		mTileData = data;
+		mTileDataComponent = data;
+		mRigidBodyComponent = new RigidBodyComponent(this);
+		mRigidBodyComponent->SetPosition(mTileDataComponent->GetCurrentPosition());
+		mRigidBodyComponent->SetDimension(Vector2(8.0f, 8.0f));
+		mRigidBodyComponent->Init();
 	}
 }
 
@@ -41,12 +48,12 @@ void Tile::Cooldown(float deltaTime)
 
 TileDataComponent* Tile::GetTileDataComponent() const
 {
-	return mTileData;
+	return mTileDataComponent;
 }
 
 bool Tile::IsInBound()
 {
-	Vector2 position = mTileData->GetCurrentPosition();
+	Vector2 position = mTileDataComponent->GetCurrentPosition();
 	bool inBoundX = position.x >= 0 && position.x <= mGame->GetWindowWidth();
 	bool inBoundY = position.y >= 0 && position.y <= mGame->GetWindowHeight();
 	return inBoundX && inBoundY;

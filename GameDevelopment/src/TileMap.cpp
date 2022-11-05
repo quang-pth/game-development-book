@@ -118,8 +118,7 @@ void TileMap::LoadTileData(const char* filePath)
 			tileDataComponent->SetData(dimension, srcPosition, layout);
 			tileDataComponent->SetTexture(mTexture);
 			// Create tile game object
-			Tile* tile = new Tile(GameObject::GetGame());
-			tile->SetTileData(tileDataComponent);
+			Tile* tile = new Tile(GameObject::GetGame(), tileDataComponent);
 
 			mTiles.emplace_back(tile);
 		}

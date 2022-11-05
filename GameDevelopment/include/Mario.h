@@ -24,6 +24,7 @@ public:
 	class InputComponent *inputComponent;
 	class CircleComponent *circleComponent;
 	class AnimatorComponent *animator;
+	class RigidBodyComponent* rigidBodyComponent;
 private:
 	// Methods
 	void StartCooldown();

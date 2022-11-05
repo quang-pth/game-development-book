@@ -125,7 +125,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Users\ASUS\Desktop\Game Development\GameDevelopment\GameDevelopment;C:\Users\ASUS\Desktop\Game Development\GameDevelopment\GameDevelopment\include;C:\Users\ASUS\Desktop\Game Development\GameDevelopment\GameDevelopment\src;C:\Users\ASUS\Desktop\Game Development\GameDevelopment\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>;SDL2_image.lib;SDL2.lib;SDL2main.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>box2D.lib;SDL2_image.lib;SDL2.lib;SDL2main.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\RigidBodyComponent.cpp" />
     <ClCompile Include="src\JumpState.cpp" />
     <ClCompile Include="src\IdleState.cpp" />
     <ClCompile Include="src\GameObjectState.cpp" />
@@ -174,6 +175,7 @@
     <ClCompile Include="src\TileDataComponent.cpp" />
     <ClCompile Include="src\Tile.cpp" />
     <ClCompile Include="src\TileMap.cpp" />
+    <ClCompile Include="src\Unit.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\IdleState.h" />
@@ -204,6 +206,8 @@
     <ClInclude Include="include\Tile.h" />
     <ClInclude Include="include\TileMap.h" />
     <ClInclude Include="include\JumpState.h" />
+    <ClInclude Include="include\Unit.h" />
+    <ClInclude Include="include\RigidBodyComponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

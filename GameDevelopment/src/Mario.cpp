@@ -5,8 +5,10 @@
 #include "include/SpriteComponent.h"
 #include "include/InputComponent.h"
 #include "include/CircleComponent.h"
-#include "include/Asteroid.h"
 #include "include/AnimatorComponent.h"
+#include "include/RigidBodyComponent.h"
+#include "include/Unit.h"
+#include "include/Asteroid.h"
 #include "include/Animation.h"
 #include "include/WalkState.h"
 #include "include/IdleState.h"
@@ -66,12 +68,21 @@ Hero::Hero(Game* game, std::string name) :
 	circleComponent = new CircleComponent(this);
 	circleComponent->SetRadius(20.0f * pTransform->GetScale());
 
+	rigidBodyComponent = new RigidBodyComponent(this);
+	rigidBodyComponent->SetBodyType(EBody::DYNAMIC);
+	rigidBodyComponent->SetPosition(pTransform->GetPosition());
+	rigidBodyComponent->SetDimension(Vector2(8.0f, 8.0f));
+	rigidBodyComponent->Init();
+
 	mState = new IdleState();
 	mState->Enter(this);
 }
 
 void Hero::UpdateGameObject(float deltaTime)
 {
+	Vector2 position = Unit::MetersToPixels(rigidBodyComponent->GetBody()->GetPosition());
+	pTransform->SetPosition(position.x, position.y);
+
 	mState->Update(this);
 	this->ConstraintInScreenBounds();
 }

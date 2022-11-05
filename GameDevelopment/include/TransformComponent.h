@@ -15,6 +15,7 @@ public:
 	float GetScale() const { return mScale; }
 	void SetScale(float scale) { mScale = scale; }
 	void SetPosition(const Vector2& position) { mPosition.x = position.x; mPosition.y = position.y; }
+	void SetPosition(float x, float y) { mPosition.x = x; mPosition.y = y; }
 	void SetRotation(float rotation) { mRotation = rotation; }
 private:
 	Vector2 mPosition; // Center point of the gameobject

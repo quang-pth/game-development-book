@@ -7,15 +7,19 @@
 #include"include/TileMap.h"
 #include"include/StateManager.h"
 #include"include/Mario.h"
-#include<SDL2/SDL_image.h>
 #include"include/Asteroid.h"
+#include<SDL2/SDL_image.h>
+#include<box2D/b2_math.h>
 #include<iostream>
 
 Game::Game() : 
 	mpWindow(nullptr), mIsRunning(true), 
 	mTicksCount(0.0f), mpRenderer(), mpUpdatingGameObjects(false), 
 	mWindowWidth(800), mWindowHeight(600), 
-	mHero(nullptr), mTilemap(nullptr), mCooldownManager(nullptr), mStateManager(nullptr)
+	mHero(nullptr), mTilemap(nullptr), 
+	mCooldownManager(nullptr), mStateManager(nullptr),
+	mVelocityIterations(7), mPositionIterations(3),
+	mPhysicWorld(b2Vec2(0.0f, 10.0f))
 {
 
 }
@@ -105,6 +109,7 @@ void Game::UpdateGame()
 	}
 	// Update game objects
 	mpUpdatingGameObjects = true;
+	mPhysicWorld.Step(1 / 60.0f, mVelocityIterations, mPositionIterations);
 	for (const auto& gameObject : mpGameObjects) {
 		gameObject->Update(deltaTime);
 	}
@@ -245,6 +250,11 @@ int Game::GetWindowHeight() const
 Vector2 Game::GetCenterPoint() const
 {
 	return Vector2(mWindowWidth / 2, mWindowHeight / 2);
+}
+
+b2World* Game::GetPhysicWorld()
+{
+	return &mPhysicWorld;
 }
 
 void Game::AddGameObject(GameObject* gameObject)
