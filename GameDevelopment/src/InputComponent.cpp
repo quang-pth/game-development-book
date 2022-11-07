@@ -28,7 +28,7 @@ void InputComponent::Update(float deltaTime)
 	if (hero != nullptr) {
 		Vector2 velocity = MoveComponent::GetVelocity();
 		velocity.y = 0.0f;
-		hero->rigidBodyComponent->SetVelocity(velocity * deltaTime);
+		hero->rigidBodyComponent->Move(velocity * deltaTime);
 	}
 }
 

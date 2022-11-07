@@ -36,7 +36,7 @@ void RigidBodyComponent::SetPosition(const Vector2& position)
 	mPosition = Unit::PixelsToMeters(position);
 }
 
-void RigidBodyComponent::SetVelocity(const Vector2& velocity)
+void RigidBodyComponent::Move(const Vector2& velocity)
 {
 	b2Vec2 vec = Unit::PixelsToMeters(velocity);
 	mBody->SetLinearVelocity(mBody->GetLinearVelocity() + vec);
