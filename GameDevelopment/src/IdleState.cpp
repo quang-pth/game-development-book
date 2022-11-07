@@ -14,13 +14,14 @@ GameObjectState* IdleState::HandleInput(Hero* mOwner, const uint8_t* keyState)
 	bool isWalked = keyState[mOwner->inputComponent->GetInputKey("Left")]
 		|| keyState[mOwner->inputComponent->GetInputKey("Right")];
 	
+	if (keyState[mOwner->inputComponent->GetInputKey("Jump")]) {
+		return new JumpState();
+	}
+
 	if (isWalked) {
 		return new WalkState();
 	}
 
-	if (keyState[mOwner->inputComponent->GetInputKey("Jump")]) {
-		return new JumpState();
-	}
 
     return nullptr;
 }

@@ -13,7 +13,7 @@ InputComponent::InputComponent(GameObject* owner, int updateOrder) :
 	MoveComponent(owner, updateOrder),
 	mMaxForwardSpeed(200.0f),
 	mForwardLeftKey(SDL_SCANCODE_A), mForwardRightKey(SDL_SCANCODE_D), mJumpKey(SDL_SCANCODE_SPACE),
-	mState(EMovement::EUnMoveable), mRightKeyIsClicked(false)
+	mState(EMovement::EMoveable), mRightKeyIsClicked(false)
 {
 }
 
@@ -23,8 +23,12 @@ InputComponent::~InputComponent()
 
 void InputComponent::Update(float deltaTime)
 {
-	if (mState == EMovement::EMoveable) {
-		MoveComponent::Update(deltaTime);
+	MoveComponent::Update(deltaTime);
+	Hero* hero = (Hero*)mOwner;
+	if (hero != nullptr) {
+		Vector2 velocity = MoveComponent::GetVelocity();
+		velocity.y = 0.0f;
+		hero->rigidBodyComponent->SetVelocity(velocity * deltaTime);
 	}
 }
 
@@ -63,7 +67,6 @@ int InputComponent::GetInputKey(const std::string& keyName) const
 	else if (keyName == "Jump") {
 		return mJumpKey;
 	}
-
 	return -1;
 }
 

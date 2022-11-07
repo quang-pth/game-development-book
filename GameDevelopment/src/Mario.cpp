@@ -22,9 +22,9 @@ Hero::Hero(Game* game, std::string name) :
 	mActivateLaserIdx(0), mSpawnCooldown(1.5f),
 	mMoveDirection(Direction::Right)
 {
-	mCenterPosition = Vector2(game->GetWindowWidth() / 2 , game->GetWindowHeight() / 2);
+	mCenterPosition = Vector2(game->GetWindowWidth() / 2 - 30.0f, game->GetWindowHeight() / 2);
 	pTransform->SetPosition(mCenterPosition);
-	pTransform->SetScale(2.0f);
+	pTransform->SetScale(1.0f);
 	
 	/*
 	* ANIMATIONS
@@ -71,7 +71,7 @@ Hero::Hero(Game* game, std::string name) :
 	rigidBodyComponent = new RigidBodyComponent(this);
 	rigidBodyComponent->SetBodyType(EBody::DYNAMIC);
 	rigidBodyComponent->SetPosition(pTransform->GetPosition());
-	rigidBodyComponent->SetDimension(Vector2(8.0f, 8.0f));
+	rigidBodyComponent->SetDimension(Vector2(8 * pTransform->GetScale(), 8 * pTransform->GetScale()));
 	rigidBodyComponent->Init();
 
 	mState = new IdleState();

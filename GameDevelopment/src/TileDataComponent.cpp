@@ -3,6 +3,7 @@
 #include "include/TransformComponent.h"
 #include "include/GameObject.h"
 #include "include/Game.h"
+#include <iostream>
 
 TileDataComponent::TileDataComponent(GameObject* mOwner, int updateOrder, const std::string& name) : 
 	SpriteComponent(mOwner, updateOrder, name),
@@ -14,6 +15,7 @@ TileDataComponent::TileDataComponent(GameObject* mOwner, int updateOrder, const 
 
 TileDataComponent::~TileDataComponent()
 {
+
 }
 
 void TileDataComponent::Draw(SDL_Renderer* renderer)

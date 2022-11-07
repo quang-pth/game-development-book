@@ -7,10 +7,11 @@
 class Tile : public GameObject, ICooldownable
 {
 public:
-	Tile(class Game* game, class TileDataComponent* tileDataComponent, const std::string& name = "Tile");
+	Tile(class Game* game, const std::string& name = "Tile");
 	~Tile();
 	void UpdateGameObject(float deltaTime) override;
-	void SetTileData(class TileDataComponent* data);
+	void SetTileData(const Vector2& dimension, const Vector2& srcPosition,
+		const Vector2& layout, SDL_Texture* texture);
 	void Cooldown(float deltaTime) override;
 	class TileDataComponent* GetTileDataComponent() const;
 private:

@@ -20,23 +20,12 @@ TileMap::TileMap(Game* game, const std::string& name) :
 
 void TileMap::UpdateGameObject(float deltaTime)
 {
-	if (mState == EMovement::EMoveable) {
-		Hero* mario = GameObject::GetGame()->GetMario();
-		Vector2 distance = mario->pTransform->GetPosition();
-		Vector2 center = GameObject::GetGame()->GetCenterPoint();
+	Hero* mario = GameObject::GetGame()->GetMario();
+	Vector2 distance = mario->pTransform->GetPosition();
+	Vector2 center = GameObject::GetGame()->GetCenterPoint();
 
-		mOffset += mario->inputComponent->GetVelocity() * deltaTime;
-
-		if (mOffset.x > mXBound) {
-			mOffset.x = mXBound;
-		}
-		else if (mOffset.x < 0.0f) {
-			mOffset.x = 0.0f;
-		}
-
-		for (Tile* tile : mTiles) {
-			tile->GetTileDataComponent()->SetOffset(mOffset);
-		}
+	for (Tile* tile : mTiles) {
+		tile->GetTileDataComponent()->SetOffset(mOffset);
 	}
 }
 
@@ -110,15 +99,13 @@ void TileMap::LoadTileData(const char* filePath)
 
 			if (index == -1) continue;
 			// Setup tile data
-			TileDataComponent* tileDataComponent = new TileDataComponent(this);
 			Vector2 dimension = Vector2(mTileWidth, mTileHeight);
 			Vector2 srcPosition = Vector2(mTileWidth * (index % mTilePerRow),
 				mTileHeight * (index / mTilePerRow));
 			Vector2 layout = Vector2(col, row);
-			tileDataComponent->SetData(dimension, srcPosition, layout);
-			tileDataComponent->SetTexture(mTexture);
 			// Create tile game object
-			Tile* tile = new Tile(GameObject::GetGame(), tileDataComponent);
+			Tile* tile = new Tile(GameObject::GetGame());
+			tile->SetTileData(dimension, srcPosition, layout, mTexture);
 
 			mTiles.emplace_back(tile);
 		}

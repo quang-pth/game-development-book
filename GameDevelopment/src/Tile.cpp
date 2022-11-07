@@ -8,12 +8,11 @@
 #include "include/Unit.h"
 #include <iostream>
 
-Tile::Tile(Game* game, TileDataComponent* tileDataComponent, const std::string& name) :
+Tile::Tile(Game* game, const std::string& name) :
 	GameObject(game, name),
-	mRigidBodyComponent()
+	mRigidBodyComponent(), mTileDataComponent()
 {
-	mTileDataComponent = new TileDataComponent(this);
-	this->SetTileData(tileDataComponent);
+	pTransform->SetScale(1.0f);
 	game->GetCooldownManager()->Observe(this);
 }
 
@@ -23,17 +22,20 @@ Tile::~Tile()
 
 void Tile::UpdateGameObject(float deltaTime)
 {
+	mRigidBodyComponent->SetTransform(mTileDataComponent->GetCurrentPosition());
 }
 
-void Tile::SetTileData(TileDataComponent* data)
+void Tile::SetTileData(const Vector2& dimension, const Vector2& srcPosition, 
+	const Vector2& layout, SDL_Texture* texture)
 {
-	if (data != nullptr) {
-		mTileDataComponent = data;
-		mRigidBodyComponent = new RigidBodyComponent(this);
-		mRigidBodyComponent->SetPosition(mTileDataComponent->GetCurrentPosition());
-		mRigidBodyComponent->SetDimension(Vector2(8.0f, 8.0f));
-		mRigidBodyComponent->Init();
-	}
+	mTileDataComponent = new TileDataComponent(this);
+	mTileDataComponent->SetData(dimension, srcPosition, layout);
+	mTileDataComponent->SetTexture(texture);
+
+	mRigidBodyComponent = new RigidBodyComponent(this);
+	mRigidBodyComponent->SetPosition(mTileDataComponent->GetCurrentPosition());
+	mRigidBodyComponent->SetDimension(Vector2(8.0f * pTransform->GetScale(), 8.0f * pTransform->GetScale()));
+	mRigidBodyComponent->Init();
 }
 
 void Tile::Cooldown(float deltaTime)

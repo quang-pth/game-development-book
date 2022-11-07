@@ -30,7 +30,8 @@ void MoveComponent::Update(float deltaTime)
 	}
 
 	Vector2 position = mOwner->pTransform->GetPosition();
-	position += (mForceVelocity + mOwner->GetForward() * mForwardSpeed) * deltaTime;
+	Vector2 velocity = mForceVelocity + mOwner->GetForward() * mForwardSpeed;
+	position += velocity * deltaTime;
 	mOwner->pTransform->SetPosition(position);
 }
 

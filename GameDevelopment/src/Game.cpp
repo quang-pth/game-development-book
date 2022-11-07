@@ -15,7 +15,7 @@
 Game::Game() : 
 	mpWindow(nullptr), mIsRunning(true), 
 	mTicksCount(0.0f), mpRenderer(), mpUpdatingGameObjects(false), 
-	mWindowWidth(800), mWindowHeight(600), 
+	mWindowWidth(800), mWindowHeight(640),
 	mHero(nullptr), mTilemap(nullptr), 
 	mCooldownManager(nullptr), mStateManager(nullptr),
 	mVelocityIterations(7), mPositionIterations(3),
@@ -57,6 +57,7 @@ void Game::RunLoop()
 	while (mIsRunning) {
 		ProcessInput();
 		UpdateGame();
+		mPhysicWorld.Step(1 / 60.0f, mVelocityIterations, mPositionIterations);
 		GenerateOutput();
 	}
 }
@@ -109,7 +110,6 @@ void Game::UpdateGame()
 	}
 	// Update game objects
 	mpUpdatingGameObjects = true;
-	mPhysicWorld.Step(1 / 60.0f, mVelocityIterations, mPositionIterations);
 	for (const auto& gameObject : mpGameObjects) {
 		gameObject->Update(deltaTime);
 	}
@@ -149,7 +149,6 @@ void Game::LoadData()
 	mCooldownManager = new CooldownManager(this);
 
 	mHero = new Hero(this);
-	mHero->pTransform->SetScale(1.5f);
 
 	GameObject* background = new GameObject(this, "Background");
 	background->pTransform->SetPosition(Vector2(mWindowWidth / 2.0f, mWindowHeight / 2.0f));
@@ -175,13 +174,9 @@ void Game::LoadData()
 	nearBackgroundComponent->SetScrollSpeed(-200.0f);
 
 	mTilemap = new TileMap(this);
-	mTilemap->pTransform->SetPosition(Vector2(0.0f, -32.0f));
-	mTilemap->pTransform->SetScale(1.0f);
 	mTilemap->SetTileDimension(Vector2(16, 16));
 	mTilemap->SetTilePerRow(94);
-	mTilemap->Init("Assets/Shooter/spritesheet.png", "Assets/Shooter/misc-universal.csv");
-
-	mStateManager = new StateManager(this, "StateManager");
+	mTilemap->Init("Assets/Shooter/spritesheet.png", "Assets/Shooter/level-one.csv");
 }
 
 void Game::UnloadData()
