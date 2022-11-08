@@ -145,6 +145,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\GameTree.cpp" />
+    <ClCompile Include="src\NavComponent.cpp" />
     <ClCompile Include="src\Graph.cpp" />
     <ClCompile Include="src\AIAttack.cpp" />
     <ClCompile Include="src\AIDeath.cpp" />
@@ -174,6 +176,7 @@
     <ClCompile Include="src\TransformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\GameTree.h" />
     <ClInclude Include="include\Graph.h" />
     <ClInclude Include="include\AIAttack.h" />
     <ClInclude Include="include\AIDeath.h" />
@@ -200,6 +203,7 @@
     <ClInclude Include="include\Random.h" />
     <ClInclude Include="include\InputComponent.h" />
     <ClInclude Include="include\Laser.h" />
+    <ClInclude Include="include\NavComponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

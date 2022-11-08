@@ -37,9 +37,26 @@ struct GBFSScratch {
 	bool mInClosedSet = false;
 	bool mInOpenSet = false;
 };
+// A Star
+struct AStarScratch {
+	const WeightedEdge* mParentEdge = nullptr;
+	float mHeuristic = 0.0f;
+	float mActualFromStart = 0.0f;
+	bool mInClosedSet = false;
+	bool mInOpenSet = false;
+};
+// Dijkstra
+struct DijkstraScratch {
+	const WeightedEdge* mParentEdge = nullptr;
+	float mActualFromStart = 0.0f;
+	bool mInClosedSet = false;
+	bool mInOpenSet = false;
+};
 
 using NodeToParentMap = std::unordered_map<const GraphNode*, const GraphNode*>;
 using GBFSMap = std::unordered_map<const WeightedGraphNode*, GBFSScratch>;
+using AStarMap = std::unordered_map<const WeightedGraphNode*, AStarScratch>;
+using DijkstraMap = std::unordered_map<const WeightedGraphNode*, DijkstraScratch>;
 
 // Compute Mahattan Heuristic
 float ComputeMahattanHeuristic(const WeightedGraphNode* firstNode, const WeightedGraphNode* secondNode) {
@@ -123,20 +140,120 @@ public:
 
 		return currentNode == goal;
 	}
+	
+	static bool AStar(const WeightedGraph& graph, const WeightedGraphNode* start,
+		const WeightedGraphNode* goal, AStarMap& outMap)
+	{
+		std::vector<const WeightedGraphNode*> openSet;
+		const WeightedGraphNode* currentNode = start;
+		outMap[currentNode].mInClosedSet = true;
 
+		do {
+			// Add node adjacent to open set
+			for (const WeightedEdge* edge : currentNode->mEdges) {
+				AStarScratch& data = outMap[edge->mToNode];
+				if (!data.mInClosedSet) {
+					if (!data.mInOpenSet) {
+						data.mParentEdge = edge;
+						data.mHeuristic = ComputeMahattanHeuristic(edge->mToNode, goal);
+						data.mActualFromStart = outMap[currentNode].mActualFromStart + edge->weight;
+						data.mInOpenSet = true;
+
+						openSet.emplace_back(edge->mToNode);
+					}
+					else {
+						float newGCost = outMap[currentNode].mActualFromStart + edge->weight;
+						if (newGCost < data.mActualFromStart) {
+							data.mParentEdge = edge;
+							data.mActualFromStart = newGCost;
+						}
+					}
+				}
+			}
+
+			if (openSet.empty()) {
+				break;
+			}
+
+			// Find node with lowest Heurisitc Cost
+			auto iter = std::min_element(openSet.begin(), openSet.end(),
+				[&outMap](const WeightedGraphNode* firstNode, const WeightedGraphNode* secondNode) {
+				float fCostOne = outMap[firstNode].mHeuristic + outMap[firstNode].mActualFromStart;
+				float fCostTwo = outMap[secondNode].mHeuristic + outMap[secondNode].mActualFromStart;
+				return fCostOne < fCostTwo;
+			});
+
+			currentNode = (*iter);
+			openSet.erase(iter);
+			outMap[currentNode].mInOpenSet = false;
+			outMap[currentNode].mInClosedSet = true;
+
+		} while (currentNode != goal);
+
+		return currentNode == goal;
+	}
+
+	static bool Dijkstra(const WeightedGraph& graph, const WeightedGraphNode* start,
+		const WeightedGraphNode* goal, DijkstraMap& outMap)
+	{
+		std::vector<const WeightedGraphNode*> openSet;
+		const WeightedGraphNode* currentNode = start;
+		outMap[currentNode].mInClosedSet = true;
+
+		do {
+			// Add node adjacent to open set
+			for (const WeightedEdge* edge : currentNode->mEdges) {
+				DijkstraScratch& data = outMap[edge->mToNode];
+				if (!data.mInClosedSet) {
+					if (!data.mInOpenSet) {
+						data.mParentEdge = edge;
+						data.mActualFromStart = outMap[currentNode].mActualFromStart + edge->weight;
+						data.mInOpenSet = true;
+
+						openSet.emplace_back(edge->mToNode);
+					}
+					else {
+						float newGCost = outMap[currentNode].mActualFromStart + edge->weight;
+						if (newGCost < data.mActualFromStart) {
+							data.mParentEdge = edge;
+							data.mActualFromStart = newGCost;
+						}
+					}
+				}
+			}
+
+			if (openSet.empty()) {
+				break;
+			}
+
+			// Find node with lowest Heurisitc Cost
+			auto iter = std::min_element(openSet.begin(), openSet.end(),
+				[&outMap](const WeightedGraphNode* firstNode, const WeightedGraphNode* secondNode) {
+				return outMap[firstNode].mActualFromStart < outMap[secondNode].mActualFromStart;
+			});
+
+			currentNode = (*iter);
+			openSet.erase(iter);
+			outMap[currentNode].mInOpenSet = false;
+			outMap[currentNode].mInClosedSet = true;
+
+		} while (currentNode != goal);
+
+		return currentNode == goal;
+	}
 
 	static std::queue<const GraphNode*>& GetPath(const Graph& graph, const GraphNode* start,
 		const GraphNode* end, NodeToParentMap& map)
 	{
 		bool foundPath = GraphAlgorithm::BFS(graph, end, start, map);
-		std::queue<const GraphNode*> path;
+		std::queue<const GraphNode*> path = std::queue<const GraphNode*>();
 
 		if (foundPath) {
 			const GraphNode* currentNode = map[start];
-			while (currentNode != nullptr) {
+			do {
 				path.emplace(currentNode);
 				currentNode = map[currentNode];
-			}
+			} while (currentNode != nullptr);
 		}
 
 		return path;
@@ -148,9 +265,46 @@ public:
 		bool foundPath = GraphAlgorithm::GBFS(graph, end, start, map);
 		std::queue<const WeightedGraphNode*> path = std::queue<const WeightedGraphNode*>();
 
-		// TODO: extract node from edges
 		if (foundPath) {
+			const WeightedGraphNode* currentNode = start;
+			do {
+				path.emplace(currentNode);
+				currentNode = map[currentNode].mParentEdge->mFromNode;
+			} while (currentNode != nullptr);
+		}
 
+		return path;
+	}
+
+	static std::queue<const WeightedGraphNode*>& GetPath(const WeightedGraph& graph, const WeightedGraphNode* start,
+		const WeightedGraphNode* end, AStarMap& map)
+	{
+		bool foundPath = GraphAlgorithm::AStar(graph, end, start, map);
+		std::queue<const WeightedGraphNode*> path = std::queue<const WeightedGraphNode*>();
+
+		if (foundPath) {
+			const WeightedGraphNode* currentNode = start;
+			do {
+				path.emplace(currentNode);
+				currentNode = map[currentNode].mParentEdge->mFromNode;
+			} while (currentNode != nullptr);
+		}
+
+		return path;
+	}
+
+	static std::queue<const WeightedGraphNode*>& GetPath(const WeightedGraph& graph, const WeightedGraphNode* start,
+		const WeightedGraphNode* end, DijkstraMap& map)
+	{
+		bool foundPath = GraphAlgorithm::Dijkstra(graph, end, start, map);
+		std::queue<const WeightedGraphNode*> path = std::queue<const WeightedGraphNode*>();
+
+		if (foundPath) {
+			const WeightedGraphNode* currentNode = start;
+			do {
+				path.emplace(currentNode);
+				currentNode = map[currentNode].mParentEdge->mFromNode;
+			} while (currentNode != nullptr);
 		}
 
 		return path;
