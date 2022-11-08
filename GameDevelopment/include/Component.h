@@ -10,7 +10,7 @@ public:
 	/*
 	* updateOrder: component with smaller updateOrder is updated first
 	*/
-	Component(class GameObject* owner, int updateOrder = 100, std::string name = "");
+	Component(class GameObject* owner, int updateOrder = 100, const std::string& name = "");
 	virtual ~Component();
 
 	virtual void Update(float deltaTime);

@@ -145,6 +145,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Graph.cpp" />
+    <ClCompile Include="src\AIAttack.cpp" />
+    <ClCompile Include="src\AIDeath.cpp" />
+    <ClCompile Include="src\AIPatrol.cpp" />
+    <ClCompile Include="src\AIState.cpp" />
+    <ClCompile Include="src\AIComponent.cpp" />
     <ClCompile Include="src\ICooldownable.cpp" />
     <ClCompile Include="src\CooldownManager.cpp" />
     <ClCompile Include="src\Laser.cpp" />
@@ -168,6 +174,12 @@
     <ClCompile Include="src\TransformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Graph.h" />
+    <ClInclude Include="include\AIAttack.h" />
+    <ClInclude Include="include\AIDeath.h" />
+    <ClInclude Include="include\AIPatrol.h" />
+    <ClInclude Include="include\AIState.h" />
+    <ClInclude Include="include\AIComponent.h" />
     <ClInclude Include="include\ICooldownable.h" />
     <ClInclude Include="include\CooldownManager.h" />
     <ClInclude Include="include\CircleComponent.h" />

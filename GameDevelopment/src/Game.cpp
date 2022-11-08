@@ -5,8 +5,12 @@
 #include"include/BackgroundSpriteComponent.h"
 #include"include/TransformComponent.h"
 #include"include/TileMapComponent.h"
+#include"include/AIComponent.h"
 #include"include/Ship.h"
 #include"include/Asteroid.h"
+#include"include/AIPatrol.h"
+#include"include/AIAttack.h"
+#include"include/AIDeath.h"
 #include<SDL2/SDL_image.h>
 #include<iostream>
 
@@ -165,6 +169,14 @@ void Game::LoadData()
 	};
 	nearBackgroundComponent->SetBackgroundTextures(nearBackgroundTextures);
 	nearBackgroundComponent->SetScrollSpeed(-200.0f);
+
+	// AI
+	GameObject* aiActor = new GameObject(this, "AIActor");
+	AIComponent* aiComponent = new AIComponent(aiActor);
+	aiComponent->RegisterState(new AIPatrol(aiComponent));
+	aiComponent->RegisterState(new AIAttack(aiComponent));
+	aiComponent->RegisterState(new AIDeath(aiComponent));
+	aiComponent->ChangeState("AIPatrol");
 }
 
 void Game::UnloadData()

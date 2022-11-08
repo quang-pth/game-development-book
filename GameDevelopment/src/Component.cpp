@@ -5,7 +5,7 @@ Component::Component() : mOwner(), mUpdateOrder(), mName()
 {
 }
 
-Component::Component(GameObject* owner, int updateOrder, std::string name) : 
+Component::Component(GameObject* owner, int updateOrder, const std::string& name) : 
 	mOwner(owner), mUpdateOrder(updateOrder), mName(name)
 {
 	mOwner->AddComponent(this);
