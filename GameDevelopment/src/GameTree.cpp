@@ -1,24 +1,26 @@
 #include "include/GameTree.h"
 
-const GameTreeNode* Minimax::MinimaxDecide(const GameTreeNode* root)
+const GameState* Minimax::AlphaBetaDecide(const GameState* root, unsigned int depth)
 {
-    // Find subtree with the max value and save the choice
-    const GameTreeNode* choice = nullptr;
-    float maxValue = -std::numeric_limits<float>::infinity();
-    
-    for (const GameTreeNode* node : root->mChildrens) {
-        float minValue = this->MinPlayer(node);
-    
-        if (minValue > maxValue) {
-            maxValue = minValue;
-            choice = node;
+    const GameState* choice = nullptr;
+    // alpha: determine the lowerbounds of state score
+    float alpha = -std::numeric_limits<float>::infinity();
+    // beta: determine the upperbounds of state score
+    float beta = std::numeric_limits<float>::infinity();
+
+    for (const GameState* nextState : root->GetPossibleMoves()) {
+        float value = this->AlphaBetaMin(nextState, depth - 1, alpha, beta);
+
+        if (value > alpha) {
+            alpha = value;
+            choice = nextState;
         }
     }
 
     return choice;
 }
 
-float Minimax::MaxPlayerLimit(const GameState* gameState, unsigned int depth)
+float Minimax::AlphaBetaMax(const GameState* gameState, unsigned int depth, float alpha, float beta)
 {
     if (gameState->IsTerminal() || depth == 0) {
         return gameState->GetScore();
@@ -26,13 +28,19 @@ float Minimax::MaxPlayerLimit(const GameState* gameState, unsigned int depth)
 
     float maxValue = -std::numeric_limits<float>::infinity();
     for (const GameState* nextState : gameState->GetPossibleMoves()) {
-        maxValue = std::max(maxValue, this->MinPlayerLimit(nextState, depth - 1));
+        maxValue = std::max(maxValue, this->AlphaBetaMin(nextState, depth - 1, alpha, beta));
+
+        if (maxValue >= beta) {
+            return maxValue;
+        }
+
+        alpha = std::max(maxValue, alpha);
     }
 
     return maxValue;
 }
 
-float Minimax::MinPlayerLimit(const GameState* gameState, unsigned int depth)
+float Minimax::AlphaBetaMin(const GameState* gameState, unsigned int depth, float alpha, float beta)
 {
     if (gameState->IsTerminal() || depth == 0) {
         return gameState->GetScore();
@@ -40,35 +48,13 @@ float Minimax::MinPlayerLimit(const GameState* gameState, unsigned int depth)
 
     float minValue = std::numeric_limits<float>::infinity();
     for (const GameState* nextState : gameState->GetPossibleMoves()) {
-        minValue = std::min(minValue, this->MaxPlayerLimit(nextState, depth - 1));
-    }
+        minValue = std::min(minValue, this->AlphaBetaMax(nextState, depth - 1, alpha, beta));
 
-    return minValue;
-}
+        if (minValue <= alpha) {
+            return minValue;
+        }
 
-float Minimax::MaxPlayer(const GameTreeNode* node)
-{
-    if (node->mChildrens.empty()) {
-        return node->mState->GetScore();
-    }
-
-    float maxValue = -std::numeric_limits<float>::infinity();
-    for (const GameTreeNode* node : node->mChildrens) {
-        maxValue = std::max(maxValue, this->MinPlayer(node));
-    }
-
-    return maxValue;
-}
-
-float Minimax::MinPlayer(const GameTreeNode* node)
-{
-    if (node->mChildrens.empty()) {
-        return node->mState->GetScore();
-    }
-
-    float minValue = std::numeric_limits<float>::infinity();
-    for (const GameTreeNode* node : node->mChildrens) {
-        minValue = std::max(minValue, this->MaxPlayer(node));
+        beta = std::min(minValue, beta);
     }
 
     return minValue;

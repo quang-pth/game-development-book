@@ -29,10 +29,8 @@ struct GameTreeNode {
 class Minimax {
 public:
 	Minimax() = default;
-	const GameTreeNode* MinimaxDecide(const GameTreeNode* root);
+	const GameState* AlphaBetaDecide(const GameState* root, unsigned int depth);
 private:
-	float MaxPlayerLimit(const GameState* gameState, unsigned int depth);
-	float MinPlayerLimit(const GameState* gameState, unsigned int depth);
-	float MaxPlayer(const GameTreeNode* node);
-	float MinPlayer(const GameTreeNode* node);
+	float AlphaBetaMax(const GameState* gameState, unsigned int depth, float alpha, float beta);
+	float AlphaBetaMin(const GameState* gameState, unsigned int depth, float alpha, float beta);
 };
