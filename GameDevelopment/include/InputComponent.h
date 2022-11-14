@@ -19,7 +19,7 @@ public:
 private:
 	float mMaxForwardSpeed;
 	bool mRightKeyIsClicked;
-	int mForwardLeftKey, mForwardRightKey, mJumpKey;
+	int mForwardLeftKey, mForwardRightKey, mJumpKey, mFireKey;
 	EMovement mState;
 };
 

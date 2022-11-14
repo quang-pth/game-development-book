@@ -12,7 +12,8 @@
 InputComponent::InputComponent(GameObject* owner, int updateOrder) :
 	MoveComponent(owner, updateOrder),
 	mMaxForwardSpeed(200.0f),
-	mForwardLeftKey(SDL_SCANCODE_A), mForwardRightKey(SDL_SCANCODE_D), mJumpKey(SDL_SCANCODE_SPACE),
+	mForwardLeftKey(SDL_SCANCODE_A), 
+	mForwardRightKey(SDL_SCANCODE_D), mJumpKey(SDL_SCANCODE_SPACE), mFireKey(SDL_SCANCODE_P),
 	mState(EMovement::EMoveable), mRightKeyIsClicked(false)
 {
 }
@@ -38,12 +39,18 @@ void InputComponent::ProcessInput(const uint8_t* keyState)
 	if (keyState[mForwardRightKey]) {
 		forwardSpeed += mMaxForwardSpeed;
 		mRightKeyIsClicked = true;
+		((Hero*)mOwner)->SetDirection(Hero::Direction::Right);
 	}
 	if (keyState[mForwardLeftKey]) {
 		forwardSpeed -= mMaxForwardSpeed;
 		mRightKeyIsClicked = false;
+		((Hero*)mOwner)->SetDirection(Hero::Direction::Left);
 	}
 	MoveComponent::SetForwardSpeed(forwardSpeed);
+
+	if (keyState[mFireKey]) {
+		((Hero*)mOwner)->Fire();
+	}
 }
 
 float InputComponent::GetMaxForwardSpeed() const

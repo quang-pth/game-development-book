@@ -7,6 +7,7 @@
 #include "include/CircleComponent.h"
 #include "include/AnimatorComponent.h"
 #include "include/RigidBodyComponent.h"
+#include "include/Laser.h"
 #include "include/Unit.h"
 #include "include/Asteroid.h"
 #include "include/Animation.h"
@@ -18,9 +19,11 @@
 
 Hero::Hero(Game* game, std::string name) :
 	GameObject(game, name),
-	mFireKey(SDL_SCANCODE_SPACE), mFireCooldown(0.3f),
+	mFireCooldown(0.3f),
 	mActivateLaserIdx(0), mSpawnCooldown(1.5f),
-	mMoveDirection(Direction::Right)
+	mMoveDirection(Direction::Right),
+	mCapacity(30), mLasers(), mFireDirection(Direction::Right),
+	mCurrentFireCooldown(0.0f)
 {
 	mCenterPosition = Vector2(game->GetWindowWidth() / 2 - 30.0f, game->GetWindowHeight() / 2);
 	pTransform->SetPosition(mCenterPosition);
@@ -76,10 +79,14 @@ Hero::Hero(Game* game, std::string name) :
 
 	mState = new IdleState();
 	mState->Enter(this);
+
+	this->InstantiateLaser();
 }
 
 void Hero::UpdateGameObject(float deltaTime)
 {
+	mCurrentFireCooldown -= deltaTime;
+
 	Vector2 position = Unit::MetersToPixels(rigidBodyComponent->GetBody()->GetPosition());
 	pTransform->SetPosition(position.x, position.y);
 
@@ -109,6 +116,42 @@ void Hero::Cooldown(float deltaTime)
 	if (mSpawnCooldown <= 0) {
 		this->ActAfterCooldown();
 	}
+}
+
+void Hero::SetDirection(Direction direction)
+{
+	mMoveDirection = direction;
+}
+
+void Hero::Fire()
+{
+	if (mCurrentFireCooldown > 0.0f) return;
+
+	mActivateLaserIdx++;
+	if (mActivateLaserIdx >= mLasers.size()) {
+		mActivateLaserIdx = 0;
+	}
+
+	Laser* laser = mLasers[mActivateLaserIdx];
+
+	if (mMoveDirection == Direction::Left) {
+		Vector2 offset(-5.0f, animator->GetTextureHeight() / 2 - 3.5f);
+		laser->pTransform->SetPosition(pTransform->GetPosition() + offset);
+		laser->SetDirection(-1);
+	}
+	else if (mMoveDirection == Direction::Right) {
+		Vector2 offset(8.0f, animator->GetTextureHeight() / 2 - 3.5f);
+		laser->pTransform->SetPosition(pTransform->GetPosition() + offset);
+		laser->SetDirection(1);
+	}
+
+	laser->SetState(GameObject::State::EActive);
+	mCurrentFireCooldown = mFireCooldown;
+}
+
+bool Hero::IsMoving() const
+{
+	return inputComponent->GetForwardSpeed() != 0.0f;
 }
 
 Hero::Direction Hero::GetMoveDirection() const
@@ -184,4 +227,14 @@ void Hero::ConstraintInScreenBounds()
 	}
 
 	pTransform->SetPosition(Vector2(newXPos, newYPos));
+}
+
+void Hero::InstantiateLaser()
+{
+	for (unsigned int idx = 0; idx < mCapacity; idx++) {
+		Laser* laser = new Laser(GameObject::GetGame());
+		laser->SetState(GameObject::State::EDeactive);
+		laser->pTransform->SetScale(1.5f);
+		mLasers.emplace_back(laser);
+	}
 }

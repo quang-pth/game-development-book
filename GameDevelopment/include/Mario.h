@@ -15,6 +15,9 @@ public:
 	void UpdateGameObject(float deltaTime) override;
 	void ProcessGameObjectInput(const uint8_t* keyState) override;
 	void Cooldown(float deltaTime) override;
+	void SetDirection(Direction direction);
+	void Fire();
+	bool IsMoving() const;
 	Direction GetMoveDirection() const;
 	void SetMoveDirection(Hero::Direction direction);
 	class InputComponent* GetInputComponent() const;
@@ -30,13 +33,15 @@ private:
 	void StartCooldown();
 	void ActAfterCooldown();
 	void ConstraintInScreenBounds();
+	void InstantiateLaser();
 	// Weapon
-	unsigned int mActivateLaserIdx;
-	// Cooldown
-	float mFireCooldown;
 	float mSpawnCooldown;
-	// Component
-	uint8_t mFireKey;
+	float mFireCooldown;
+	float mCurrentFireCooldown;
+	unsigned int mActivateLaserIdx;
+	unsigned int mCapacity;
+	Direction mFireDirection;
+	std::vector<class Laser*> mLasers;
 	// States
 	Direction mMoveDirection;
 	Vector2 mCenterPosition;

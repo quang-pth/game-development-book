@@ -8,14 +8,14 @@
 #include "include/Mario.h"
 #include <iostream>
 
-Laser::Laser() : GameObject(), mMoveComponent(), mSpriteComponent(), mCircleComponent()
-{
-}
-
 Laser::Laser(Game* game, std::string name) : 
-	GameObject(game, name)
+	GameObject(game, name),
+	mLifeTime(1.5f),
+	mCurrentLifeTime(1.5f),
+	mForwardSpeed(150.0f)
 {
 	mMoveComponent = new MoveComponent(this);
+	mMoveComponent->SetForwardSpeed(mForwardSpeed);
 
 	mSpriteComponent = new SpriteComponent(this);
 	mSpriteComponent->SetTexture(GameObject::GetGame()->GetTexture("Assets/Shooter/Hero/Bullet/tile000.png"));
@@ -26,7 +26,13 @@ Laser::Laser(Game* game, std::string name) :
 
 void Laser::UpdateGameObject(float deltaTime)
 {
+	mCurrentLifeTime -= deltaTime;
+	mMoveComponent->Update(deltaTime);
+}
 
+void Laser::SetDirection(int direction)
+{
+	mMoveComponent->SetForwardSpeed(direction * mForwardSpeed);
 }
 
 MoveComponent* Laser::GetMoveComponent() const
@@ -42,4 +48,13 @@ SpriteComponent* Laser::GetSpriteComponent() const
 CircleComponent* Laser::GetCircleComponent() const
 {
 	return mCircleComponent;
+}
+
+void Laser::CheckIsAlive()
+{
+	if (mCurrentLifeTime <= 0) {
+		GameObject::SetState(GameObject::State::EDeactive);
+		mCurrentLifeTime = mLifeTime;
+		mMoveComponent->SetForwardSpeed(mForwardSpeed);
+	}
 }

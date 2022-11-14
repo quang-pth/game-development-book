@@ -1,6 +1,8 @@
 #include "RigidBodyComponent.h"
 #include "include/Game.h"
 #include "include/GameObject.h"
+#include "include/TransformComponent.h"
+#include "include/TileMap.h"
 #include "include/Unit.h"
 #include<box2d/b2_polygon_shape.h>
 #include <box2d/b2_fixture.h>
@@ -75,7 +77,7 @@ void RigidBodyComponent::Init()
 		mBody->CreateFixture(&fixtureDef);
 		break;
 	case EBody::STATIC:
-		mBodyDef.position.Set(mPosition.x, mPosition.y);
+		mBodyDef.position.Set(mPosition.x + Unit::PixelsToMeters(16.0f), mPosition.y);
 		mBodyDef.userData.pointer = reinterpret_cast<uintptr_t>(mOwner);
 		mBody = mOwner->GetGame()->GetPhysicWorld()->CreateBody(&mBodyDef);
 		polygonShape.SetAsBox(mDimension.x, mDimension.y);

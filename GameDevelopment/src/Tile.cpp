@@ -4,6 +4,7 @@
 #include "include/TileDataComponent.h"
 #include "include/TransformComponent.h"
 #include "include/RigidBodyComponent.h"
+#include "include/TileMap.h"
 #include "include/CooldownManager.h"
 #include "include/Unit.h"
 #include <iostream>
@@ -12,7 +13,7 @@ Tile::Tile(Game* game, const std::string& name) :
 	GameObject(game, name),
 	mRigidBodyComponent(), mTileDataComponent()
 {
-	pTransform->SetScale(1.0f);
+	pTransform->SetScale(2.0f);
 	game->GetCooldownManager()->Observe(this);
 }
 

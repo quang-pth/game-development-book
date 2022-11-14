@@ -11,6 +11,9 @@ public:
 	TransformComponent(class GameObject* owner, int updateOrder, std::string name);
 	
 	Vector2 GetPosition() const { return mPosition; }
+	void FlipPosition();
+	void FlipX();
+	void FlipY();
 	float GetRotation() const { return mRotation; }
 	float GetScale() const { return mScale; }
 	void SetScale(float scale) { mScale = scale; }

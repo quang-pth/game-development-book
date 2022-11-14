@@ -18,6 +18,8 @@ public:
 	void Init(const char* srcTextureFilePath, const char* layoutFilePath);
 	void SetState(EMovement state);
 	void SetTileDimension(const Vector2& dimension);
+	float GetTileWidth() const;
+	float GetTileHeight() const;
 	void SetTilePerRow(unsigned int numOfTiles);
 	EMovement GetState() const;
 	bool AtRightBounds();

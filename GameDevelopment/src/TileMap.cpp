@@ -46,6 +46,16 @@ void TileMap::SetTileDimension(const Vector2& dimension)
 	mTileHeight = dimension.y;
 }
 
+float TileMap::GetTileWidth() const
+{
+	return mTileWidth;
+}
+
+float TileMap::GetTileHeight() const
+{
+	return mTileHeight;
+}
+
 void TileMap::SetTilePerRow(unsigned int numOfTiles)
 {
 	mTilePerRow = numOfTiles;
@@ -98,8 +108,9 @@ void TileMap::LoadTileData(const char* filePath)
 			int index = tiles[row][col];
 
 			if (index == -1) continue;
-			// Setup tile data
+
 			Vector2 dimension = Vector2(mTileWidth, mTileHeight);
+			// Setup tile data
 			Vector2 srcPosition = Vector2(mTileWidth * (index % mTilePerRow),
 				mTileHeight * (index / mTilePerRow));
 			Vector2 layout = Vector2(col, row);
