@@ -38,6 +38,12 @@ void RigidBodyComponent::SetPosition(const Vector2& position)
 	mPosition = Unit::PixelsToMeters(position);
 }
 
+Vector2* RigidBodyComponent::GetPosition() const
+{
+	Vector2 position = Unit::MetersToPixels(mBody->GetPosition());
+	return &position;
+}
+
 void RigidBodyComponent::Move(const Vector2& velocity)
 {
 	b2Vec2 vec = Unit::PixelsToMeters(velocity);
@@ -77,7 +83,7 @@ void RigidBodyComponent::Init()
 		mBody->CreateFixture(&fixtureDef);
 		break;
 	case EBody::STATIC:
-		mBodyDef.position.Set(mPosition.x + Unit::PixelsToMeters(16.0f), mPosition.y);
+		mBodyDef.position.Set(mPosition.x, mPosition.y);
 		mBodyDef.userData.pointer = reinterpret_cast<uintptr_t>(mOwner);
 		mBody = mOwner->GetGame()->GetPhysicWorld()->CreateBody(&mBodyDef);
 		polygonShape.SetAsBox(mDimension.x, mDimension.y);

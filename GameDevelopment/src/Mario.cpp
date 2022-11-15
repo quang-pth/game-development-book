@@ -27,7 +27,7 @@ Hero::Hero(Game* game, std::string name) :
 {
 	mCenterPosition = Vector2(game->GetWindowWidth() / 2 - 30.0f, game->GetWindowHeight() / 2);
 	pTransform->SetPosition(mCenterPosition);
-	pTransform->SetScale(1.0f);
+	pTransform->SetScale(1.8f);
 	
 	/*
 	* ANIMATIONS
@@ -74,7 +74,7 @@ Hero::Hero(Game* game, std::string name) :
 	rigidBodyComponent = new RigidBodyComponent(this);
 	rigidBodyComponent->SetBodyType(EBody::DYNAMIC);
 	rigidBodyComponent->SetPosition(pTransform->GetPosition());
-	rigidBodyComponent->SetDimension(Vector2(8 * pTransform->GetScale(), 8 * pTransform->GetScale()));
+	rigidBodyComponent->SetDimension(Vector2(5 * pTransform->GetScale(), 5 * pTransform->GetScale()));
 	rigidBodyComponent->Init();
 
 	mState = new IdleState();

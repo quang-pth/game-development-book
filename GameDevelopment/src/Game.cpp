@@ -149,7 +149,6 @@ void Game::LoadData()
 	mCooldownManager = new CooldownManager(this);
 
 	mHero = new Hero(this);
-	mHero->pTransform->SetScale(1.5f);
 
 	GameObject* background = new GameObject(this, "Background");
 	background->pTransform->SetPosition(Vector2(mWindowWidth / 2.0f, mWindowHeight / 2.0f));

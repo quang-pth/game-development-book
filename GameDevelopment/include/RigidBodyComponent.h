@@ -19,6 +19,7 @@ public:
 	void SetBodyType(EBody type);
 	void SetTransform(const Vector2& position);
 	void SetPosition(const Vector2& position);
+	Vector2* GetPosition() const;
 	void Move(const Vector2& velocity);
 	void Jump(float force);
 	void SetDimension(const Vector2& dimension);

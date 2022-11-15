@@ -28,7 +28,8 @@ void TileDataComponent::Draw(SDL_Renderer* renderer)
 		&mDestRect, -Math::ToDegrees(mOwner->pTransform->GetRotation()), nullptr, SDL_FLIP_NONE);
 }
 
-void TileDataComponent::SetData(const Vector2& dimension, const Vector2& srcPosition, const Vector2& layoutPosition)
+void TileDataComponent::SetData(const Vector2& dimension, const Vector2& srcPosition, 
+	const Vector2& layoutPosition)
 {
 	// Config source rect
 	mSrcRect.w = static_cast<int>(dimension.x);

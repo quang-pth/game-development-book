@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Enemy.cpp" />
     <ClCompile Include="src\RigidBodyComponent.cpp" />
     <ClCompile Include="src\JumpState.cpp" />
     <ClCompile Include="src\IdleState.cpp" />
@@ -178,6 +179,7 @@
     <ClCompile Include="src\Unit.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Enemy.h" />
     <ClInclude Include="include\IdleState.h" />
     <ClInclude Include="include\GameObjectState.h" />
     <ClInclude Include="include\Enums.h" />

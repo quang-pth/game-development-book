@@ -23,7 +23,6 @@ Tile::~Tile()
 
 void Tile::UpdateGameObject(float deltaTime)
 {
-	mRigidBodyComponent->SetTransform(mTileDataComponent->GetCurrentPosition());
 }
 
 void Tile::SetTileData(const Vector2& dimension, const Vector2& srcPosition, 
