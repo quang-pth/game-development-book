@@ -151,6 +151,14 @@
     <ClCompile Include="src\IdleState.cpp" />
     <ClCompile Include="src\GameObjectState.cpp" />
     <ClCompile Include="src\Enums.cpp" />
+    <ClCompile Include="src\GameTree.cpp" />
+    <ClCompile Include="src\NavComponent.cpp" />
+    <ClCompile Include="src\Graph.cpp" />
+    <ClCompile Include="src\AIAttack.cpp" />
+    <ClCompile Include="src\AIDeath.cpp" />
+    <ClCompile Include="src\AIPatrol.cpp" />
+    <ClCompile Include="src\AIState.cpp" />
+    <ClCompile Include="src\AIComponent.cpp" />
     <ClCompile Include="src\ICooldownable.cpp" />
     <ClCompile Include="src\CooldownManager.cpp" />
     <ClCompile Include="src\Laser.cpp" />
@@ -183,6 +191,13 @@
     <ClInclude Include="include\IdleState.h" />
     <ClInclude Include="include\GameObjectState.h" />
     <ClInclude Include="include\Enums.h" />
+    <ClInclude Include="include\GameTree.h" />
+    <ClInclude Include="include\Graph.h" />
+    <ClInclude Include="include\AIAttack.h" />
+    <ClInclude Include="include\AIDeath.h" />
+    <ClInclude Include="include\AIPatrol.h" />
+    <ClInclude Include="include\AIState.h" />
+    <ClInclude Include="include\AIComponent.h" />
     <ClInclude Include="include\ICooldownable.h" />
     <ClInclude Include="include\CooldownManager.h" />
     <ClInclude Include="include\CircleComponent.h" />
@@ -210,6 +225,7 @@
     <ClInclude Include="include\JumpState.h" />
     <ClInclude Include="include\Unit.h" />
     <ClInclude Include="include\RigidBodyComponent.h" />
+    <ClInclude Include="include\NavComponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

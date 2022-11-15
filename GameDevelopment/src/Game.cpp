@@ -7,7 +7,11 @@
 #include"include/TileMap.h"
 #include"include/StateManager.h"
 #include"include/Mario.h"
+#include"include/AIComponent.h"
 #include"include/Asteroid.h"
+#include"include/AIPatrol.h"
+#include"include/AIAttack.h"
+#include"include/AIDeath.h"
 #include<SDL2/SDL_image.h>
 #include<box2D/b2_math.h>
 #include<iostream>
@@ -177,6 +181,13 @@ void Game::LoadData()
 	mTilemap->SetTileDimension(Vector2(16, 16));
 	mTilemap->SetTilePerRow(94);
 	mTilemap->Init("Assets/Shooter/spritesheet.png", "Assets/Shooter/level-one-half-dimension.csv");
+	// AI
+	// GameObject* aiActor = new GameObject(this, "AIActor");
+	// AIComponent* aiComponent = new AIComponent(aiActor);
+	// aiComponent->RegisterState(new AIPatrol(aiComponent));
+	// aiComponent->RegisterState(new AIAttack(aiComponent));
+	// aiComponent->RegisterState(new AIDeath(aiComponent));
+	// aiComponent->ChangeState("AIPatrol");
 }
 
 void Game::UnloadData()

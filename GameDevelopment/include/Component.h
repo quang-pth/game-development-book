@@ -5,12 +5,11 @@
 class Component
 {
 public:
-	std::string name;
 	Component();
 	/*
 	* updateOrder: component with smaller updateOrder is updated first
 	*/
-	Component(class GameObject* owner, int updateOrder = 100, std::string name = "");
+	Component(class GameObject* owner, int updateOrder = 100, const std::string& name = "");
 	virtual ~Component();
 
 	virtual void Update(float deltaTime);
@@ -20,5 +19,6 @@ public:
 protected:
 	class GameObject* mOwner;
 	int mUpdateOrder;
+	std::string mName;
 };
 
