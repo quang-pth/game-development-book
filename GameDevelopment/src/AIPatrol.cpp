@@ -1,6 +1,7 @@
 #include "AIPatrol.h"
 
 #include "include/AIComponent.h"
+#include "include/AnimatorComponent.h"
 #include "include/Enemy.h"
 
 AIPatrol::AIPatrol(AIComponent* owner) : 
@@ -30,6 +31,7 @@ void AIPatrol::Update(float deltaTime)
 
 void AIPatrol::OnEnter()
 {
+	mAgent->GetAnimatorComponent()->SetAnimation("Running");
 }
 
 void AIPatrol::OnExit()

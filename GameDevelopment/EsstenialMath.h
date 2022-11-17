@@ -247,7 +247,7 @@ namespace EssentialMath
 	class ConvertHelper {
 	public:
 		// Convert an Euler Angle representation to Matrix form
-		// head, pitch and bank must be mesured in object's space 
+		// head, pitch and bank must be measured in object's space 
 		static void ObjectToUprightRotationMatrix(const EulerAngle& angle, float matrix[3][3]) {
 			float cosHead = cosf(angle.head);
 			float sinHead = sinf(angle.head);

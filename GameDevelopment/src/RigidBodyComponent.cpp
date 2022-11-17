@@ -64,6 +64,16 @@ void RigidBodyComponent::SetDimension(const Vector2& dimension)
 	mDimension = Unit::PixelsToMeters(dimension);
 }
 
+void RigidBodyComponent::SetGravity(float gravity)
+{
+	mBody->SetGravityScale(gravity);
+}
+
+void RigidBodyComponent::WakeUp(bool wakeUp)
+{
+	mBody->SetAwake(wakeUp);
+}
+
 void RigidBodyComponent::Init()
 {
 	b2PolygonShape polygonShape;

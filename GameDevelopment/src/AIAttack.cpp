@@ -3,11 +3,12 @@
 #include "include/AIComponent.h"
 #include "include/MoveComponent.h"
 #include "include/TransformComponent.h"
+#include "include/AnimatorComponent.h"
 #include "include/Enemy.h"
 
 AIAttack::AIAttack(AIComponent* owner) : 
 	AIState(owner),
-	mName("AIAttack")
+	mName("AIAttack"), mRemainingDuration(1.5f)
 {
 }
 
@@ -17,26 +18,33 @@ AIAttack::~AIAttack()
 
 void AIAttack::Update(float deltaTime)
 {
+	mRemainingDuration -= deltaTime;
+
 	if (mAgent->IsDead()) {
 		mOwner->ChangeState("AIDeath");
 		return;
 	}
 
+	mAgent->ActAsState(deltaTime);
+
+	if (mRemainingDuration > 0) return;
+
 	if (!AIState::CanAttack()) {
 		mOwner->ChangeState("AIPatrol");
 		return;
 	}
-
- 	mAgent->ActAsState(deltaTime);
 }
 
 void AIAttack::OnEnter()
 {
 	mAgent->GetMoveComponent()->SetForwardSpeed(0.0f);
+	mAgent->GetAnimatorComponent()->SetAnimation("Idle");
 }
 
 void AIAttack::OnExit()
 {
+	mAgent->SetIsAttacked(false);
+	mRemainingDuration = 1.5f;
 }
 
 const char* AIAttack::GetName() const

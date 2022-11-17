@@ -23,6 +23,8 @@ public:
 	void Move(const Vector2& velocity);
 	void Jump(float force);
 	void SetDimension(const Vector2& dimension);
+	void SetGravity(float gravity);
+	void WakeUp(bool wakeUp);
 	void Init();
 	b2Body* GetBody() const;
 	float density;

@@ -13,5 +13,6 @@ public:
 	const char* GetName() const override;
 private:
 	const char* mName;
+	float mRemainingDuration;
 };
 

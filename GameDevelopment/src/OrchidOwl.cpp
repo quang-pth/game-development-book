@@ -7,6 +7,7 @@
 #include "include/CircleComponent.h"
 #include "include/MoveComponent.h"
 #include "include/AIComponent.h"
+#include "include/RigidBodyComponent.h"
 // AI
 #include "include/AIState.h"
 #include "include/AIPatrol.h"
@@ -14,11 +15,13 @@
 #include "include/AIDeath.h"
 
 #include "include/Weapon.h"
+#include "include/Unit.h"
 
 OrchidOwl::OrchidOwl(Game* game, const std::string& name) :
 	Enemy(game, name),
 	mPatrolDuration(1.5f), mCurrentPatrolTime(0.0f)
 {
+	mAttackRadius = 278.0f;
 	mWeapon->SetAttackInterval(.5f);
 
 	mForwardSpeed = 30.0f;
@@ -64,48 +67,55 @@ OrchidOwl::OrchidOwl(Game* game, const std::string& name) :
 	mAI->RegisterState(new AIAttack(mAI));
 	mAI->RegisterState(new AIDeath(mAI));
 	mAI->ChangeState("AIPatrol");
+
+	const Vector2& offsetPos = Vector2(TILE_SIZE, 0.0f) * pTransform->GetScale() * 0.5f;
+	mRigidBodyComponent->SetBodyType(EBody::DYNAMIC);
+	mRigidBodyComponent->SetPosition(pTransform->GetPosition() + offsetPos);
+	mRigidBodyComponent->SetDimension(Vector2(TILE_SIZE, TILE_SIZE) * pTransform->GetScale() * 0.3f);
+	mRigidBodyComponent->Init();
+	mRigidBodyComponent->SetGravity(0.0f);
 }
 
 OrchidOwl::~OrchidOwl()
 {
 }
 
-void OrchidOwl::UpdateGameObject(float deltaTime)
+void OrchidOwl::ConstraintInBounds()
 {
-	mWeapon->Update(deltaTime);
+	float offset = 20.0f;
+
+	if (pTransform->GetPosition().x > mGame->GetWindowWidth() + offset
+		|| pTransform->GetPosition().x < -offset
+		) {
+		this->ChangeDirection();
+	}
+
+	if (pTransform->GetPosition().y > mGame->GetWindowHeight() + offset
+		|| pTransform->GetPosition().y < -offset
+		) {
+		this->ChangeDirection();
+	}
 }
 
-void OrchidOwl::ActAsState(float deltaTime)
+void OrchidOwl::ChangeDirection()
 {
-	if (mAI->GetState()->GetName() == "AIPatrol")
-	{
-		this->Patrol(deltaTime);
-	}
-	else if (mAI->GetState()->GetName() == "AIAttack") {
-		this->Attack(deltaTime);
-	}
-	else if (mAI->GetState()->GetName() == "AIDeath") {
-		this->Death(deltaTime);
-	}
+	mMoveComponent->ToggleHorizontalDirection(mForwardSpeed);
+	mAnimator->FlipTexture(mMoveComponent->GetDirection() == Direction::Left);
 }
 
 void OrchidOwl::Patrol(float deltaTime)
 {
 	mCurrentPatrolTime -= deltaTime;
 	mMoveComponent->Update(deltaTime);
+	mRigidBodyComponent->SetTransform(pTransform->GetPosition());
 
 	if (mCurrentPatrolTime < 0.0f) {
-		mMoveComponent->ToggleHorizontalDirection(mForwardSpeed);
-		mAnimator->FlipTexture(mMoveComponent->GetDirection() == Direction::Left);
+		this->ChangeDirection();
 		mCurrentPatrolTime = mPatrolDuration;
 	}
 }
 
-void OrchidOwl::Attack(float deltaTime)
-{
- 	mWeapon->Fire();
-}
-
 void OrchidOwl::Death(float deltaTime)
 {
+	//mRigidBodyComponent->SetGravity(1.0f);
 }

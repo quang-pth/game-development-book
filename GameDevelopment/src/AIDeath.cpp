@@ -21,6 +21,8 @@ AIDeath::~AIDeath()
 void AIDeath::Update(float deltaTime)
 {
 	mCurrentDuration -= deltaTime;
+	mAgent->ActAsState(deltaTime);
+
 	if (mCurrentDuration < 0.0f) {
 		mOwner->GetOwner()->SetState(GameObject::State::EDeactive);
 		mCurrentDuration = mDuration;
