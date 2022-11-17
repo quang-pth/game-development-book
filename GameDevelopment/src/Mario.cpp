@@ -13,22 +13,19 @@
 #include "include/Animation.h"
 #include "include/WalkState.h"
 #include "include/IdleState.h"
+#include "include/Weapon.h"
 #include <SDL2/SDL.h>
 #include <iostream>
-#include<memory>
 
-Hero::Hero(Game* game, std::string name) :
-	GameObject(game, name),
-	mFireCooldown(0.5f),
-	mActivateLaserIdx(0), mSpawnCooldown(1.5f),
-	mMoveDirection(Direction::Right),
-	mCapacity(30), mLasers(), mFireDirection(Direction::Right),
-	mCurrentFireCooldown(0.0f)
+Hero::Hero(Game* game, const std::string& name) :
+	GameObject(game, name)
 {
 	mCenterPosition = Vector2(game->GetWindowWidth() / 2 - 30.0f, game->GetWindowHeight() / 2);
 	pTransform->SetPosition(mCenterPosition);
 	pTransform->SetScale(1.8f);
 	
+	mWeapon.reset(new Weapon(this));
+
 	/*
 	* ANIMATIONS
 	*/
@@ -80,13 +77,11 @@ Hero::Hero(Game* game, std::string name) :
 
 	mState = new IdleState();
 	mState->Enter(this);
-
-	this->InstantiateLaser();
 }
 
 void Hero::UpdateGameObject(float deltaTime)
 {
-	mCurrentFireCooldown -= deltaTime;
+	mWeapon->Update(deltaTime);
 
 	const Vector2& position = Unit::MetersToPixels(rigidBodyComponent->GetBody()->GetPosition());
 	pTransform->SetPosition(position);
@@ -108,46 +103,6 @@ void Hero::ProcessGameObjectInput(const uint8_t* keyState)
 void Hero::StartCooldown()
 {
 	GameObject::SetState(GameObject::State::EDeactive);
-	GameObject::GetGame()->GetCooldownManager()->Observe(this);
-}
-
-void Hero::Cooldown(float deltaTime)
-{
-	mSpawnCooldown -= deltaTime;
-	if (mSpawnCooldown <= 0) {
-		this->ActAfterCooldown();
-	}
-}
-
-void Hero::SetDirection(Direction direction)
-{
-	mMoveDirection = direction;
-}
-
-void Hero::Fire()
-{
-	if (mCurrentFireCooldown > 0.0f) return;
-
-	mActivateLaserIdx++;
-	if (mActivateLaserIdx >= mLasers.size()) {
-		mActivateLaserIdx = 0;
-	}
-
-	Laser* laser = mLasers[mActivateLaserIdx];
-
-	if (mMoveDirection == Direction::Left) {
-		Vector2 offset(-5.0f, animator->GetTextureHeight() / 2 - 3.5f);
-		laser->pTransform->SetPosition(pTransform->GetPosition() + offset);
-		laser->SetDirection(-1);
-	}
-	else if (mMoveDirection == Direction::Right) {
-		Vector2 offset(8.0f, animator->GetTextureHeight() / 2 - 3.5f);
-		laser->pTransform->SetPosition(pTransform->GetPosition() + offset);
-		laser->SetDirection(1);
-	}
-
-	laser->SetState(GameObject::State::EActive);
-	mCurrentFireCooldown = mFireCooldown;
 }
 
 bool Hero::IsMoving() const
@@ -155,14 +110,9 @@ bool Hero::IsMoving() const
 	return inputComponent->GetForwardSpeed() != 0.0f;
 }
 
-Direction Hero::GetMoveDirection() const
-{
-	return mMoveDirection;
-}
-
 void Hero::SetMoveDirection(Direction direction)
 {
-	mMoveDirection = direction;
+	inputComponent->SetDirection(direction);
 }
 
 InputComponent* Hero::GetInputComponent() const
@@ -186,22 +136,12 @@ bool Hero::MoveExceedCenterPoint(bool toTheRight)
 
 bool Hero::IsImageFlipped()
 {
-	return mMoveDirection == Direction::Right;
+	return inputComponent->GetDirection() == Direction::Left;
 }
 
-void Hero::ActAfterCooldown()
+void Hero::Fire()
 {
-	mSpawnCooldown = 1.5f;
-	// Reset ship position to the center of the screen if collided with asteroid
-	pTransform->SetPosition(Vector2(
-		GameObject::GetGame()->GetWindowWidth() / 2.0f,
-		GameObject::GetGame()->GetWindowHeight() / 2.0f
-	));
-	// Reset game object states
-	pTransform->SetRotation(0.0f);
-	GameObject::GetGame()->GetCooldownManager()->Release(this);
-	GameObject::SetState(GameObject::State::EActive);
-	inputComponent->ResetForce();
+	mWeapon->Fire();
 }
 
 void Hero::ConstraintInScreenBounds()
@@ -228,14 +168,4 @@ void Hero::ConstraintInScreenBounds()
 	}
 
 	pTransform->SetPosition(Vector2(newXPos, newYPos));
-}
-
-void Hero::InstantiateLaser()
-{
-	for (unsigned int idx = 0; idx < mCapacity; idx++) {
-		Laser* laser = new Laser(GameObject::GetGame());
-		laser->SetState(GameObject::State::EDeactive);
-		laser->pTransform->SetScale(1.5f);
-		mLasers.emplace_back(laser);
-	}
 }

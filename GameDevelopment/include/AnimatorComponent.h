@@ -7,7 +7,8 @@
 class AnimatorComponent : public SpriteComponent
 {
 public:
-	AnimatorComponent(class GameObject* owner, int drawOrder = 100);
+	AnimatorComponent(class GameObject* owner, int drawOrder = 100, 
+		const std::string& name = "AnimatorComponent");
 	~AnimatorComponent();
 	void Update(float deltaTime) override;
 	void SetAnimation(const std::string& animationName);

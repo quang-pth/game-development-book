@@ -173,7 +173,7 @@ void Game::LoadData()
 	farBackgroundComponent->SetScrollSpeed(-100.0f);
 	// Near background
 	BackgroundSpriteComponent* nearBackgroundComponent = 
-		new BackgroundSpriteComponent(background, 50, "BackgroundSprite2");
+		new BackgroundSpriteComponent(background, 11, "BackgroundSprite2");
 	nearBackgroundComponent->SetScreenSize(Vector2(mWindowWidth, mWindowHeight));
 	std::vector<SDL_Texture*> nearBackgroundTextures = {
 		GetTexture("Assets/Chapter2/Stars.png"),

@@ -70,3 +70,8 @@ Direction MoveComponent::GetDirection() const
 {
 	return mDirection;
 }
+
+void MoveComponent::SetDirection(Direction direction)
+{
+	mDirection = direction;
+}

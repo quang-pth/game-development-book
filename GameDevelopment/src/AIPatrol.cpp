@@ -15,7 +15,17 @@ AIPatrol::~AIPatrol()
 
 void AIPatrol::Update(float deltaTime)
 {
-	((Enemy*)mOwner->GetOwner())->ActAsState(deltaTime);
+	if (AIState::CanAttack()) {
+		mOwner->ChangeState("AIAttack");
+		return;
+	}
+
+	if (mAgent->IsDead()) {
+		mOwner->ChangeState("AIDeath");
+		return;
+	}
+	
+	mAgent->ActAsState(deltaTime);
 }
 
 void AIPatrol::OnEnter()

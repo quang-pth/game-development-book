@@ -2,27 +2,31 @@
 
 #include"include/GameObject.h"
 
+class MoveComponent;
+class SpriteComponent;
+class CircleComponent;
+
 class Laser : public GameObject
 {
 public:
 	Laser() = default;
-	Laser(class Game* game, const std::string& name = "Laser");
+	Laser(class Game* game, bool enemyLaser = false, const std::string& name = "Laser");
 	void UpdateGameObject(float deltaTime) override;
 	void SetDirection(int direction);
 	void SetTexture(const std::string& filePath);
-	class MoveComponent* GetMoveComponent() const;
-	class SpriteComponent* GetSpriteComponent() const;
-	class CircleComponent* GetCircleComponent() const;
+	MoveComponent* GetMoveComponent() const;
+	SpriteComponent* GetSpriteComponent() const;
+	CircleComponent* GetCircleComponent() const;
 private:
 	void CheckIsAlive();
 	void ResetLaser();
 	void CheckCollisions();
-	class MoveComponent* mMoveComponent;
-	class SpriteComponent* mSpriteComponent;
-	class CircleComponent* mCircleComponent;
+	MoveComponent* mMoveComponent;
+	SpriteComponent* mSpriteComponent;
+	CircleComponent* mCircleComponent;
 	float mLifeTime;
 	float mCurrentLifeTime;
 	float mForwardSpeed;
 	float mDamage;
+	bool mIsEnemyLaser;
 };
-

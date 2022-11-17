@@ -43,6 +43,7 @@
     <ClCompile Include="src\Unit.cpp" />
     <ClCompile Include="src\OrchidOwl.cpp" />
     <ClCompile Include="src\Health.cpp" />
+    <ClCompile Include="src\Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Enemy.h" />
@@ -86,5 +87,6 @@
     <ClInclude Include="include\NavComponent.h" />
     <ClInclude Include="include\OrchidOwl.h" />
     <ClInclude Include="include\Health.h" />
+    <ClInclude Include="include\Weapon.h" />
   </ItemGroup>
 </Project>

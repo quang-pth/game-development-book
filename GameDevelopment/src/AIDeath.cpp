@@ -29,8 +29,8 @@ void AIDeath::Update(float deltaTime)
 
 void AIDeath::OnEnter()
 {
-	mActor->GetMoveComponent()->SetForwardSpeed(0.0f);
-	mActor->GetAnimatorComponent()->SetAnimation("Hurt");
+	mAgent->GetMoveComponent()->SetForwardSpeed(0.0f);
+	mAgent->GetAnimatorComponent()->SetAnimation("Hurt");
 }
 
 void AIDeath::OnExit()

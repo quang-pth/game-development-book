@@ -30,7 +30,7 @@ public:
 	virtual void RemoveGameObjectComponent(class Component* component);
 	State GetState() const;
 	void SetState(State state);
-	class Component* GetComponent(std::string name);
+	class Component* GetComponent(const std::string& name);
 	Vector2 GetForward() const;
 	class Game* GetGame() const;
 	class TransformComponent *pTransform;

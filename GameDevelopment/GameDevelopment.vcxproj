@@ -187,6 +187,7 @@
     <ClCompile Include="src\Tile.cpp" />
     <ClCompile Include="src\TileMap.cpp" />
     <ClCompile Include="src\Unit.cpp" />
+    <ClCompile Include="src\Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Health.h" />
@@ -230,6 +231,7 @@
     <ClInclude Include="include\RigidBodyComponent.h" />
     <ClInclude Include="include\NavComponent.h" />
     <ClInclude Include="include\OrchidOwl.h" />
+    <ClInclude Include="include\Weapon.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

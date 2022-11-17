@@ -203,11 +203,13 @@ public:
 	}
 
 	// Normalize this vector
-	void Normalize()
+	Vector2 Normalize()
 	{
 		float length = Length();
 		x /= length;
 		y /= length;
+
+		return *this;
 	}
 
 	// Normalize the provided vector

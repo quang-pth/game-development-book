@@ -2,8 +2,9 @@
 #include "include/Animation.h"
 #include <iostream>
 
-AnimatorComponent::AnimatorComponent(GameObject* owner, int drawOrder) : 
-	SpriteComponent(owner, drawOrder), 
+AnimatorComponent::AnimatorComponent(GameObject* owner, int drawOrder, 
+	const std::string& name) :
+	SpriteComponent(owner, drawOrder, name), 
 	mCurrentFrame(0), 
 	mAnimationsMap(), mCurrentAnimation()
 {

@@ -23,6 +23,7 @@ public:
 	void ResetForce();
 	void ToggleHorizontalDirection(float speed);
 	Direction GetDirection() const;
+	void SetDirection(Direction direction);
 protected:
 	float mForwardSpeed; // Velocity measured in units/second
 	Direction mDirection;

@@ -9,8 +9,9 @@ public:
 	virtual void OnEnter() = 0;
 	virtual void OnExit() = 0;
 	virtual const char* GetName() const = 0;
+	bool CanAttack() const;
 protected:
 	class AIComponent* mOwner;
-	class Enemy* mActor;
+	class Enemy* mAgent;
 };
 

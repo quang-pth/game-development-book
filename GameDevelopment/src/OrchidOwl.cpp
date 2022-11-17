@@ -13,10 +13,14 @@
 #include "include/AIAttack.h"
 #include "include/AIDeath.h"
 
+#include "include/Weapon.h"
+
 OrchidOwl::OrchidOwl(Game* game, const std::string& name) :
 	Enemy(game, name),
 	mPatrolDuration(1.5f), mCurrentPatrolTime(0.0f)
 {
+	mWeapon->SetAttackInterval(.5f);
+
 	mForwardSpeed = 30.0f;
 	mMoveComponent->SetForwardSpeed(mForwardSpeed);
 	
@@ -57,6 +61,7 @@ OrchidOwl::OrchidOwl(Game* game, const std::string& name) :
 	mCircleComponent->SetRadius(16.0f * pTransform->GetScale());
 
 	mAI->RegisterState(new AIPatrol(mAI));
+	mAI->RegisterState(new AIAttack(mAI));
 	mAI->RegisterState(new AIDeath(mAI));
 	mAI->ChangeState("AIPatrol");
 }
@@ -67,14 +72,7 @@ OrchidOwl::~OrchidOwl()
 
 void OrchidOwl::UpdateGameObject(float deltaTime)
 {
-	const Vector2& distanceVector = pTransform->GetPosition() - mGame->GetHero()->pTransform->GetPosition();
-	if (distanceVector.Length() < mAttackRadius) {
-		mAI->ChangeState("AIAttack");
-	}
-}
-
-void OrchidOwl::Cooldown(float deltaTime)
-{
+	mWeapon->Update(deltaTime);
 }
 
 void OrchidOwl::ActAsState(float deltaTime)
@@ -105,6 +103,7 @@ void OrchidOwl::Patrol(float deltaTime)
 
 void OrchidOwl::Attack(float deltaTime)
 {
+ 	mWeapon->Fire();
 }
 
 void OrchidOwl::Death(float deltaTime)

@@ -6,13 +6,15 @@
 #include "include/CircleComponent.h"
 #include "include/AIComponent.h"
 #include "include/Health.h"
+#include "include/Weapon.h"
 
 Enemy::Enemy(Game* game, const std::string& name) :
 	GameObject(game, name),
 	mAI(),
-	mForwardSpeed(200.0f)
+	mForwardSpeed(200.0f), mAttackRadius(250.0f)
 {
-	mHealth = new Health(20.0f);
+	mHealth.reset(new Health(20.0f));
+	mWeapon.reset(new Weapon(this, true));
 
 	mAnimator = new AnimatorComponent(this);
 	
@@ -29,10 +31,6 @@ Enemy::~Enemy()
 }
 
 void Enemy::UpdateGameObject(float deltaTime)
-{
-}
-
-void Enemy::Cooldown(float deltaTime)
 {
 }
 
@@ -60,11 +58,17 @@ AnimatorComponent* Enemy::GetAnimatorComponent() const
 	return mAnimator;
 }
 
+float Enemy::GetAttackRadius() const
+{
+	return mAttackRadius;
+}
+
 void Enemy::ReceiveDamage(float amount)
 {
 	mHealth->ReceiveDamage(amount);
+}
 
-	if (mHealth->IsDead()) {
-		mAI->ChangeState("AIDeath");
-	}
+bool Enemy::IsDead() const
+{
+	return mHealth->IsDead();
 }

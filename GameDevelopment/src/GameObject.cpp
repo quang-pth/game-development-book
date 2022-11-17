@@ -93,7 +93,7 @@ void GameObject::SetState(State state)
 	mState = state;
 }
 
-Component* GameObject::GetComponent(std::string name)
+Component* GameObject::GetComponent(const std::string& name)
 {
 	std::vector<Component*>::iterator iter = std::find_if(mpComponents.begin(), mpComponents.end(),
 		[&](const Component* component){ return component->name == name; });

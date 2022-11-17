@@ -10,12 +10,12 @@
 #include "include/Mario.h"
 #include <iostream>
 
-Laser::Laser(Game* game, const std::string& name) :
+Laser::Laser(Game* game, bool enemyLaser, const std::string& name) :
 	GameObject(game, name),
 	mLifeTime(1.5f),
 	mCurrentLifeTime(1.5f),
 	mForwardSpeed(270.0f),
-	mDamage(5.0f)
+	mDamage(5.0f), mIsEnemyLaser(enemyLaser)
 {
 	mMoveComponent = new MoveComponent(this);
 	mMoveComponent->SetForwardSpeed(mForwardSpeed);
@@ -75,9 +75,17 @@ void Laser::ResetLaser()
 
 void Laser::CheckCollisions()
 {
-	for (Enemy* enemy : mGame->GetEnemies()) {
-		if (CircleComponent::IsIntersect(enemy->GetCircleComponent(), mCircleComponent)) {
-			enemy->ReceiveDamage(mDamage);
+	if (!mIsEnemyLaser) {
+		for (Enemy* enemy : mGame->GetEnemies()) {
+			if (CircleComponent::IsIntersect(enemy->GetCircleComponent(), mCircleComponent)) {
+				enemy->ReceiveDamage(mDamage);
+				this->ResetLaser();
+			}
+		}
+	}
+	else {
+		if (CircleComponent::IsIntersect(mGame->GetHero()->circleComponent, mCircleComponent)) {
+			//mGame->GetHero().rec->ReceiveDamage(mDamage);
 			this->ResetLaser();
 		}
 	}
