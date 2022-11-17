@@ -20,6 +20,7 @@ public:
 	void RemoveSprite(class SpriteComponent* sprite);
 	SDL_Texture* GetTexture(const std::string& fileName);
 	class Hero* GetMario() const;
+	std::vector<class Enemy*> GetEnemies() const;
 	class TileMap* GetTileMap() const;
 	class CooldownManager* GetCooldownManager() const;
 	int GetWindowWidth() const;
@@ -45,6 +46,7 @@ private:
 	class CooldownManager* mCooldownManager;
 	bool mpUpdatingGameObjects;
 	class Hero *mHero;
+	std::vector<class Enemy*> mEnemies;
 	class TileMap *mTilemap;
 	class StateManager *mStateManager;
 	// Sprites

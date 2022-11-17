@@ -9,11 +9,11 @@
 #include "include/Unit.h"
 #include <iostream>
 
-Tile::Tile(Game* game, const std::string& name) :
+Tile::Tile(Game* game, float scale, const std::string& name) :
 	GameObject(game, name),
 	mRigidBodyComponent(), mTileDataComponent()
 {
-	pTransform->SetScale(2.0f);
+	pTransform->SetScale(scale);
 	game->GetCooldownManager()->Observe(this);
 }
 
@@ -33,8 +33,9 @@ void Tile::SetTileData(const Vector2& dimension, const Vector2& srcPosition,
 	mTileDataComponent->SetTexture(texture);
 
 	mRigidBodyComponent = new RigidBodyComponent(this);
-	mRigidBodyComponent->SetPosition(mTileDataComponent->GetCurrentPosition());
-	mRigidBodyComponent->SetDimension(Vector2(8.0f * pTransform->GetScale(), 8.0f * pTransform->GetScale()));
+	const Vector2& offsetPos = Vector2(dimension.x * pTransform->GetScale() * 0.5f, 0.0f);
+	mRigidBodyComponent->SetPosition(mTileDataComponent->GetCurrentPosition() + offsetPos);
+	mRigidBodyComponent->SetDimension(dimension * pTransform->GetScale() * 0.5f);
 	mRigidBodyComponent->Init();
 }
 

@@ -17,6 +17,7 @@ public:
 	void UpdateGameObject(float deltaTime) override;
 	void Init(const char* srcTextureFilePath, const char* layoutFilePath);
 	void SetState(EMovement state);
+	void SetScale(float scale);
 	void SetTileDimension(const Vector2& dimension);
 	float GetTileWidth() const;
 	float GetTileHeight() const;
@@ -30,6 +31,7 @@ private:
 	SDL_Texture* mTexture;
 	std::vector<class Tile*> mTiles;
 	unsigned int mTileWidth, mTileHeight, mTilePerRow;
+	float mScale;
 	Vector2 mOffset;
 	float mXBound;
 	EMovement mState;

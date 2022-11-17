@@ -5,6 +5,7 @@
 #include "include/InputComponent.h";
 #include "include/Game.h";
 #include "include/Mario.h";
+#include "include/Unit.h";
 #include<fstream>
 #include<sstream>
 #include <iostream>
@@ -12,9 +13,9 @@
 
 TileMap::TileMap(Game* game, const std::string& name) : 
 	GameObject(game, name), mTexture(),
-	mTileWidth(16), mTileHeight(16),
+	mTileWidth(TILE_SIZE), mTileHeight(TILE_SIZE),
 	mTilePerRow(7), mOffset(Vector2::Zero), mXBound(0.0f),
-	mState(EMovement::EMoveable)
+	mState(EMovement::EMoveable), mScale(1.0f)
 {
 }
 
@@ -38,6 +39,11 @@ void TileMap::Init(const char* srcTextureFilePath, const char* layoutFilePath)
 void TileMap::SetState(EMovement state)
 {
 	mState = state;
+}
+
+void TileMap::SetScale(float scale)
+{
+	mScale = scale;
 }
 
 void TileMap::SetTileDimension(const Vector2& dimension)
@@ -109,13 +115,13 @@ void TileMap::LoadTileData(const char* filePath)
 
 			if (index == -1) continue;
 
-			Vector2 dimension = Vector2(mTileWidth, mTileHeight);
+			const Vector2& dimension = Vector2(mTileWidth, mTileHeight);
 			// Setup tile data
-			Vector2 srcPosition = Vector2(mTileWidth * (index % mTilePerRow),
+			const Vector2& srcPosition = Vector2(mTileWidth * (index % mTilePerRow),
 				mTileHeight * (index / mTilePerRow));
-			Vector2 layout = Vector2(col, row);
+			const Vector2& layout = Vector2(col, row);
 			// Create tile game object
-			Tile* tile = new Tile(GameObject::GetGame());
+			Tile* tile = new Tile(GameObject::GetGame(), mScale);
 			tile->SetTileData(dimension, srcPosition, layout, mTexture);
 
 			mTiles.emplace_back(tile);

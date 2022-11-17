@@ -1,254 +1,88 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
+    <ClCompile Include="src\Enemy.cpp" />
+    <ClCompile Include="src\RigidBodyComponent.cpp" />
+    <ClCompile Include="src\JumpState.cpp" />
+    <ClCompile Include="src\IdleState.cpp" />
+    <ClCompile Include="src\GameObjectState.cpp" />
+    <ClCompile Include="src\Enums.cpp" />
+    <ClCompile Include="src\GameTree.cpp" />
+    <ClCompile Include="src\NavComponent.cpp" />
+    <ClCompile Include="src\Graph.cpp" />
+    <ClCompile Include="src\AIAttack.cpp" />
+    <ClCompile Include="src\AIDeath.cpp" />
+    <ClCompile Include="src\AIPatrol.cpp" />
+    <ClCompile Include="src\AIState.cpp" />
+    <ClCompile Include="src\AIComponent.cpp" />
+    <ClCompile Include="src\ICooldownable.cpp" />
+    <ClCompile Include="src\CooldownManager.cpp" />
+    <ClCompile Include="src\Laser.cpp" />
+    <ClCompile Include="src\CircleComponent.cpp" />
+    <ClCompile Include="src\InputComponent.cpp" />
+    <ClCompile Include="src\Random.cpp" />
+    <ClCompile Include="src\Asteroid.cpp" />
+    <ClCompile Include="src\MoveComponent.cpp" />
+    <ClCompile Include="src\Animation.cpp" />
+    <ClCompile Include="EsstenialMath.cpp" />
+    <ClCompile Include="src\Mario.cpp" />
+    <ClCompile Include="src\BackgroundSpriteComponent.cpp" />
+    <ClCompile Include="src\AnimatorComponent.cpp" />
+    <ClCompile Include="src\CustomMath.cpp" />
+    <ClCompile Include="src\SpriteComponent.cpp" />
+    <ClCompile Include="src\Component.cpp" />
+    <ClCompile Include="src\GameObject.cpp" />
+    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="Source.cpp" />
+    <ClCompile Include="src\TransformComponent.cpp" />
+    <ClCompile Include="src\StateManager.cpp" />
+    <ClCompile Include="src\WalkState.cpp" />
+    <ClCompile Include="src\TileDataComponent.cpp" />
+    <ClCompile Include="src\Tile.cpp" />
+    <ClCompile Include="src\TileMap.cpp" />
+    <ClCompile Include="src\Unit.cpp" />
+    <ClCompile Include="src\OrchidOwl.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Game.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GameObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Component.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SpriteComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CustomMath.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AnimatorComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\BackgroundSpriteComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Mario.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EsstenialMath.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Animation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TransformComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\MoveComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Asteroid.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Random.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\InputComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CircleComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Laser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CooldownManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ICooldownable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\StateManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Enums.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GameObjectState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\WalkState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\IdleState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TileDataComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Tile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TileMap.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\JumpState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Unit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RigidBodyComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Enemy.cpp">
-    <ClCompile Include="src\AIComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AIState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AIPatrol.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AIAttack.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AIDeath.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Graph.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\NavComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GameTree.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="include\Game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\GameObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Component.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\SpriteComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\CustomMath.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\AnimatorComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\BackgroundSpriteComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Mario.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="EsstenialMath.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Animation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TransformComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\MoveComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Asteroid.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Random.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\InputComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\CircleComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Laser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\CooldownManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ICooldownable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\StateManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Enums.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\GameObjectState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\WalkState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\IdleState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TileDataComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Tile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TileMap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\JumpState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Unit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RigidBodyComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Enemy.h">
-    <ClInclude Include="include\AIComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\AIState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\AIPatrol.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\AIAttack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\AIDeath.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Graph.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\NavComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\GameTree.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClInclude Include="include\Enemy.h" />
+    <ClInclude Include="include\IdleState.h" />
+    <ClInclude Include="include\GameObjectState.h" />
+    <ClInclude Include="include\Enums.h" />
+    <ClInclude Include="include\GameTree.h" />
+    <ClInclude Include="include\Graph.h" />
+    <ClInclude Include="include\AIAttack.h" />
+    <ClInclude Include="include\AIDeath.h" />
+    <ClInclude Include="include\AIPatrol.h" />
+    <ClInclude Include="include\AIState.h" />
+    <ClInclude Include="include\AIComponent.h" />
+    <ClInclude Include="include\ICooldownable.h" />
+    <ClInclude Include="include\CooldownManager.h" />
+    <ClInclude Include="include\CircleComponent.h" />
+    <ClInclude Include="include\Asteroid.h" />
+    <ClInclude Include="include\Animation.h" />
+    <ClInclude Include="EsstenialMath.h" />
+    <ClInclude Include="include\BackgroundSpriteComponent.h" />
+    <ClInclude Include="include\AnimatorComponent.h" />
+    <ClInclude Include="include\Component.h" />
+    <ClInclude Include="include\GameObject.h" />
+    <ClInclude Include="include\Game.h" />
+    <ClInclude Include="include\SpriteComponent.h" />
+    <ClInclude Include="include\CustomMath.h" />
+    <ClInclude Include="include\Mario.h" />
+    <ClInclude Include="include\TransformComponent.h" />
+    <ClInclude Include="include\MoveComponent.h" />
+    <ClInclude Include="include\Random.h" />
+    <ClInclude Include="include\InputComponent.h" />
+    <ClInclude Include="include\Laser.h" />
+    <ClInclude Include="include\StateManager.h" />
+    <ClInclude Include="include\WalkState.h" />
+    <ClInclude Include="include\TileDataComponent.h" />
+    <ClInclude Include="include\Tile.h" />
+    <ClInclude Include="include\TileMap.h" />
+    <ClInclude Include="include\JumpState.h" />
+    <ClInclude Include="include\Unit.h" />
+    <ClInclude Include="include\RigidBodyComponent.h" />
+    <ClInclude Include="include\NavComponent.h" />
+    <ClInclude Include="include\OrchidOwl.h" />
   </ItemGroup>
 </Project>

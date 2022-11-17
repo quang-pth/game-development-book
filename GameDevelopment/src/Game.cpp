@@ -7,11 +7,13 @@
 #include"include/TileMap.h"
 #include"include/StateManager.h"
 #include"include/Mario.h"
+#include"include/OrchidOwl.h"
 #include"include/AIComponent.h"
 #include"include/Asteroid.h"
 #include"include/AIPatrol.h"
 #include"include/AIAttack.h"
 #include"include/AIDeath.h"
+#include"include/Unit.h"
 #include<SDL2/SDL_image.h>
 #include<box2D/b2_math.h>
 #include<iostream>
@@ -23,7 +25,8 @@ Game::Game() :
 	mHero(nullptr), mTilemap(nullptr), 
 	mCooldownManager(nullptr), mStateManager(nullptr),
 	mVelocityIterations(7), mPositionIterations(3),
-	mPhysicWorld(b2Vec2(0.0f, 10.0f))
+	mPhysicWorld(b2Vec2(0.0f, 10.0f)),
+	mEnemies()
 {
 
 }
@@ -153,6 +156,8 @@ void Game::LoadData()
 	mCooldownManager = new CooldownManager(this);
 
 	mHero = new Hero(this);
+	OrchidOwl* owl = new OrchidOwl(this);
+	mEnemies.emplace_back(owl);
 
 	GameObject* background = new GameObject(this, "Background");
 	background->pTransform->SetPosition(Vector2(mWindowWidth / 2.0f, mWindowHeight / 2.0f));
@@ -178,9 +183,11 @@ void Game::LoadData()
 	nearBackgroundComponent->SetScrollSpeed(-200.0f);
 
 	mTilemap = new TileMap(this);
-	mTilemap->SetTileDimension(Vector2(16, 16));
-	mTilemap->SetTilePerRow(94);
+	mTilemap->SetTileDimension(Vector2(TILE_SIZE, TILE_SIZE));
+	mTilemap->SetScale(2.0f);
+	mTilemap->SetTilePerRow(TILE_PER_ROW);
 	mTilemap->Init("Assets/Shooter/spritesheet.png", "Assets/Shooter/level-one-half-dimension.csv");
+	
 	// AI
 	// GameObject* aiActor = new GameObject(this, "AIActor");
 	// AIComponent* aiComponent = new AIComponent(aiActor);
@@ -231,6 +238,11 @@ SDL_Texture* Game::GetTexture(const std::string& fileName)
 Hero* Game::GetMario() const
 {
 	return mHero;
+}
+
+std::vector<class Enemy*> Game::GetEnemies() const
+{
+	return mEnemies;
 }
 
 TileMap* Game::GetTileMap() const

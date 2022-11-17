@@ -19,7 +19,7 @@
 
 Hero::Hero(Game* game, std::string name) :
 	GameObject(game, name),
-	mFireCooldown(0.3f),
+	mFireCooldown(0.5f),
 	mActivateLaserIdx(0), mSpawnCooldown(1.5f),
 	mMoveDirection(Direction::Right),
 	mCapacity(30), mLasers(), mFireDirection(Direction::Right),
@@ -71,10 +71,11 @@ Hero::Hero(Game* game, std::string name) :
 	circleComponent = new CircleComponent(this);
 	circleComponent->SetRadius(20.0f * pTransform->GetScale());
 
+	const Vector2& offsetPos = Vector2(TILE_SIZE * pTransform->GetScale() * 0.5f, 0.0f);
 	rigidBodyComponent = new RigidBodyComponent(this);
 	rigidBodyComponent->SetBodyType(EBody::DYNAMIC);
-	rigidBodyComponent->SetPosition(pTransform->GetPosition());
-	rigidBodyComponent->SetDimension(Vector2(5 * pTransform->GetScale(), 5 * pTransform->GetScale()));
+	rigidBodyComponent->SetPosition(pTransform->GetPosition() + offsetPos);
+	rigidBodyComponent->SetDimension(Vector2(TILE_SIZE, TILE_SIZE) * pTransform->GetScale() * 0.3f);
 	rigidBodyComponent->Init();
 
 	mState = new IdleState();
@@ -87,8 +88,8 @@ void Hero::UpdateGameObject(float deltaTime)
 {
 	mCurrentFireCooldown -= deltaTime;
 
-	Vector2 position = Unit::MetersToPixels(rigidBodyComponent->GetBody()->GetPosition());
-	pTransform->SetPosition(position.x, position.y);
+	const Vector2& position = Unit::MetersToPixels(rigidBodyComponent->GetBody()->GetPosition());
+	pTransform->SetPosition(position);
 
 	mState->Update(this);
 	this->ConstraintInScreenBounds();

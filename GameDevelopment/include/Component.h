@@ -5,7 +5,8 @@
 class Component
 {
 public:
-	Component();
+	std::string name;
+	Component() = default;
 	/*
 	* updateOrder: component with smaller updateOrder is updated first
 	*/
@@ -19,6 +20,5 @@ public:
 protected:
 	class GameObject* mOwner;
 	int mUpdateOrder;
-	std::string mName;
 };
 

@@ -7,7 +7,7 @@
 class Tile : public GameObject, ICooldownable
 {
 public:
-	Tile(class Game* game, const std::string& name = "Tile");
+	Tile(class Game* game, float scale, const std::string& name = "Tile");
 	~Tile();
 	void UpdateGameObject(float deltaTime) override;
 	void SetTileData(const Vector2& dimension, const Vector2& srcPosition,

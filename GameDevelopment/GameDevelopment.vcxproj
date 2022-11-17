@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\OrchidOwl.cpp" />
     <ClCompile Include="src\Enemy.cpp" />
     <ClCompile Include="src\RigidBodyComponent.cpp" />
     <ClCompile Include="src\JumpState.cpp" />
@@ -226,6 +227,7 @@
     <ClInclude Include="include\Unit.h" />
     <ClInclude Include="include\RigidBodyComponent.h" />
     <ClInclude Include="include\NavComponent.h" />
+    <ClInclude Include="include\OrchidOwl.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

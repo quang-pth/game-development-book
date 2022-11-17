@@ -14,11 +14,13 @@ class AIComponent;
 class Enemy : public GameObject
 {
 public:
-	Enemy(Game* game, int updateOrder = 30, const std::string& name = "Enemy");
+	Enemy() = default;
+	Enemy(Game* game, const std::string& name = "Enemy");
 	~Enemy();
-	void UpdateGameObject(float deltaTime) override;
+	virtual void UpdateGameObject(float deltaTime) override;
 	virtual void Cooldown(float deltaTime);
-private:
+	CircleComponent* GetCircleComponent() const;
+protected:
 	AnimatorComponent* mAnimator;
 	MoveComponent* mMoveComponent;
 	SpriteComponent* mSpriteComponent;

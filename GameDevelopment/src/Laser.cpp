@@ -5,14 +5,15 @@
 #include "include/CircleComponent.h"
 #include "include/TransformComponent.h"
 #include "include/Asteroid.h"
+#include "include/Enemy.h"
 #include "include/Mario.h"
 #include <iostream>
 
-Laser::Laser(Game* game, std::string name) : 
+Laser::Laser(Game* game, std::string name) :
 	GameObject(game, name),
 	mLifeTime(1.5f),
 	mCurrentLifeTime(1.5f),
-	mForwardSpeed(150.0f)
+	mForwardSpeed(270.0f)
 {
 	mMoveComponent = new MoveComponent(this);
 	mMoveComponent->SetForwardSpeed(mForwardSpeed);
@@ -27,6 +28,7 @@ Laser::Laser(Game* game, std::string name) :
 void Laser::UpdateGameObject(float deltaTime)
 {
 	mCurrentLifeTime -= deltaTime;
+	this->CheckCollisions();
 	mMoveComponent->Update(deltaTime);
 }
 
@@ -53,8 +55,23 @@ CircleComponent* Laser::GetCircleComponent() const
 void Laser::CheckIsAlive()
 {
 	if (mCurrentLifeTime <= 0) {
-		GameObject::SetState(GameObject::State::EDeactive);
-		mCurrentLifeTime = mLifeTime;
-		mMoveComponent->SetForwardSpeed(mForwardSpeed);
+		this->ResetLaser();
+	}
+}
+
+void Laser::ResetLaser()
+{
+	GameObject::SetState(GameObject::State::EDeactive);
+	mMoveComponent->SetForwardSpeed(mForwardSpeed);
+	mCurrentLifeTime = mLifeTime;
+}
+
+void Laser::CheckCollisions()
+{
+	for (Enemy* enemy : mGame->GetEnemies()) {
+		if (CircleComponent::IsIntersect(enemy->GetCircleComponent(), mCircleComponent)) {
+			enemy->SetState(GameObject::State::EDeactive);
+			this->ResetLaser();
+		}
 	}
 }

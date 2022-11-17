@@ -14,6 +14,8 @@ public:
 	class CircleComponent* GetCircleComponent() const;
 private:
 	void CheckIsAlive();
+	void ResetLaser();
+	void CheckCollisions();
 	class MoveComponent* mMoveComponent;
 	class SpriteComponent* mSpriteComponent;
 	class CircleComponent* mCircleComponent;
