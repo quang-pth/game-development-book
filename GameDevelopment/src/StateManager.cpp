@@ -10,7 +10,7 @@
 
 StateManager::StateManager(Game* game, const std::string& name) : GameObject(game, name)
 {
-	mpMario = game->GetMario();
+	mpMario = game->GetHero();
 	mpTileMap = game->GetTileMap();
 }
 

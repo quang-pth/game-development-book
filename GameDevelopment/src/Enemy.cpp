@@ -4,21 +4,28 @@
 #include "include/MoveComponent.h"
 #include "include/SpriteComponent.h"
 #include "include/CircleComponent.h"
+#include "include/AIComponent.h"
+#include "include/Health.h"
 
 Enemy::Enemy(Game* game, const std::string& name) :
-	GameObject(game, name), mAI(), mStates(), mCurrentState()
+	GameObject(game, name),
+	mAI(),
+	mForwardSpeed(200.0f)
 {
+	mHealth = new Health(20.0f);
+
 	mAnimator = new AnimatorComponent(this);
+	
 	mMoveComponent = new MoveComponent(this);
-	mSpriteComponent = new SpriteComponent(this);
+
 	mCircleComponent = new CircleComponent(this);
+	
+	mAI = new AIComponent(this);
 }
 
 Enemy::~Enemy()
 {
-	while (!mStates.empty()) {
-		delete mStates.back();
-	}
+
 }
 
 void Enemy::UpdateGameObject(float deltaTime)
@@ -29,7 +36,35 @@ void Enemy::Cooldown(float deltaTime)
 {
 }
 
+void Enemy::ActAsState(float deltaTime)
+{
+}
+
 CircleComponent* Enemy::GetCircleComponent() const
 {
 	return mCircleComponent;
+}
+
+MoveComponent* Enemy::GetMoveComponent() const
+{
+	return mMoveComponent;
+}
+
+AIComponent* Enemy::GetAIComponent() const
+{
+	return mAI;
+}
+
+AnimatorComponent* Enemy::GetAnimatorComponent() const
+{
+	return mAnimator;
+}
+
+void Enemy::ReceiveDamage(float amount)
+{
+	mHealth->ReceiveDamage(amount);
+
+	if (mHealth->IsDead()) {
+		mAI->ChangeState("AIDeath");
+	}
 }

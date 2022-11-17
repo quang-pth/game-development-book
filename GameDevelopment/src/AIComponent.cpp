@@ -25,10 +25,12 @@ void AIComponent::Update(float deltaTime)
 
 void AIComponent::ChangeState(const std::string& name)
 {
+	if (mState != nullptr && mState->GetName() == name) return;
+
 	// Exit the current state
 	if (mState != nullptr) 
 		mState->OnExit();
-	// Transist to the next state if any
+	// Transition to the next state if any
 	auto iter = mStateMap.find(name);
 	if (iter != mStateMap.end()) {
 		mState = iter->second;
@@ -43,4 +45,14 @@ void AIComponent::ChangeState(const std::string& name)
 void AIComponent::RegisterState(AIState* state)
 {
 	mStateMap.emplace(state->GetName(), state);
+}
+
+AIState* AIComponent::GetState() const
+{
+	return mState;
+}
+
+std::unordered_map<std::string, class AIState*> AIComponent::GetStates() const
+{
+	return mStateMap;
 }

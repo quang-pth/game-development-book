@@ -11,5 +11,6 @@ public:
 	virtual const char* GetName() const = 0;
 protected:
 	class AIComponent* mOwner;
+	class Enemy* mActor;
 };
 

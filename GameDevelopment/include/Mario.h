@@ -4,13 +4,14 @@
 #include "include/ICooldownable.h"
 #include<vector>
 
+enum class Direction {
+	Left,
+	Right,
+};
+
 class Hero : public GameObject, ICooldownable
 {
 public:
-	enum class Direction {
-		Left,
-		Right,
-	};
 	Hero(class Game* game, std::string = "Mario");
 	void UpdateGameObject(float deltaTime) override;
 	void ProcessGameObjectInput(const uint8_t* keyState) override;
@@ -19,7 +20,7 @@ public:
 	void Fire();
 	bool IsMoving() const;
 	Direction GetMoveDirection() const;
-	void SetMoveDirection(Hero::Direction direction);
+	void SetMoveDirection(Direction direction);
 	class InputComponent* GetInputComponent() const;
 	bool MoveExceedCenterPoint(bool toTheRight);
 	bool IsImageFlipped();

@@ -42,6 +42,7 @@
     <ClCompile Include="src\TileMap.cpp" />
     <ClCompile Include="src\Unit.cpp" />
     <ClCompile Include="src\OrchidOwl.cpp" />
+    <ClCompile Include="src\Health.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Enemy.h" />
@@ -84,5 +85,6 @@
     <ClInclude Include="include\RigidBodyComponent.h" />
     <ClInclude Include="include\NavComponent.h" />
     <ClInclude Include="include\OrchidOwl.h" />
+    <ClInclude Include="include\Health.h" />
   </ItemGroup>
 </Project>

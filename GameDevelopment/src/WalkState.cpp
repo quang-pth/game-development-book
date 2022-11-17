@@ -28,11 +28,11 @@ GameObjectState* WalkState::HandleInput(Hero* mOwner, const uint8_t* keyState)
 void WalkState::Update(Hero* mOwner)
 {
 	if (mOwner->inputComponent->RightKeyIsClicked()) {
-		mOwner->SetMoveDirection(Hero::Direction::Right);
+		mOwner->SetMoveDirection(Direction::Right);
 		mOwner->animator->FlipTexture(false);
 	}
 	else {
-		mOwner->SetMoveDirection(Hero::Direction::Left);
+		mOwner->SetMoveDirection(Direction::Left);
 		mOwner->animator->FlipTexture(true);
 	}
 }

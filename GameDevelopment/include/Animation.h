@@ -12,6 +12,7 @@ public:
 	std::string name;
 	Animation(const std::string& name, const std::vector<SDL_Texture*>& textures, bool isLoop = true);
 	~Animation();
+	bool IsFinished(float currentFrame);
 	float GetFPS() const { return mAnimationFPS; }
 	void SetFPS(float fps) { mAnimationFPS = fps; }
 private:

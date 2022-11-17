@@ -13,8 +13,10 @@ public:
 	void SetAnimation(const std::string& animationName);
 	void AddAnimation(std::shared_ptr<class Animation> animation);
 	void ResetAnimation(std::string animationName);
+	bool IsFinishedAnimation();
 private:
 	std::unordered_map <std::string, std::shared_ptr<class Animation>> mAnimationsMap;
+	std::shared_ptr<class Animation> mCurrentAnimation;
 	std::string mAnimationName;
 	float mCurrentFrame;
 };

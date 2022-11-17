@@ -4,17 +4,9 @@
 #include "CustomMath.h"
 #include <iostream>
 
-MoveComponent::MoveComponent() : 
-	Component(), 
-	mForwardSpeed(0.0f),
-	mMass(1.0f), mForceVelocity(0.0f, 0.0f), mSumOfForces(0.0f, 0.0f),
-	mForceMode(ForceMode::Impulse)
-{
-}
-
 MoveComponent::MoveComponent(GameObject* owner, int updateOrder, std::string name) : 
 	Component(owner, updateOrder, name), 
-	mForwardSpeed(0.0f),
+	mForwardSpeed(30.0f), mDirection(Direction::Right),
 	mMass(1.0f), mSumOfForces(0.0f, 0.0f), mForceVelocity(0.0f, 0.0f), 
 	mForceMode(ForceMode::Impulse)
 {
@@ -60,4 +52,21 @@ void MoveComponent::ResetForce()
 {
 	mForceVelocity = Vector2::Zero;
 	mSumOfForces = Vector2::Zero;
+}
+
+void MoveComponent::ToggleHorizontalDirection(float speed)
+{
+	if (mDirection == Direction::Right) {
+		mDirection = Direction::Left;
+		this->SetForwardSpeed(speed * (-1.0f));
+	}
+	else {
+		mDirection = Direction::Right;
+		this->SetForwardSpeed(speed);
+	}
+}
+
+Direction MoveComponent::GetDirection() const
+{
+	return mDirection;
 }

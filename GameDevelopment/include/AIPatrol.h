@@ -1,7 +1,7 @@
 #pragma once
 
 #include"include/AIState.h"
-
+	
 class AIPatrol : public AIState
 {
 public:

@@ -13,6 +13,7 @@ AIAttack::~AIAttack()
 
 void AIAttack::Update(float deltaTime)
 {
+
 }
 
 void AIAttack::OnEnter()

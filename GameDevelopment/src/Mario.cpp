@@ -155,12 +155,12 @@ bool Hero::IsMoving() const
 	return inputComponent->GetForwardSpeed() != 0.0f;
 }
 
-Hero::Direction Hero::GetMoveDirection() const
+Direction Hero::GetMoveDirection() const
 {
 	return mMoveDirection;
 }
 
-void Hero::SetMoveDirection(Hero::Direction direction)
+void Hero::SetMoveDirection(Direction direction)
 {
 	mMoveDirection = direction;
 }

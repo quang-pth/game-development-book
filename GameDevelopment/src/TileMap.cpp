@@ -21,7 +21,7 @@ TileMap::TileMap(Game* game, const std::string& name) :
 
 void TileMap::UpdateGameObject(float deltaTime)
 {
-	Hero* mario = GameObject::GetGame()->GetMario();
+	Hero* mario = GameObject::GetGame()->GetHero();
 	Vector2 distance = mario->pTransform->GetPosition();
 	Vector2 center = GameObject::GetGame()->GetCenterPoint();
 

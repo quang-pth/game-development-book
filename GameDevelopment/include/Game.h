@@ -19,7 +19,7 @@ public:
 	void AddSprite(class SpriteComponent* sprite);
 	void RemoveSprite(class SpriteComponent* sprite);
 	SDL_Texture* GetTexture(const std::string& fileName);
-	class Hero* GetMario() const;
+	class Hero* GetHero() const;
 	std::vector<class Enemy*> GetEnemies() const;
 	class TileMap* GetTileMap() const;
 	class CooldownManager* GetCooldownManager() const;

@@ -187,14 +187,6 @@ void Game::LoadData()
 	mTilemap->SetScale(2.0f);
 	mTilemap->SetTilePerRow(TILE_PER_ROW);
 	mTilemap->Init("Assets/Shooter/spritesheet.png", "Assets/Shooter/level-one-half-dimension.csv");
-	
-	// AI
-	// GameObject* aiActor = new GameObject(this, "AIActor");
-	// AIComponent* aiComponent = new AIComponent(aiActor);
-	// aiComponent->RegisterState(new AIPatrol(aiComponent));
-	// aiComponent->RegisterState(new AIAttack(aiComponent));
-	// aiComponent->RegisterState(new AIDeath(aiComponent));
-	// aiComponent->ChangeState("AIPatrol");
 }
 
 void Game::UnloadData()
@@ -235,7 +227,7 @@ SDL_Texture* Game::GetTexture(const std::string& fileName)
 	return texture;
 }
 
-Hero* Game::GetMario() const
+Hero* Game::GetHero() const
 {
 	return mHero;
 }

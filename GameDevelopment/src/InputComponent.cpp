@@ -39,12 +39,12 @@ void InputComponent::ProcessInput(const uint8_t* keyState)
 	if (keyState[mForwardRightKey]) {
 		forwardSpeed += mMaxForwardSpeed;
 		mRightKeyIsClicked = true;
-		((Hero*)mOwner)->SetDirection(Hero::Direction::Right);
+		((Hero*)mOwner)->SetDirection(Direction::Right);
 	}
 	if (keyState[mForwardLeftKey]) {
 		forwardSpeed -= mMaxForwardSpeed;
 		mRightKeyIsClicked = false;
-		((Hero*)mOwner)->SetDirection(Hero::Direction::Left);
+		((Hero*)mOwner)->SetDirection(Direction::Left);
 	}
 	MoveComponent::SetForwardSpeed(forwardSpeed);
 

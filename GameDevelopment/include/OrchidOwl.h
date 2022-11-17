@@ -10,5 +10,11 @@ public:
 	~OrchidOwl();
 	virtual void UpdateGameObject(float deltaTime) override;
 	virtual void Cooldown(float deltaTime) override;
+	virtual void ActAsState(float deltaTime) override;
+private:
+	void Patrol(float deltaTime);
+	void Attack(float deltaTime);
+	void Death(float deltaTime);
+	float mPatrolDuration, mCurrentPatrolTime;
 };
 

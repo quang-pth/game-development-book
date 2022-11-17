@@ -5,10 +5,21 @@
 #include "include/TransformComponent.h"
 #include "include/AnimatorComponent.h"
 #include "include/CircleComponent.h"
+#include "include/MoveComponent.h"
+#include "include/AIComponent.h"
+// AI
+#include "include/AIState.h"
+#include "include/AIPatrol.h"
+#include "include/AIAttack.h"
+#include "include/AIDeath.h"
 
 OrchidOwl::OrchidOwl(Game* game, const std::string& name) :
-	Enemy(game, name)
+	Enemy(game, name),
+	mPatrolDuration(1.5f), mCurrentPatrolTime(0.0f)
 {
+	mForwardSpeed = 30.0f;
+	mMoveComponent->SetForwardSpeed(mForwardSpeed);
+	
 	pTransform->SetPosition(Vector2(600.0f, 50.0f));
 	pTransform->SetScale(1.5f);
 
@@ -44,6 +55,10 @@ OrchidOwl::OrchidOwl(Game* game, const std::string& name) :
 	mAnimator->SetAnimation(runningAnimation->name);
 
 	mCircleComponent->SetRadius(16.0f * pTransform->GetScale());
+
+	mAI->RegisterState(new AIPatrol(mAI));
+	mAI->RegisterState(new AIDeath(mAI));
+	mAI->ChangeState("AIPatrol");
 }
 
 OrchidOwl::~OrchidOwl()
@@ -52,8 +67,46 @@ OrchidOwl::~OrchidOwl()
 
 void OrchidOwl::UpdateGameObject(float deltaTime)
 {
+	const Vector2& distanceVector = pTransform->GetPosition() - mGame->GetHero()->pTransform->GetPosition();
+	if (distanceVector.Length() < mAttackRadius) {
+		mAI->ChangeState("AIAttack");
+	}
 }
 
 void OrchidOwl::Cooldown(float deltaTime)
+{
+}
+
+void OrchidOwl::ActAsState(float deltaTime)
+{
+	if (mAI->GetState()->GetName() == "AIPatrol")
+	{
+		this->Patrol(deltaTime);
+	}
+	else if (mAI->GetState()->GetName() == "AIAttack") {
+		this->Attack(deltaTime);
+	}
+	else if (mAI->GetState()->GetName() == "AIDeath") {
+		this->Death(deltaTime);
+	}
+}
+
+void OrchidOwl::Patrol(float deltaTime)
+{
+	mCurrentPatrolTime -= deltaTime;
+	mMoveComponent->Update(deltaTime);
+
+	if (mCurrentPatrolTime < 0.0f) {
+		mMoveComponent->ToggleHorizontalDirection(mForwardSpeed);
+		mAnimator->FlipTexture(mMoveComponent->GetDirection() == Direction::Left);
+		mCurrentPatrolTime = mPatrolDuration;
+	}
+}
+
+void OrchidOwl::Attack(float deltaTime)
+{
+}
+
+void OrchidOwl::Death(float deltaTime)
 {
 }

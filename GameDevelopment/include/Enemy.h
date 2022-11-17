@@ -10,6 +10,7 @@ class MoveComponent;
 class SpriteComponent;
 class CircleComponent;
 class AIComponent;
+class Health;
 
 class Enemy : public GameObject
 {
@@ -19,14 +20,21 @@ public:
 	~Enemy();
 	virtual void UpdateGameObject(float deltaTime) override;
 	virtual void Cooldown(float deltaTime);
+	virtual void ActAsState(float deltaTime);
+	virtual void ReceiveDamage(float amount);
 	CircleComponent* GetCircleComponent() const;
+	MoveComponent* GetMoveComponent() const;
+	AIComponent* GetAIComponent() const;
+	AnimatorComponent* GetAnimatorComponent() const;
 protected:
+	// Components
 	AnimatorComponent* mAnimator;
 	MoveComponent* mMoveComponent;
-	SpriteComponent* mSpriteComponent;
 	CircleComponent* mCircleComponent;
 	AIComponent* mAI;
-	std::vector<AIState*> mStates;
-	AIState* mCurrentState;
+	Health* mHealth;
+	// Other
+	float mForwardSpeed;
+	float mAttackRadius;
 };
 

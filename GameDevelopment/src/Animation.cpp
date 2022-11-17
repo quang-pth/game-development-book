@@ -10,3 +10,8 @@ Animation::Animation(const std::string& name,
 Animation::~Animation()
 {
 }
+
+bool Animation::IsFinished(float currentFrame)
+{
+	return !isLoop && textures.size() - 1 == currentFrame;
+}

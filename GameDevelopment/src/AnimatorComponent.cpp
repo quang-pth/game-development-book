@@ -3,7 +3,9 @@
 #include <iostream>
 
 AnimatorComponent::AnimatorComponent(GameObject* owner, int drawOrder) : 
-	SpriteComponent(owner, drawOrder), mCurrentFrame(0), mAnimationsMap()
+	SpriteComponent(owner, drawOrder), 
+	mCurrentFrame(0), 
+	mAnimationsMap(), mCurrentAnimation()
 {
 
 }
@@ -14,18 +16,18 @@ AnimatorComponent::~AnimatorComponent()
 
 void AnimatorComponent::Update(float deltaTime)
 {
-	const std::shared_ptr<Animation> animation = mAnimationsMap[mAnimationName];
-	const std::vector<SDL_Texture*> textures = animation->textures;
+	mCurrentAnimation = mAnimationsMap[mAnimationName];
+	const std::vector<SDL_Texture*> textures = mCurrentAnimation->textures;
 	const int animationFrames = textures.size();
 	
 	if (animationFrames < 0) return;
 
-	mCurrentFrame += animation->GetFPS() * deltaTime;
+	mCurrentFrame += mCurrentAnimation->GetFPS() * deltaTime;
 
 	while (mCurrentFrame >= animationFrames) {
 		mCurrentFrame -= animationFrames;
 		
-		if (!animation->isLoop) {
+		if (!mCurrentAnimation->isLoop) {
 			mCurrentFrame = textures.size() - 1;
 		}
 	}
@@ -54,4 +56,9 @@ void AnimatorComponent::ResetAnimation(std::string animationName)
 {
 	mAnimationName = animationName;
 	mCurrentFrame = 0;
+}
+
+bool AnimatorComponent::IsFinishedAnimation()
+{
+	return mCurrentAnimation->IsFinished(mCurrentFrame);
 }

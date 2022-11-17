@@ -5,15 +5,17 @@
 #include "include/CircleComponent.h"
 #include "include/TransformComponent.h"
 #include "include/Asteroid.h"
+#include "include/Health.h"
 #include "include/Enemy.h"
 #include "include/Mario.h"
 #include <iostream>
 
-Laser::Laser(Game* game, std::string name) :
+Laser::Laser(Game* game, const std::string& name) :
 	GameObject(game, name),
 	mLifeTime(1.5f),
 	mCurrentLifeTime(1.5f),
-	mForwardSpeed(270.0f)
+	mForwardSpeed(270.0f),
+	mDamage(5.0f)
 {
 	mMoveComponent = new MoveComponent(this);
 	mMoveComponent->SetForwardSpeed(mForwardSpeed);
@@ -35,6 +37,11 @@ void Laser::UpdateGameObject(float deltaTime)
 void Laser::SetDirection(int direction)
 {
 	mMoveComponent->SetForwardSpeed(direction * mForwardSpeed);
+}
+
+void Laser::SetTexture(const std::string& filePath)
+{
+	mSpriteComponent->SetTexture(GameObject::GetGame()->GetTexture(filePath));
 }
 
 MoveComponent* Laser::GetMoveComponent() const
@@ -70,7 +77,7 @@ void Laser::CheckCollisions()
 {
 	for (Enemy* enemy : mGame->GetEnemies()) {
 		if (CircleComponent::IsIntersect(enemy->GetCircleComponent(), mCircleComponent)) {
-			enemy->SetState(GameObject::State::EDeactive);
+			enemy->ReceiveDamage(mDamage);
 			this->ResetLaser();
 		}
 	}
