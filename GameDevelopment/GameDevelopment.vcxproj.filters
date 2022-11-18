@@ -44,6 +44,10 @@
     <ClCompile Include="src\OrchidOwl.cpp" />
     <ClCompile Include="src\Health.cpp" />
     <ClCompile Include="src\Weapon.cpp" />
+    <ClCompile Include="src\HurtState.cpp" />
+    <ClCompile Include="src\DamagableState.cpp" />
+    <ClCompile Include="src\AIDamagable.cpp" />
+    <ClCompile Include="src\AIInjured.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Enemy.h" />
@@ -88,5 +92,9 @@
     <ClInclude Include="include\OrchidOwl.h" />
     <ClInclude Include="include\Health.h" />
     <ClInclude Include="include\Weapon.h" />
+    <ClInclude Include="include\HurtState.h" />
+    <ClInclude Include="include\DamagableState.h" />
+    <ClInclude Include="include\AIDamagable.h" />
+    <ClInclude Include="include\AIInjured.h" />
   </ItemGroup>
 </Project>

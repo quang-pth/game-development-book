@@ -5,27 +5,34 @@
 #include "include/JumpState.h"
 #include "include/IdleState.h"
 
+WalkState::WalkState(Hero* owner) : DamagableState(owner)
+{
+
+}
+
 WalkState::~WalkState()
 {
 }
 
-GameObjectState* WalkState::HandleInput(Hero* mOwner, const uint8_t* keyState)
+void WalkState::HandleInput(const uint8_t* keyState)
 {
+	DamagableState::HandleInput(keyState);
+
 	bool remainInWalkState = keyState[mOwner->inputComponent->GetInputKey("Left")]
 		|| keyState[mOwner->inputComponent->GetInputKey("Right")];
-	
+
 	if (keyState[mOwner->inputComponent->GetInputKey("Jump")]) {
-		return new JumpState();
+		mOwner->ChangeState("JumpState");
 	}
 
 	if (remainInWalkState) {
-		return nullptr;
+		return;
 	}
 
-	return new IdleState();
+	mOwner->ChangeState("IdleState");
 }
 
-void WalkState::Update(Hero* mOwner)
+void WalkState::Update(float deltaTime)
 {
 	if (mOwner->inputComponent->RightKeyIsClicked()) {
 		mOwner->SetMoveDirection(Direction::Right);
@@ -37,7 +44,7 @@ void WalkState::Update(Hero* mOwner)
 	}
 }
 
-void WalkState::Enter(Hero* mOwner)
+void WalkState::Enter()
 {
 	mOwner->animator->FlipTexture(mOwner->IsImageFlipped());
 	mOwner->animator->SetAnimation("Walk");

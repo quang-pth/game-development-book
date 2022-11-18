@@ -14,8 +14,8 @@
 
 Enemy::Enemy(Game* game, const std::string& name) :
 	GameObject(game, name),
-	mAI(),
-	mForwardSpeed(200.0f), mAttackRadius(250.0f), mIsAttacked(false)
+	mForwardSpeed(200.0f), 
+	mAttackRadius(250.0f), mIsAttacked(false)
 {
 	mHealth.reset(new Health(20.0f));
 	mWeapon.reset(new Weapon(this, true));

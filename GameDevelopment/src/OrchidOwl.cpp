@@ -13,6 +13,7 @@
 #include "include/AIPatrol.h"
 #include "include/AIAttack.h"
 #include "include/AIDeath.h"
+#include "include/AIInjured.h"
 
 #include "include/Weapon.h"
 #include "include/Unit.h"
@@ -66,6 +67,7 @@ OrchidOwl::OrchidOwl(Game* game, const std::string& name) :
 	mAI->RegisterState(new AIPatrol(mAI));
 	mAI->RegisterState(new AIAttack(mAI));
 	mAI->RegisterState(new AIDeath(mAI));
+	mAI->RegisterState(new AIInjured(mAI));
 	mAI->ChangeState("AIPatrol");
 
 	const Vector2& offsetPos = Vector2(TILE_SIZE, 0.0f) * pTransform->GetScale() * 0.5f;

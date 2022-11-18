@@ -5,7 +5,9 @@
 #include "include/InputComponent.h"
 #include "include/RigidBodyComponent.h"
 
-JumpState::JumpState() : mMaxHeight(5.0f), mMaxTime(.75f)
+JumpState::JumpState(Hero* owner) : 
+	DamagableState(owner),
+	mMaxHeight(5.0f), mMaxTime(.75f)
 {
 	float timeToApex = mMaxTime / 2.0f;
 	mForce = (2 * mMaxHeight) / timeToApex;
@@ -15,28 +17,29 @@ JumpState::~JumpState()
 {
 }
 
-GameObjectState* JumpState::HandleInput(Hero* mOwner, const uint8_t* keyState)
+void JumpState::HandleInput(const uint8_t* keyState)
 {
+	DamagableState::HandleInput(keyState);
+
 	bool isWalked = keyState[mOwner->inputComponent->GetInputKey("Left")]
 		|| keyState[mOwner->inputComponent->GetInputKey("Right")];
 
 	if (isWalked) {
-		return new WalkState();
+		mOwner->ChangeState("WalkState");
 	}
-
-    return nullptr;
 }
 
-void JumpState::Update(Hero* mOwner)
+void JumpState::Update(float deltaTime)
 {
 }
 
-void JumpState::Enter(Hero* mOwner)
+void JumpState::Enter()
 {
-    mOwner->animator->SetAnimation("Jump");
+	mOwner->animator->SetAnimation("Jump");
 	mOwner->rigidBodyComponent->Jump(mForce);
 }
 
-void JumpState::Exit()
+void JumpState::Exit() 
 {
+
 }

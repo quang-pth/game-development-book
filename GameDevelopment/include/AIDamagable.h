@@ -1,18 +1,17 @@
 #pragma once
 
-#include "include/AIDamagable.h"
+#include"include/AIState.h"
 
-class AIAttack : public AIDamagable
+class AIDamagable : public AIState
 {
 public:
-	AIAttack(class AIComponent* owner);
-	~AIAttack();
+	AIDamagable(class AIComponent* owner);
+	~AIDamagable();
 	void Update(float deltaTime) override;
 	void OnEnter() override;
 	void OnExit() override;
 	const char* GetName() const override;
 private:
 	const char* mName;
-	float mRemainingDuration;
 };
 

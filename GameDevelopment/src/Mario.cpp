@@ -13,12 +13,14 @@
 #include "include/Animation.h"
 #include "include/WalkState.h"
 #include "include/IdleState.h"
+#include "include/JumpState.h"
+#include "include/HurtState.h"
 #include "include/Weapon.h"
 #include <SDL2/SDL.h>
 #include <iostream>
 
 Hero::Hero(Game* game, const std::string& name) :
-	GameObject(game, name)
+	GameObject(game, name), mStateMap(), mIsAttacked(false)
 {
 	mCenterPosition = Vector2(game->GetWindowWidth() / 2 - 30.0f, game->GetWindowHeight() / 2);
 	pTransform->SetPosition(mCenterPosition);
@@ -54,12 +56,19 @@ Hero::Hero(Game* game, const std::string& name) :
 	};
 	std::shared_ptr<Animation> jumpAnimation = std::make_shared<Animation>("Jump", jumpTextures, false);
 	idleAnimation->SetFPS(1.5f);
+	// Hurt
+	std::vector<SDL_Texture*> hurtTextures = {
+		game->GetTexture("Assets/Shooter/Hero/Hurt/tile000.png")
+	};
+	std::shared_ptr<Animation> hurtAnimation = std::make_shared<Animation>("Hurt", hurtTextures, false);
+	hurtAnimation->SetFPS(1.5f);
 
 	// Animator
 	animator = new AnimatorComponent(this);
 	animator->AddAnimation(walkingAnimation);
 	animator->AddAnimation(idleAnimation);
 	animator->AddAnimation(jumpAnimation);
+	animator->AddAnimation(hurtAnimation);
 	animator->SetAnimation(walkingAnimation->name);
 
 	inputComponent = new InputComponent(this);
@@ -75,8 +84,12 @@ Hero::Hero(Game* game, const std::string& name) :
 	rigidBodyComponent->SetDimension(Vector2(TILE_SIZE, TILE_SIZE) * pTransform->GetScale() * 0.3f);
 	rigidBodyComponent->Init();
 
-	mState = new IdleState();
-	mState->Enter(this);
+	mStateMap.emplace("IdleState", new IdleState(this));
+	mStateMap.emplace("WalkState", new WalkState(this));
+	mStateMap.emplace("JumpState", new JumpState(this));
+	mStateMap.emplace("HurtState", new HurtState(this));
+	this->ChangeState("IdleState");
+	mCurrentState->Enter();
 }
 
 void Hero::UpdateGameObject(float deltaTime)
@@ -86,18 +99,13 @@ void Hero::UpdateGameObject(float deltaTime)
 	const Vector2& position = Unit::MetersToPixels(rigidBodyComponent->GetBody()->GetPosition());
 	pTransform->SetPosition(position);
 
-	mState->Update(this);
+	mCurrentState->Update(deltaTime);
 	this->ConstraintInScreenBounds();
 }
 
 void Hero::ProcessGameObjectInput(const uint8_t* keyState)
 {
-	GameObjectState* state = mState->HandleInput(this, keyState);
-	if (state != nullptr) {
-		delete mState;
-		mState = state;
-		mState->Enter(this);
-	}
+	mCurrentState->HandleInput(keyState);
 }
 
 void Hero::StartCooldown()
@@ -142,6 +150,33 @@ bool Hero::IsImageFlipped()
 void Hero::Fire()
 {
 	mWeapon->Fire();
+}
+
+bool Hero::IsAttacked() const
+{
+	return mIsAttacked;
+}
+
+void Hero::SetIsAttacked(bool isAttacked)
+{
+	mIsAttacked = isAttacked;	
+}
+
+void Hero::ChangeState(const std::string& name)
+{
+	if (mCurrentState != nullptr) mCurrentState->Exit();
+
+	GameObjectState* state = mStateMap[name];
+
+	if (state == nullptr) {
+		SDL_Log("Cannot find state with name: {0}", name);
+		return;
+	}
+
+	if (state != mCurrentState) {
+		mCurrentState = state;
+		mCurrentState->Enter();
+	}
 }
 
 void Hero::ConstraintInScreenBounds()

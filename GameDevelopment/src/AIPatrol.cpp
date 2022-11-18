@@ -5,7 +5,7 @@
 #include "include/Enemy.h"
 
 AIPatrol::AIPatrol(AIComponent* owner) : 
-	AIState(owner),
+	AIDamagable(owner),
 	mName("AIPatrol")
 {
 }
@@ -16,6 +16,8 @@ AIPatrol::~AIPatrol()
 
 void AIPatrol::Update(float deltaTime)
 {
+	AIDamagable::Update(deltaTime);
+
 	if (AIState::CanAttack()) {
 		mOwner->ChangeState("AIAttack");
 		return;

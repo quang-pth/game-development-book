@@ -5,32 +5,39 @@
 #include "include/WalkState.h"
 #include "include/JumpState.h"
 
+IdleState::IdleState(Hero* owner) : DamagableState(owner)
+{
+
+}
+
 IdleState::~IdleState()
 {
 }
 
-GameObjectState* IdleState::HandleInput(Hero* mOwner, const uint8_t* keyState)
+void IdleState::HandleInput(const uint8_t* keyState)
 {
+	DamagableState::HandleInput(keyState);
+
 	if (keyState[mOwner->inputComponent->GetInputKey("Jump")]) {
-		return new JumpState();
+		mOwner->ChangeState("JumpState");
 	}
 
 	if (mOwner->IsMoving()) {
-		return new WalkState();
+		mOwner->ChangeState("WalkState");
 	}
 
-    return nullptr;
 }
 
-void IdleState::Update(Hero* mOwner)
+void IdleState::Update(float deltaTime)
 {
 }
 
-void IdleState::Enter(Hero* mOwner)
+void IdleState::Enter()
 {
 	mOwner->animator->SetAnimation("Idle");
 }
 
 void IdleState::Exit()
 {
+
 }

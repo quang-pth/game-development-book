@@ -86,6 +86,7 @@ void Laser::CheckCollisions()
 	else {
 		if (CircleComponent::IsIntersect(mGame->GetHero()->circleComponent, mCircleComponent)) {
 			//mGame->GetHero().rec->ReceiveDamage(mDamage);
+			mGame->GetHero()->SetIsAttacked(true);
 			this->ResetLaser();
 		}
 	}

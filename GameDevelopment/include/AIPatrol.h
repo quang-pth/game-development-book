@@ -1,8 +1,8 @@
 #pragma once
 
-#include"include/AIState.h"
+#include"include/AIDamagable.h"
 	
-class AIPatrol : public AIState
+class AIPatrol : public AIDamagable
 {
 public:
 	AIPatrol(class AIComponent* owner);

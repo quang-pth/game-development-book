@@ -1,15 +1,18 @@
 #pragma once
 
-#include"include/GameObjectState.h"
+#include"include/DamagableState.h"
 
-class JumpState : public GameObjectState
+class Hero;
+
+class JumpState : public DamagableState
 {
 public:
-	JumpState();
+	JumpState() = default;
+	JumpState(Hero* owner);
 	~JumpState();
-	GameObjectState* HandleInput(class Hero* mOwner, const uint8_t * keyState) override;
-	void Update(class Hero* mOwner) override;
-	void Enter(class Hero* mOwner) override;
+	void HandleInput(const uint8_t * keyState) override;
+	void Update(float deltaTime) override;
+	void Enter() override;
 	void Exit() override;
 private:
 	float mMaxHeight;

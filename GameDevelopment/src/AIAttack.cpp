@@ -7,7 +7,7 @@
 #include "include/Enemy.h"
 
 AIAttack::AIAttack(AIComponent* owner) : 
-	AIState(owner),
+	AIDamagable(owner),
 	mName("AIAttack"), mRemainingDuration(1.5f)
 {
 }
@@ -18,6 +18,8 @@ AIAttack::~AIAttack()
 
 void AIAttack::Update(float deltaTime)
 {
+	AIDamagable::Update(deltaTime);
+
 	mRemainingDuration -= deltaTime;
 
 	if (mAgent->IsDead()) {
@@ -38,7 +40,6 @@ void AIAttack::Update(float deltaTime)
 void AIAttack::OnEnter()
 {
 	mAgent->GetMoveComponent()->SetForwardSpeed(0.0f);
-	mAgent->GetAnimatorComponent()->SetAnimation("Idle");
 }
 
 void AIAttack::OnExit()

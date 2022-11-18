@@ -1,15 +1,18 @@
 #pragma once
 
-#include"include/GameObjectState.h"
+#include"include/DamagableState.h"
 
-class IdleState : public GameObjectState
+class Hero;
+
+class IdleState : public DamagableState
 {
 public:
 	IdleState() = default;
+	IdleState(Hero* owner);
 	~IdleState();
-	GameObjectState* HandleInput(class Hero* mOwner, const uint8_t* keyState) override;
-	void Update(class Hero* mOwner) override;
-	void Enter(class Hero* mOwner) override;
+	void HandleInput(const uint8_t* keyState) override;
+	void Update(float deltaTime) override;
+	void Enter() override;
 	void Exit() override;
 };
 
