@@ -14,7 +14,6 @@ Tile::Tile(Game* game, float scale, const std::string& name) :
 	mRigidBodyComponent(), mTileDataComponent()
 {
 	pTransform->SetScale(scale);
-	game->GetCooldownManager()->Observe(this);
 }
 
 Tile::~Tile()
@@ -42,10 +41,10 @@ void Tile::SetTileData(const Vector2& dimension, const Vector2& srcPosition,
 void Tile::Cooldown(float deltaTime)
 {
 	if (this->IsInBound()) {
-		GameObject::SetState(GameObject::State::EActive);
+		GameObject::SetState(State::EActive);
 	}
 	else {
-		GameObject::SetState(GameObject::State::EDeactive);
+		GameObject::SetState(State::EDeactive);
 	}
 }
 

@@ -5,6 +5,7 @@
 #include "include/GameObject.h"
 #include "include/MoveComponent.h"
 #include "include/AnimatorComponent.h"
+#include "include/RigidBodyComponent.h"
 #include "include/AIComponent.h"
 
 AIDeath::AIDeath(AIComponent* owner) : 
@@ -24,13 +25,14 @@ void AIDeath::Update(float deltaTime)
 	mAgent->ActAsState(deltaTime);
 
 	if (mCurrentDuration < 0.0f) {
-		mOwner->GetOwner()->SetState(GameObject::State::EDeactive);
+		mOwner->GetOwner()->SetState(State::EDeactive);
 		mCurrentDuration = mDuration;
 	}
 }
 
 void AIDeath::OnEnter()
 {
+	mAgent->GetRigidBodyComponent()->WakeUp(true);
 	mAgent->GetMoveComponent()->SetForwardSpeed(0.0f);
 	mAgent->GetAnimatorComponent()->SetAnimation("Hurt");
 }

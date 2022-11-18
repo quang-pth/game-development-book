@@ -5,15 +5,16 @@
 #include<memory>
 #include"CustomMath.h"
 
+enum class State {
+	EActive,
+	EDeactive,
+	EPaused,
+	EDead,
+};
+
 class GameObject
 {
 public:
-	enum class State {
-		EActive,
-		EDeactive,
-		EPaused,
-		EDead,
-	};
 	std::string name;
 
 	GameObject();
@@ -34,6 +35,7 @@ public:
 	Vector2 GetForward() const;
 	class Game* GetGame() const;
 	class TransformComponent *pTransform;
+	bool IsActive() const;
 private:
 	void AddDefaultComponents();
 	State mState;

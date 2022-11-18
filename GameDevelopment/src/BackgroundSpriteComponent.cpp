@@ -3,16 +3,19 @@
 #include "include/BackgroundSpriteComponent.h"
 
 BackgroundSpriteComponent::BackgroundSpriteComponent(GameObject* owner, int drawOrder, std::string name) :
-	SpriteComponent(owner, drawOrder, name), mScrollSpeed(0.0f)
+	SpriteComponent(owner, drawOrder, name), mScrollSpeed(Vector2::Zero)
 {
 }
 
 void BackgroundSpriteComponent::Update(float deltaTime)
 {
 	for (auto& texture : mBackgroundTextures) {
-		texture.mOffset.x += mScrollSpeed * deltaTime;
+		texture.mOffset += mScrollSpeed * deltaTime;
 		if (texture.mOffset.x < -mScreenSize.x) {
 			texture.mOffset.x = (mBackgroundTextures.size() - 1) * mScreenSize.x - 1;
+		}
+		if (texture.mOffset.y > mScreenSize.y) {
+			texture.mOffset.y = -((mBackgroundTextures.size() - 1) * mScreenSize.y - 1);
 		}
 	}
 }
@@ -30,14 +33,14 @@ void BackgroundSpriteComponent::Draw(SDL_Renderer* renderer)
 	}
 }
 
-void BackgroundSpriteComponent::SetBackgroundTextures(const std::vector<SDL_Texture*>& textures)
+void BackgroundSpriteComponent::SetBackgroundTextures(const std::vector<SDL_Texture*>& textures, bool vertical, bool horizontal)
 {
 	int count = 0;
 	for (auto texture : textures) {
 		BackgroundTexture tempTexture;
 		tempTexture.mTexture = texture;
-		tempTexture.mOffset.x = count * mScreenSize.x;
-		tempTexture.mOffset.y = 0;
+		tempTexture.mOffset.x = count * mScreenSize.x * horizontal;
+		tempTexture.mOffset.y = count * mScreenSize.y * (-1) * vertical;
 		mBackgroundTextures.emplace_back(tempTexture);
 		count++;
 	}

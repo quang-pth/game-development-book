@@ -1,18 +1,22 @@
 #include"include/Game.h"
+
+// GAME OBJECT
 #include"include/GameObject.h"
-#include"include/CooldownManager.h"
+#include"include/Mario.h"
+#include"include/OrchidOwl.h"
+#include"include/Martian.h"
+#include"include/MrCircuit.h"
+// COMPONENTS
 #include"include/SpriteComponent.h"
 #include"include/BackgroundSpriteComponent.h"
 #include"include/TransformComponent.h"
 #include"include/TileMap.h"
-#include"include/StateManager.h"
-#include"include/Mario.h"
-#include"include/OrchidOwl.h"
 #include"include/AIComponent.h"
-#include"include/Asteroid.h"
+// AI 
 #include"include/AIPatrol.h"
 #include"include/AIAttack.h"
 #include"include/AIDeath.h"
+// OTHER
 #include"include/Unit.h"
 #include<SDL2/SDL_image.h>
 #include<box2D/b2_math.h>
@@ -129,7 +133,7 @@ void Game::UpdateGame()
 	// Get dead gameobjects
 	std::vector<GameObject*> deadGameObjects;
 	for (const auto& gameObject : mpGameObjects) {
-		if (gameObject->GetState() == GameObject::State::EDead) {
+		if (gameObject->GetState() == State::EDead) {
 			deadGameObjects.emplace_back(gameObject);
 		}
 	}
@@ -153,34 +157,35 @@ void Game::GenerateOutput()
 
 void Game::LoadData()
 {
-	mCooldownManager = new CooldownManager(this);
-
 	mHero = new Hero(this);
 	OrchidOwl* owl = new OrchidOwl(this);
 	mEnemies.emplace_back(owl);
+	Martian* martian = new Martian(this);
+	mEnemies.emplace_back(martian);
+	MrCircuit* mrCircuit = new MrCircuit(this);
+	mEnemies.emplace_back(mrCircuit);
 
 	GameObject* background = new GameObject(this, "Background");
 	background->pTransform->SetPosition(Vector2(mWindowWidth / 2.0f, mWindowHeight / 2.0f));
 	// Far background
 	BackgroundSpriteComponent* farBackgroundComponent = 
-		new BackgroundSpriteComponent(background, 10, "BackgroundSprite1");
+		new BackgroundSpriteComponent(background, 10, "MoutainBackground");
 	farBackgroundComponent->SetScreenSize(Vector2(mWindowWidth, mWindowHeight));
 	std::vector<SDL_Texture*> farBackgroundTextures = {
-		GetTexture("Assets/Chapter2/Farback01.png"),
-		GetTexture("Assets/Chapter2/Farback02.png"),
+		GetTexture("Assets/SeasonalTilesets/WinterWorld/Background/CombinedBg.png"),
+		GetTexture("Assets/SeasonalTilesets/WinterWorld/Background/CombinedBg.png"),
 	};
 	farBackgroundComponent->SetBackgroundTextures(farBackgroundTextures);
-	farBackgroundComponent->SetScrollSpeed(-100.0f);
 	// Near background
 	BackgroundSpriteComponent* nearBackgroundComponent = 
-		new BackgroundSpriteComponent(background, 11, "BackgroundSprite2");
+		new BackgroundSpriteComponent(background, 11, "SnowingBackground");
 	nearBackgroundComponent->SetScreenSize(Vector2(mWindowWidth, mWindowHeight));
 	std::vector<SDL_Texture*> nearBackgroundTextures = {
 		GetTexture("Assets/Chapter2/Stars.png"),
 		GetTexture("Assets/Chapter2/Stars.png"),
 	};
-	nearBackgroundComponent->SetBackgroundTextures(nearBackgroundTextures);
-	nearBackgroundComponent->SetScrollSpeed(-200.0f);
+	nearBackgroundComponent->SetBackgroundTextures(nearBackgroundTextures, true, false);
+	nearBackgroundComponent->SetScrollSpeed(Vector2(0.0f, 28.0f));
 
 	mTilemap = new TileMap(this);
 	mTilemap->SetTileDimension(Vector2(TILE_SIZE, TILE_SIZE));

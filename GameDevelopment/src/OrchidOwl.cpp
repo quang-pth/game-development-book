@@ -31,6 +31,8 @@ OrchidOwl::OrchidOwl(Game* game, const std::string& name) :
 	pTransform->SetPosition(Vector2(600.0f, 50.0f));
 	pTransform->SetScale(1.5f);
 
+	mCircleComponent->SetRadius(4.0f);
+
 	/*
 	* ANIMATIONS
 	*/
@@ -75,7 +77,7 @@ OrchidOwl::OrchidOwl(Game* game, const std::string& name) :
 	mRigidBodyComponent->SetPosition(pTransform->GetPosition() + offsetPos);
 	mRigidBodyComponent->SetDimension(Vector2(TILE_SIZE, TILE_SIZE) * pTransform->GetScale() * 0.3f);
 	mRigidBodyComponent->Init();
-	mRigidBodyComponent->SetGravity(0.0f);
+	mRigidBodyComponent->WakeUp(false);
 }
 
 OrchidOwl::~OrchidOwl()
@@ -119,5 +121,4 @@ void OrchidOwl::Patrol(float deltaTime)
 
 void OrchidOwl::Death(float deltaTime)
 {
-	//mRigidBodyComponent->SetGravity(1.0f);
 }

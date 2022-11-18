@@ -20,8 +20,6 @@ void AIAttack::Update(float deltaTime)
 {
 	AIDamagable::Update(deltaTime);
 
-	mRemainingDuration -= deltaTime;
-
 	if (mAgent->IsDead()) {
 		mOwner->ChangeState("AIDeath");
 		return;
@@ -29,6 +27,7 @@ void AIAttack::Update(float deltaTime)
 
 	mAgent->ActAsState(deltaTime);
 
+	mRemainingDuration -= deltaTime;
 	if (mRemainingDuration > 0) return;
 
 	if (!AIState::CanAttack()) {

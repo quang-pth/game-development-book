@@ -110,7 +110,7 @@ void Hero::ProcessGameObjectInput(const uint8_t* keyState)
 
 void Hero::StartCooldown()
 {
-	GameObject::SetState(GameObject::State::EDeactive);
+	GameObject::SetState(State::EDeactive);
 }
 
 bool Hero::IsMoving() const

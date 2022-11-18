@@ -11,10 +11,10 @@ public:
 		std::string name = "BackgroundSpriteComponent");
 	void Update(float deltaTime) override;
 	void Draw(SDL_Renderer* renderer) override;
-	void SetBackgroundTextures(const std::vector<SDL_Texture*>& textures);
+	void SetBackgroundTextures(const std::vector<SDL_Texture*>& textures, bool vertical = false, bool horizontal = false);
 	void SetScreenSize(const Vector2& size) { mScreenSize = size; }
-	void SetScrollSpeed(float speed) { mScrollSpeed = speed; }
-	float GetScrollSpeed() const { return mScrollSpeed; }
+	void SetScrollSpeed(Vector2 speed) { mScrollSpeed = speed; }
+	Vector2 GetScrollSpeed() const { return mScrollSpeed; }
 private:
 	struct BackgroundTexture {
 		SDL_Texture* mTexture;
@@ -22,6 +22,6 @@ private:
 	};
 	std::vector<BackgroundTexture> mBackgroundTextures;
 	Vector2 mScreenSize;
-	float mScrollSpeed;
+	Vector2 mScrollSpeed;
 };
 

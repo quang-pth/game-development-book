@@ -48,6 +48,8 @@
     <ClCompile Include="src\DamagableState.cpp" />
     <ClCompile Include="src\AIDamagable.cpp" />
     <ClCompile Include="src\AIInjured.cpp" />
+    <ClCompile Include="src\Martian.cpp" />
+    <ClCompile Include="src\MrCircuit.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Enemy.h" />
@@ -96,5 +98,7 @@
     <ClInclude Include="include\DamagableState.h" />
     <ClInclude Include="include\AIDamagable.h" />
     <ClInclude Include="include\AIInjured.h" />
+    <ClInclude Include="include\Martian.h" />
+    <ClInclude Include="include\MrCircuit.h" />
   </ItemGroup>
 </Project>

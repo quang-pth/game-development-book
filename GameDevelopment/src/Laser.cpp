@@ -24,7 +24,7 @@ Laser::Laser(Game* game, bool enemyLaser, const std::string& name) :
 	mSpriteComponent->SetTexture(GameObject::GetGame()->GetTexture("Assets/Shooter/Hero/Bullet/tile000.png"));
 
 	mCircleComponent = new CircleComponent(this);
-	mCircleComponent->SetRadius(mSpriteComponent->GetTextureWidth());
+	mCircleComponent->SetRadius(5.0f);
 }
 
 void Laser::UpdateGameObject(float deltaTime)
@@ -68,7 +68,7 @@ void Laser::CheckIsAlive()
 
 void Laser::ResetLaser()
 {
-	GameObject::SetState(GameObject::State::EDeactive);
+	GameObject::SetState(State::EDeactive);
 	mMoveComponent->SetForwardSpeed(mForwardSpeed);
 	mCurrentLifeTime = mLifeTime;
 }
@@ -78,14 +78,17 @@ void Laser::CheckCollisions()
 	if (!mIsEnemyLaser) {
 		for (Enemy* enemy : mGame->GetEnemies()) {
 			if (CircleComponent::IsIntersect(enemy->GetCircleComponent(), mCircleComponent)) {
+				if (!enemy->IsActive()) continue;
+				
 				enemy->ReceiveDamage(mDamage);
 				this->ResetLaser();
 			}
 		}
 	}
 	else {
+		if (!mGame->GetHero()->IsActive()) return;
+		
 		if (CircleComponent::IsIntersect(mGame->GetHero()->circleComponent, mCircleComponent)) {
-			//mGame->GetHero().rec->ReceiveDamage(mDamage);
 			mGame->GetHero()->SetIsAttacked(true);
 			this->ResetLaser();
 		}

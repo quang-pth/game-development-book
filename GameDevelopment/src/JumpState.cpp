@@ -27,6 +27,10 @@ void JumpState::HandleInput(const uint8_t* keyState)
 	if (isWalked) {
 		mOwner->ChangeState("WalkState");
 	}
+
+	if (mOwner->animator->IsFinishedAnimation()) {
+		mOwner->ChangeState("IdleState");
+	}
 }
 
 void JumpState::Update(float deltaTime)

@@ -25,7 +25,7 @@ SpriteComponent::~SpriteComponent()
 
 void SpriteComponent::Draw(SDL_Renderer* renderer)
 {
-	if (mTexture == nullptr || mOwner->GetState() == GameObject::State::EDeactive) return;
+	if (mTexture == nullptr || mOwner->GetState() == State::EDeactive) return;
 
 	SDL_Rect rect;
 	rect.w = static_cast<int>(mTextureWidth * mOwner->pTransform->GetScale());

@@ -48,7 +48,7 @@ void Weapon::Fire()
 		laser->SetDirection(1);
 	}
 
-	laser->SetState(GameObject::State::EActive);
+	laser->SetState(State::EActive);
 	mCurrentFireInterval = mFireInterval;
 }
 
@@ -61,7 +61,7 @@ void Weapon::InstantiateLaser()
 {
 	for (unsigned int idx = 0; idx < mCapacity; idx++) {
 		Laser* laser = new Laser(mOwner->GetGame(), mIsEnemyLaser);
-		laser->SetState(GameObject::State::EDeactive);
+		laser->SetState(State::EDeactive);
 		laser->pTransform->SetScale(1.5f);
 		mLasers.emplace_back(laser);
 	}

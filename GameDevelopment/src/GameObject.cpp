@@ -10,7 +10,7 @@ GameObject::GameObject() : mGame(), name(), mState(), pTransform()
 }
 
 GameObject::GameObject(Game* game, std::string name) :
-	mGame(game), name(name), mState(GameObject::State::EActive)
+	mGame(game), name(name), mState(State::EActive)
 {
 	this->AddDefaultComponents();
 	mGame->AddGameObject(this);
@@ -26,7 +26,7 @@ GameObject::~GameObject()
 
 void GameObject::Update(float deltaTime) 
 {
-	if (mState == GameObject::State::EActive) {
+	if (mState == State::EActive) {
 		UpdateComponents(deltaTime);
 		UpdateGameObject(deltaTime);
 	}
@@ -41,7 +41,7 @@ void GameObject::UpdateComponents(float deltaTime)
 
 void GameObject::ProcessInput(const uint8_t* keyState)
 {
-	if (mState == GameObject::State::EActive) {
+	if (mState == State::EActive) {
 		for (Component* component : mpComponents) {
 			component->ProcessInput(keyState);
 		}
@@ -83,7 +83,7 @@ void GameObject::RemoveGameObjectComponent(Component* component)
 {
 }
 
-GameObject::State GameObject::GetState() const
+State GameObject::GetState() const
 {
 	return mState;
 }
@@ -114,6 +114,11 @@ Vector2 GameObject::GetForward() const
 Game* GameObject::GetGame() const
 {
 	return mGame;
+}
+
+bool GameObject::IsActive() const
+{
+	return mState == State::EActive;
 }
 
 void GameObject::AddDefaultComponents()
