@@ -111,7 +111,7 @@ bool Enemy::IsSawPlayer()
 {
 	const Vector2& distanceVector = (mGame->GetHero()->pTransform->GetPosition() - 
 		pTransform->GetPosition()).Normalize();
-	return Vector2::Dot(mMoveComponent->GetVelocity(), distanceVector) > 0.0f;
+	return Vector2::Dot(mMoveComponent->GetVelocity(), distanceVector) >= 0.0f;
 }
 
 bool Enemy::IsNearPlayer()
