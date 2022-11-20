@@ -175,6 +175,7 @@
     <ClCompile Include="src\Random.cpp" />
     <ClCompile Include="src\Asteroid.cpp" />
     <ClCompile Include="src\MoveComponent.cpp" />
+    <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="src\Animation.cpp" />
     <ClCompile Include="EsstenialMath.cpp" />
     <ClCompile Include="src\Mario.cpp" />
@@ -216,6 +217,7 @@
     <ClInclude Include="include\CooldownManager.h" />
     <ClInclude Include="include\CircleComponent.h" />
     <ClInclude Include="include\Asteroid.h" />
+    <ClInclude Include="Primitive.h" />
     <ClInclude Include="include\Animation.h" />
     <ClInclude Include="EsstenialMath.h" />
     <ClInclude Include="include\BackgroundSpriteComponent.h" />
