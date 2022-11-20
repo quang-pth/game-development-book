@@ -416,18 +416,16 @@ namespace EssentialMath
 		}
 
 		// Convert an Euler Angle to an unit Object-To-UpRight Quaternion
-		static Quaternion* EulerAngleToObjectToUpRightQuaternion(const EulerAngle& angle, bool objToUpRight = true) {
+		static Quaternion EulerAngleToObjectToUpRightQuaternion(const EulerAngle& angle, bool objToUpRight = true) {
 			Quaternion head = Quaternion(cosf(angle.head * 0.5f), 0.0f, sinf(angle.head * 0.5f), 0.0f);
 			Quaternion pitch = Quaternion(cosf(angle.pitch * 0.5f), sinf(angle.pitch * 0.5f), 0.0f, 0.0f);
 			Quaternion bank = Quaternion(cosf(angle.bank * 0.5f), 0.0f, 0.0f, sinf(angle.bank * 0.5f));
 
 			if (objToUpRight) {
-				Quaternion result = head * pitch * bank;
-				return &result;
+				return head * pitch * bank;
 			}
 
-			Quaternion *result = &(head * pitch * bank).Conjungate();
-			return result;
+			return (head * pitch * bank).Conjungate();
 		}
 
 		// Convert an Unit Quaternion to an Euler Angle

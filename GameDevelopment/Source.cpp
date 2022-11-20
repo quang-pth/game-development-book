@@ -40,11 +40,11 @@ void TestEulerAngleAndQuaternion() {
 	EulerAngle angle = EulerAngle(-45.0f * DEGREE_TO_RADIAN, -90.0f * DEGREE_TO_RADIAN, 0.0f * DEGREE_TO_RADIAN);
 	std::cout << "Euler Angle: " << angle.head << ", " << angle.pitch << ", " << angle.bank << "\n";
 	std::cout << "====================================\n";
-	Quaternion* quaternion = RepresentationConverter::EulerAngleToObjectToUpRightQuaternion(angle);
-	std::cout << "Quaternion: " << quaternion->w << ", " << quaternion->x << ", " << quaternion->y << ", " << quaternion->z << std::endl;
+	Quaternion quaternion = RepresentationConverter::EulerAngleToObjectToUpRightQuaternion(angle);
+	std::cout << "Quaternion: " << quaternion.w << ", " << quaternion.x << ", " << quaternion.y << ", " << quaternion.z << std::endl;
 	std::cout << "====================================\n";
 	float matrix[3][3] = { 0 };
-	RepresentationConverter::QuaternionToMatrix(*quaternion, matrix);
+	RepresentationConverter::QuaternionToMatrix(quaternion, matrix);
 	PrintMatrix(matrix);
 	std::cout << "====================================\n";
 	angle = RepresentationConverter::MatrixToEulerAngle(matrix);
