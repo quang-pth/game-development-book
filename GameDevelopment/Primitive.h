@@ -145,7 +145,7 @@ namespace EssentialMath
 			Vector3 avgPoint = Vector3::Zero;
 			
 			for (auto iter = points.begin(); iter != points.end(); iter++) {
-				avgPoint = avgPoint + (*iter);
+				avgPoint = avgPoint + (**iter);
 			}
 
 			return (1.0f / (points.size())) * (avgPoint.Dot(normal));

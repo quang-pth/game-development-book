@@ -10,35 +10,93 @@ namespace EssentialMath
 #define DEGREE_TO_RADIAN (PI / 180.0)
 #define RADIAN_TO_DEGREE (180.0 / PI)
 
+	class Vector2
+	{
+	public:
+		float x, y;
+	public:
+		static Vector2 Zero;
+		static Vector2 Min;
+		static Vector2 Max;
+	public:
+		Vector2() = default;
+		Vector2(float value) : x(value), y(value) {}
+		Vector2(float x, float y) : x(x), y(y) {}
+
+		Vector2 operator+(const Vector2& other) {
+			return Vector2(this->x + other.x, this->y + other.y);
+		}
+
+		Vector2 operator-(const Vector2& other) {
+			return this->operator+(other * (-1.0f));
+		}
+
+		Vector2 operator*(float scalar) const {
+			return Vector2(x * scalar, y * scalar);
+		}
+
+		Vector2 operator/(float scalar) const {
+			return this->operator*(1 / scalar);
+		}
+
+		Vector2 Normalize() const {
+			return Vector2(x, y) / this->Magnitude();
+		}
+
+		Vector2 Negate() const {
+			return (*this) * (-1);
+		}
+
+		float Dot(const Vector2& other) {
+			const Vector2& otherNormal = other.Normalize();
+
+			return Normalize().x * otherNormal.x + Normalize().y * otherNormal.y;
+		}
+
+		float Magnitude() const {
+			return sqrtf(x * x + y * y);
+		}
+
+		float MagnitudeSquared() {
+			return x * x + y * y;
+		}
+	};
+
 	class Vector3
 	{
 	public:
 		float x, y, z;
 	public:
 		static Vector3 Zero;
+		static Vector3 Min;
+		static Vector3 Max;
 	public:
 		Vector3() = default;
 		Vector3(float value) : x(value), y(value), z(value) {}
 		Vector3(float x, float y, float z) : x(x), y(y), z(z) {}
 
-		Vector3 Mult(float scalar) {
+		Vector3 operator+(const Vector3& other) {
+			return Vector3(this->x + other.x, this->y + other.y, this->z + other.z);
+		}
+		
+		Vector3 operator-(const Vector3& other) {
+			return (*this) + other * (-1.0f);
+		}
+
+		Vector3 operator*(float scalar) const {
 			return Vector3(x * scalar, y * scalar, z * scalar);
 		}
 
-		Vector3 operator+(const Vector3* other) {
-			return Vector3(this->x + other->x, this->y + other->y, this->z + other->z);
-		}
-
-		Vector3 operator*(float scalar) {
-			return this->Mult(scalar);
-		}
-
-		Vector3 operator/(float scalar) {
-			return this->Mult(1 / scalar);
+		Vector3 operator/(float scalar) const {
+			return this->operator*(1 / scalar);
 		}
 
 		Vector3 Normalize() const {
 			return Vector3(x, y, z) / this->Magnitude();
+		}
+
+		Vector3 Negate() const {
+			return (*this) * (-1);
 		}
 
 		float Dot(const Vector3& other) {
@@ -47,6 +105,14 @@ namespace EssentialMath
 			return Normalize().x * otherNormal.x + 
 				Normalize().y * otherNormal.y + 
 				Normalize().z * otherNormal.z;
+		}
+
+		Vector3 Cross(const Vector3& other) {
+			x = this->y * other.z - this->z * other.y;
+			y = this->z * other.x - this->x * other.z;
+			z = this->x * other.y - this->y * other.x;
+
+			return { x, y, z };
 		}
 
 		float Magnitude() const {
