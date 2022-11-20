@@ -14,21 +14,42 @@ namespace EssentialMath
 	{
 	public:
 		float x, y, z;
-
-		Vector3() : x(), y(), z() {}
+	public:
+		static Vector3 Zero;
+	public:
+		Vector3() = default;
+		Vector3(float value) : x(value), y(value), z(value) {}
 		Vector3(float x, float y, float z) : x(x), y(y), z(z) {}
 
-		Vector3 operator*(float scalar) {
+		Vector3 Mult(float scalar) {
 			return Vector3(x * scalar, y * scalar, z * scalar);
 		}
 
-		Vector3 Normalize() {
-			float magnitude = this->Magnitude();
-
-			return Vector3(x / magnitude, y / magnitude, z / magnitude);
+		Vector3 operator+(const Vector3* other) {
+			return Vector3(this->x + other->x, this->y + other->y, this->z + other->z);
 		}
 
-		float Magnitude() {
+		Vector3 operator*(float scalar) {
+			return this->Mult(scalar);
+		}
+
+		Vector3 operator/(float scalar) {
+			return this->Mult(1 / scalar);
+		}
+
+		Vector3 Normalize() const {
+			return Vector3(x, y, z) / this->Magnitude();
+		}
+
+		float Dot(const Vector3& other) {
+			const Vector3& otherNormal = other.Normalize();
+
+			return Normalize().x * otherNormal.x + 
+				Normalize().y * otherNormal.y + 
+				Normalize().z * otherNormal.z;
+		}
+
+		float Magnitude() const {
 			return sqrtf(x * x + y * y + z * z);
 		}
 
@@ -107,19 +128,18 @@ namespace EssentialMath
 			return *this;
 		}
 
-		Quaternion* Conjungate() const {
-			Quaternion result = Quaternion(w, -x, -y, -z);
-			return &result;
+		Quaternion Conjungate() const {
+			return Quaternion(w, -x, -y, -z);
 		}
 
-		Quaternion* Inverse() const {
+		Quaternion Inverse() const {
 			// This property only works with Unit Quaternion
 			return this->Conjungate();
 		}
 		
 		// Return an angular displacement from this quaternion to other quaternion
 		Quaternion Difference(const Quaternion* other) {
-			return other->mult(*this->Inverse());
+			return other->mult(this->Inverse());
 		}
 		
 		float GetAlpha() const {
@@ -340,7 +360,7 @@ namespace EssentialMath
 				return &result;
 			}
 
-			Quaternion *result = (head * pitch * bank).Conjungate();
+			Quaternion *result = &(head * pitch * bank).Conjungate();
 			return result;
 		}
 

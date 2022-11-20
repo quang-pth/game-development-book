@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="src\Animation.cpp" />
     <ClCompile Include="EsstenialMath.cpp" />
     <ClCompile Include="src\Ship.cpp" />
@@ -159,6 +160,7 @@
     <ClCompile Include="src\TileMapComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Primitive.h" />
     <ClInclude Include="include\Animation.h" />
     <ClInclude Include="EsstenialMath.h" />
     <ClInclude Include="include\BackgroundSpriteComponent.h" />
