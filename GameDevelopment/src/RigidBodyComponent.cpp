@@ -46,7 +46,7 @@ Vector2* RigidBodyComponent::GetPosition() const
 
 void RigidBodyComponent::Move(const Vector2& velocity)
 {
-	b2Vec2 vec = Unit::PixelsToMeters(velocity);
+	const b2Vec2& vec = Unit::PixelsToMeters(velocity);
 	mBody->SetLinearVelocity(mBody->GetLinearVelocity() + vec);
 }
 
@@ -55,7 +55,7 @@ void RigidBodyComponent::Jump(float force)
 	b2Vec2 prevVelocity = mBody->GetLinearVelocity();
 	b2Vec2 jumpVelocity = b2Vec2(0.0f, -force);
 	b2Vec2 newVelocity = prevVelocity + jumpVelocity;
-	newVelocity *= 0.135586f;
+	newVelocity = (newVelocity + prevVelocity) * 0.135568;
 	mBody->SetLinearVelocity(newVelocity);
 }
 

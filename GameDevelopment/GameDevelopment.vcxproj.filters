@@ -24,7 +24,7 @@
     <ClCompile Include="src\Asteroid.cpp" />
     <ClCompile Include="src\MoveComponent.cpp" />
     <ClCompile Include="src\Animation.cpp" />
-    <ClCompile Include="EsstenialMath.cpp" />
+    <ClCompile Include="src\EsstenialMath.cpp" />
     <ClCompile Include="src\Mario.cpp" />
     <ClCompile Include="src\BackgroundSpriteComponent.cpp" />
     <ClCompile Include="src\AnimatorComponent.cpp" />
@@ -35,7 +35,6 @@
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="src\TransformComponent.cpp" />
-    <ClCompile Include="src\StateManager.cpp" />
     <ClCompile Include="src\WalkState.cpp" />
     <ClCompile Include="src\TileDataComponent.cpp" />
     <ClCompile Include="src\Tile.cpp" />
@@ -50,6 +49,7 @@
     <ClCompile Include="src\AIInjured.cpp" />
     <ClCompile Include="src\Martian.cpp" />
     <ClCompile Include="src\MrCircuit.cpp" />
+    <ClCompile Include="src\Primitive.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Enemy.h" />
@@ -68,7 +68,7 @@
     <ClInclude Include="include\CircleComponent.h" />
     <ClInclude Include="include\Asteroid.h" />
     <ClInclude Include="include\Animation.h" />
-    <ClInclude Include="EsstenialMath.h" />
+    <ClInclude Include="include\EsstenialMath.h" />
     <ClInclude Include="include\BackgroundSpriteComponent.h" />
     <ClInclude Include="include\AnimatorComponent.h" />
     <ClInclude Include="include\Component.h" />
@@ -82,7 +82,6 @@
     <ClInclude Include="include\Random.h" />
     <ClInclude Include="include\InputComponent.h" />
     <ClInclude Include="include\Laser.h" />
-    <ClInclude Include="include\StateManager.h" />
     <ClInclude Include="include\WalkState.h" />
     <ClInclude Include="include\TileDataComponent.h" />
     <ClInclude Include="include\Tile.h" />
@@ -124,21 +123,13 @@
     <ClCompile Include="src\BackgroundSpriteComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Ship.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="EsstenialMath.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Animation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\TileMapComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Primitive.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClInclude Include="include\Primitive.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Game.h">
@@ -162,19 +153,10 @@
     <ClInclude Include="include\BackgroundSpriteComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Ship.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="EsstenialMath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Animation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TileMapComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Primitive.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

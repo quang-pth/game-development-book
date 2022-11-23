@@ -61,6 +61,10 @@ struct B2_API b2Vec2
 		return (&x)[i];
 	}
 
+	b2Vec2 operator*(float scalar) {
+		return b2Vec2(x * scalar, y * scalar);
+	}
+
 	/// Write to an indexed element.
 	float& operator () (int32 i)
 	{

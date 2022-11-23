@@ -19,18 +19,11 @@ public:
 	float GetForwardSpeed() const;
 	Vector2 GetVelocity();
 	void SetForwardSpeed(float speed);
-	void AddForce(const Vector2& force, ForceMode forceMode = ForceMode::Impulse);
-	void ResetForce();
 	void ToggleHorizontalDirection(float speed);
 	Direction GetDirection() const;
 	void SetDirection(Direction direction);
 protected:
 	float mForwardSpeed; // Velocity measured in units/second
 	Direction mDirection;
-	// Newtonian Physics
-	float mMass;
-	Vector2 mForceVelocity;
-	Vector2 mSumOfForces;
-	ForceMode mForceMode;
 };
 

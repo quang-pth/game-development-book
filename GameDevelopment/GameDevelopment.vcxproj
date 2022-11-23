@@ -175,9 +175,9 @@
     <ClCompile Include="src\Random.cpp" />
     <ClCompile Include="src\Asteroid.cpp" />
     <ClCompile Include="src\MoveComponent.cpp" />
-    <ClCompile Include="Primitive.cpp" />
+    <ClCompile Include="src\Primitive.cpp" />
     <ClCompile Include="src\Animation.cpp" />
-    <ClCompile Include="EsstenialMath.cpp" />
+    <ClCompile Include="src\EsstenialMath.cpp" />
     <ClCompile Include="src\Mario.cpp" />
     <ClCompile Include="src\BackgroundSpriteComponent.cpp" />
     <ClCompile Include="src\AnimatorComponent.cpp" />
@@ -188,7 +188,6 @@
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="src\TransformComponent.cpp" />
-    <ClCompile Include="src\StateManager.cpp" />
     <ClCompile Include="src\WalkState.cpp" />
     <ClCompile Include="src\TileDataComponent.cpp" />
     <ClCompile Include="src\Tile.cpp" />
@@ -217,9 +216,9 @@
     <ClInclude Include="include\CooldownManager.h" />
     <ClInclude Include="include\CircleComponent.h" />
     <ClInclude Include="include\Asteroid.h" />
-    <ClInclude Include="Primitive.h" />
+    <ClInclude Include="include\Primitive.h" />
     <ClInclude Include="include\Animation.h" />
-    <ClInclude Include="EsstenialMath.h" />
+    <ClInclude Include="include\EsstenialMath.h" />
     <ClInclude Include="include\BackgroundSpriteComponent.h" />
     <ClInclude Include="include\AnimatorComponent.h" />
     <ClInclude Include="include\Component.h" />
@@ -233,7 +232,6 @@
     <ClInclude Include="include\Random.h" />
     <ClInclude Include="include\InputComponent.h" />
     <ClInclude Include="include\Laser.h" />
-    <ClInclude Include="include\StateManager.h" />
     <ClInclude Include="include\WalkState.h" />
     <ClInclude Include="include\TileDataComponent.h" />
     <ClInclude Include="include\Tile.h" />
