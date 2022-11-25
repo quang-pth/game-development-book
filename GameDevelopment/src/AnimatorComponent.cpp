@@ -1,5 +1,6 @@
 ﻿#include "include/AnimatorComponent.h"
 #include "include/Animation.h"
+#include "include/Texture.h"
 #include <iostream>
 
 AnimatorComponent::AnimatorComponent(GameObject* owner, int drawOrder) : 
@@ -19,7 +20,7 @@ AnimatorComponent::~AnimatorComponent()
 void AnimatorComponent::Update(float deltaTime)
 {
 	const Animation* animation = mAnimationsMap[mAnimationName];
-	const std::vector<SDL_Texture*> textures = animation->mTextures;
+	const std::vector<Texture*> textures = animation->mTextures;
 	const int animationFrames = textures.size();
 	
 	if (animationFrames < 0) return;

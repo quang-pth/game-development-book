@@ -2,6 +2,7 @@
 #include "include/TileMapComponent.h";
 #include "include/TransformComponent.h";
 #include "include/Game.h";
+#include "include/Texture.h";
 #include<fstream>
 #include<sstream>
 #include <iostream>
@@ -39,8 +40,9 @@ void TileMapComponent::Draw(SDL_Renderer* renderer)
 			destrect.x = static_cast<int>(mOwner->GetTransform()->GetPosition().x + destrect.w * col);
 			destrect.y = static_cast<int>(mOwner->GetTransform()->GetPosition().y + destrect.h * row);
 
-			SDL_RenderCopyEx(renderer, mTexture, &srcrect,
+		/*	SDL_RenderCopyEx(renderer, mTexture, &srcrect,
 				&destrect, -Math::ToDegrees(mOwner->GetTransform()->GetRotation()), nullptr, SDL_FLIP_NONE);
+		*/
 		}
 	}
 }
@@ -78,7 +80,7 @@ void TileMapComponent::LoadTileData(const char* filePath)
 
 void TileMapComponent::SetTexture(const char* filePath)
 {
-	SDL_Texture* texture = this->mOwner->GetGame()->GetTexture(filePath);
+	Texture* texture = this->mOwner->GetGame()->GetTexture(filePath);
 	SpriteComponent::SetTexture(texture);
 }
 

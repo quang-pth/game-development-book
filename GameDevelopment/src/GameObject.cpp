@@ -5,12 +5,12 @@
 #include"include/CustomMath.h"
 #include <iostream>
 
-GameObject::GameObject() : mGame(), mName(), mState(), mTransform()
+GameObject::GameObject() : mGame(), name(), mState(), mTransform()
 {
 }
 
 GameObject::GameObject(Game* game, std::string name) :
-	mGame(game), mName(name), mState(GameObject::State::EActive)
+	mGame(game), name(name), mState(GameObject::State::EActive)
 {
 	mGame->AddGameObject(this);
 	this->AddDefaultComponents();
@@ -27,8 +27,10 @@ GameObject::~GameObject()
 void GameObject::Update(float deltaTime) 
 {
 	if (mState == GameObject::State::EActive) {
+		mTransform->ComputeWorldTransform();
 		UpdateComponents(deltaTime);
 		UpdateGameObject(deltaTime);
+		mTransform->ComputeWorldTransform();
 	}
 }
 
@@ -106,9 +108,14 @@ Component* GameObject::GetComponent(std::string name)
 	return nullptr;
 }
 
-Vector2 GameObject::GetForward() const
+std::vector<class Component*> GameObject::GetComponents() const
 {
-	return Vector2(Math::Cos(mTransform->GetRotation()), -Math::Sin(mTransform->GetRotation()));
+	return mComponents;
+}
+
+Vector3 GameObject::GetForward() const
+{
+	return Vector3(Math::Cos(mTransform->GetRotation()), Math::Sin(mTransform->GetRotation()), 0.0f);
 }
 
 Game* GameObject::GetGame() const

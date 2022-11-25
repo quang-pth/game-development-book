@@ -6,16 +6,14 @@
 #include "include/TransformComponent.h"
 #include "include/Asteroid.h"
 #include "include/Ship.h"
+#include "include/Texture.h"
 #include <iostream>
-
-Laser::Laser() : GameObject(), mMoveComponent(), mSpriteComponent(), mCircleComponent()
-{
-}
 
 Laser::Laser(Game* game, std::string name) : 
 	GameObject(game, name)
 {
 	mMoveComponent = new MoveComponent(this);
+	GameObject::GetTransform()->SetScale(0.3f);
 
 	mSpriteComponent = new SpriteComponent(this);
 	mSpriteComponent->SetTexture(GameObject::GetGame()->GetTexture("Assets/Chapter3/Laser.png"));
@@ -40,14 +38,14 @@ void Laser::UpdateGameObject(float deltaTime)
 		}
 	}
 	// Deactivate the laser if out of screen bounds
-	Vector2 position = GameObject::GetTransform()->GetPosition();
-	if (position.x < -mSpriteComponent->GetTextureWidth() || 
-		position.x > GameObject::GetGame()->GetWindowWidth() + mSpriteComponent->GetTextureWidth()) {
+	float xBound = GameObject::GetGame()->GetWindowWidth() / 2.0f + mSpriteComponent->GetTextureWidth();
+	float yBound = GameObject::GetGame()->GetWindowHeight() / 2.0f + mSpriteComponent->GetTextureHeight();
+	Vector3 position = GameObject::GetTransform()->GetPosition();
+	if (position.x < -xBound || position.x > xBound) {
 		GameObject::SetState(GameObject::State::EDeactive);
 		mMoveComponent->ResetForce();
 	}
-	if (position.y < -mSpriteComponent->GetTextureHeight() || 
-		position.y > GameObject::GetGame()->GetWindowHeight() + mSpriteComponent->GetTextureHeight()) {
+	if (position.y < -yBound || position.y > yBound) {
 		GameObject::SetState(GameObject::State::EDeactive);
 		mMoveComponent->ResetForce();
 	}

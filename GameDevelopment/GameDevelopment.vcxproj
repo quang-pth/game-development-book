@@ -124,8 +124,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\ASUS\Desktop\Game Development\GameDevelopment\GameDevelopment;C:\Users\ASUS\Desktop\Game Development\GameDevelopment\GameDevelopment\include;C:\Users\ASUS\Desktop\Game Development\GameDevelopment\GameDevelopment\src;C:\Users\ASUS\Desktop\Game Development\GameDevelopment\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>;SDL2_image.lib;SDL2.lib;SDL2main.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\ASUS\Desktop\Game Development\GameDevelopment\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SOIL.lib;OpenGL32.lib;glew32d.lib;SDL2_image.lib;SDL2.lib;SDL2main.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\ICooldownable.cpp" />
     <ClCompile Include="src\CooldownManager.cpp" />
     <ClCompile Include="src\Laser.cpp" />
@@ -166,6 +167,8 @@
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="src\TileMapComponent.cpp" />
     <ClCompile Include="src\TransformComponent.cpp" />
+    <ClCompile Include="src\VertexArray.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\ICooldownable.h" />
@@ -188,6 +191,16 @@
     <ClInclude Include="include\Random.h" />
     <ClInclude Include="include\InputComponent.h" />
     <ClInclude Include="include\Laser.h" />
+    <ClInclude Include="include\VertexArray.h" />
+    <ClInclude Include="include\Shader.h" />
+    <ClInclude Include="include\Texture.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shader\basic-frag.glsl" />
+    <None Include="Shader\basic-vert.glsl" />
+    <None Include="Shader\sprite-frag.glsl" />
+    <None Include="Shader\sprite-vert.glsl" />
+    <None Include="Shader\transform-vert.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -6,17 +6,18 @@
 class SpriteComponent : public Component
 {
 public:
-	SpriteComponent();
+	SpriteComponent() = default;
 	SpriteComponent(class GameObject* owner, int drawOrder = 100);
 	~SpriteComponent();
 
 	virtual void Draw(SDL_Renderer* renderer);
-	virtual void SetTexture(SDL_Texture* texture);
+	virtual void Draw(class Shader* shader);
+	virtual void SetTexture(class Texture* texture);
 	int GetDrawOrder() const { return mDrawOrder; }
-	int GetTextureWidth() const { return mTextureWidth; }
-	int GetTextureHeight() const { return mTextureHeight; }
+	inline int GetTextureWidth() const { return mTextureWidth; }
+	inline int GetTextureHeight() const { return mTextureHeight; }
 protected:
-	SDL_Texture* mTexture;
+	class Texture* mTexture;
 	int mDrawOrder;
 	int mTextureWidth;
 	int mTextureHeight;

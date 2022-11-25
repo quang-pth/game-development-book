@@ -14,7 +14,7 @@ public:
 private:
 	// Methods
 	void StartCooldown();
-	void ActAfterCooldown();
+	void Respawn();
 	void InitLaserPool();
 	void ConstraintInScreenBounds();
 	void CheckCollsision();

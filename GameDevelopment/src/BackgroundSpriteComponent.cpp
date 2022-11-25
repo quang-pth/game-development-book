@@ -1,6 +1,7 @@
 #include "include/GameObject.h"
 #include "include/TransformComponent.h"
 #include "include/BackgroundSpriteComponent.h"
+#include "include/Texture.h"
 
 BackgroundSpriteComponent::BackgroundSpriteComponent(GameObject* owner, int drawOrder) :
 	SpriteComponent(owner, drawOrder), mScrollSpeed(0.0f)
@@ -19,7 +20,7 @@ void BackgroundSpriteComponent::Update(float deltaTime)
 
 void BackgroundSpriteComponent::Draw(SDL_Renderer* renderer)
 {
-	for (auto& texture : mBackgroundTextures) {
+	/*for (auto& texture : mBackgroundTextures) {
 		SDL_Rect rect;
 		rect.w = static_cast<int>(mScreenSize.x);
 		rect.h = static_cast<int>(mScreenSize.y);
@@ -27,10 +28,14 @@ void BackgroundSpriteComponent::Draw(SDL_Renderer* renderer)
 		rect.y = static_cast<int>(mOwner->GetTransform()->GetPosition().y - rect.h / 2.0f + texture.mOffset.y);
 
 		SDL_RenderCopy(renderer, texture.mTexture, nullptr, &rect);
-	}
+	}*/
 }
 
-void BackgroundSpriteComponent::SetBackgroundTextures(const std::vector<SDL_Texture*>& textures)
+void BackgroundSpriteComponent::Draw(Shader* shader)
+{
+}
+
+void BackgroundSpriteComponent::SetBackgroundTextures(const std::vector<Texture*>& textures)
 {
 	int count = 0;
 	for (auto texture : textures) {

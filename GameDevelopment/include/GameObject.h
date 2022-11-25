@@ -13,7 +13,7 @@ public:
 		EPaused,
 		EDead,
 	};
-	std::string mName;
+	std::string name;
 
 	GameObject();
 	GameObject(class Game* game, std::string name = "");
@@ -31,7 +31,8 @@ public:
 	void SetState(State state);
 	class TransformComponent* GetTransform() const;
 	class Component* GetComponent(std::string name);
-	Vector2 GetForward() const;
+	std::vector<class Component*> GetComponents() const;
+	Vector3 GetForward() const;
 	class Game* GetGame() const;
 private:
 	void AddDefaultComponents();

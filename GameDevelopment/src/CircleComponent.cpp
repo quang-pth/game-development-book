@@ -13,7 +13,7 @@ CircleComponent::CircleComponent(GameObject* owner, int updateOrder) :
 
 }
 
-const Vector2& CircleComponent::GetCenter() const
+const Vector3& CircleComponent::GetCenter() const
 {
 	return mOwner->GetTransform()->GetPosition();
 }
@@ -30,10 +30,10 @@ void CircleComponent::SetRadius(float radius)
 
 bool CircleComponent::IsIntersect(const CircleComponent* circle1, const CircleComponent* circle2)
 {
-	Vector2 center1 = circle1->GetCenter();
-	Vector2 center2 = circle2->GetCenter();
-	Vector2 centerDistanceVector = center1 - center2;
-	float centerDistance = centerDistanceVector.LengthSquared();
+	Vector3 center1 = circle1->GetCenter();
+	Vector3 center2 = circle2->GetCenter();
+	Vector3 centerDistanceVector = center1 - center2;
+	float centerDistance = centerDistanceVector.LengthSq();
 	float radiusDistance = std::pow(circle1->GetRadius() + circle2->GetRadius(), 2);
 
 	return centerDistance <= radiusDistance;

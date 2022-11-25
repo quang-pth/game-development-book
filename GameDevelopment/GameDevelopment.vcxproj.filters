@@ -78,6 +78,15 @@
     <ClCompile Include="src\ICooldownable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\VertexArray.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Game.h">
@@ -140,5 +149,21 @@
     <ClInclude Include="include\ICooldownable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\VertexArray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shader\basic-vert.glsl" />
+    <None Include="Shader\basic-frag.glsl" />
+    <None Include="Shader\transform-vert.glsl" />
+    <None Include="Shader\sprite-vert.glsl" />
+    <None Include="Shader\sprite-frag.glsl" />
   </ItemGroup>
 </Project>

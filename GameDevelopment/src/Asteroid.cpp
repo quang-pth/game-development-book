@@ -4,13 +4,14 @@
 #include "include/SpriteComponent.h"
 #include "include/TransformComponent.h"
 #include "include/CircleComponent.h"
+#include "include/Texture.h"
 #include "include/CustomMath.h"
 #include "include/Random.h"
 
 Asteroid::Asteroid(Game* game, std::string name) : GameObject(game, name)
 {
-	Vector2 randomPosition = Random::GetVector(Vector2::Zero, 
-		Vector2(game->GetWindowWidth(), game->GetWindowHeight()));
+	Vector3 randomPosition = Random::GetVector(Vector3::Zero, 
+		Vector3(game->GetWindowWidth(), game->GetWindowHeight(), 0.0f));
 	GameObject::GetTransform()->SetPosition(randomPosition);
 
 	float randomRotation = Random::GetFloatRange(0.0f, Math::TwoPi);
@@ -35,22 +36,24 @@ void Asteroid::UpdateGameObject(float deltaTime)
 	Game* game = GameObject::GetGame();
 	float newXPos = transform->GetPosition().x;
 	float newYPos = transform->GetPosition().y;
+	float boundX = game->GetWindowWidth() * 0.5f + mSpriteComponent->GetTextureWidth();
+	float boundY = game->GetWindowHeight() * 0.5f + mSpriteComponent->GetTextureHeight();
 
-	if (transform->GetPosition().x > game->GetWindowWidth() + mSpriteComponent->GetTextureWidth()) {
-		newXPos = -mSpriteComponent->GetTextureWidth();
+	if (transform->GetPosition().x > boundX) {
+		newXPos = -boundX;
 	}
-	else if (transform->GetPosition().x < 0.0f - mSpriteComponent->GetTextureWidth()) {
-		newXPos = game->GetWindowWidth() + mSpriteComponent->GetTextureWidth();
-	}
-
-	if (transform->GetPosition().y > game->GetWindowHeight() + mSpriteComponent->GetTextureHeight()) {
-		newYPos = -mSpriteComponent->GetTextureHeight();
-	}
-	else if (transform->GetPosition().y < 0.0f - mSpriteComponent->GetTextureHeight()) {
-		newYPos = game->GetWindowHeight() + mSpriteComponent->GetTextureHeight();
+	else if (transform->GetPosition().x < -boundX) {
+		newXPos = boundX;
 	}
 
-	transform->SetPosition(Vector2(newXPos, newYPos));
+	if (transform->GetPosition().y > boundY) {
+		newYPos = -boundY;
+	}
+	else if (transform->GetPosition().y < -boundY) {
+		newYPos = boundY;
+	}
+
+	transform->SetPosition(Vector3(newXPos, newYPos, 0.0f));
 }
 
 MoveComponent* Asteroid::GetMoveComponent() const

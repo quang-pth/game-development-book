@@ -4,18 +4,10 @@
 #include "CustomMath.h"
 #include <iostream>
 
-MoveComponent::MoveComponent() : 
-	Component(), 
-	mForwardSpeed(0.0f), mAngularSpeed(0.0f),
-	mMass(1.0f), mForceVelocity(0.0f, 0.0f), mSumOfForces(0.0f, 0.0f),
-	mForceMode(ForceMode::Impulse)
-{
-}
-
 MoveComponent::MoveComponent(GameObject* owner, int updateOrder, std::string name) : 
 	Component(owner, updateOrder, name), 
 	mForwardSpeed(0.0f), mAngularSpeed(0.0f),
-	mMass(1.0f), mSumOfForces(0.0f, 0.0f), mForceVelocity(0.0f, 0.0f), 
+	mMass(1.0f), mSumOfForces(Vector3::Zero), mForceVelocity(Vector3::Zero), 
 	mForceMode(ForceMode::Impulse)
 {
 }
@@ -25,13 +17,13 @@ void MoveComponent::Update(float deltaTime)
 	TransformComponent* transformComponent = mOwner->GetTransform();
 
 	// Velocity of forces that applied on the gameobject
-	Vector2 acceleration = mSumOfForces * (1 / mMass);
+	Vector3 acceleration = mSumOfForces * (1 / mMass);
 	mForceVelocity += acceleration * deltaTime;
 	if (mForceMode == ForceMode::Impulse) {
-		mSumOfForces = Vector2::Zero;
+		mSumOfForces = Vector3::Zero;
 	}
 	// Move the gameobject by forces
-	Vector2 position = transformComponent->GetPosition();
+	Vector3 position = transformComponent->GetPosition();
 
 	position += mForceVelocity * deltaTime;
 	transformComponent->SetPosition(position);
@@ -41,6 +33,11 @@ void MoveComponent::Update(float deltaTime)
 		rotation += mAngularSpeed * deltaTime;
 		transformComponent->SetRotation(rotation);
 	}
+}
+
+void MoveComponent::OnUpdateWorldTransform()
+{
+
 }
 
 float MoveComponent::GetForwardSpeed() const
@@ -63,7 +60,7 @@ void MoveComponent::SetAngularSpeed(float speed)
 	mAngularSpeed = speed;
 }
 
-void MoveComponent::AddForce(const Vector2& force, ForceMode forceMode)
+void MoveComponent::AddForce(const Vector3& force, ForceMode forceMode)
 {
 	mSumOfForces += force;
 	mForceMode = forceMode;
@@ -71,6 +68,6 @@ void MoveComponent::AddForce(const Vector2& force, ForceMode forceMode)
 
 void MoveComponent::ResetForce()
 {
-	mForceVelocity = Vector2::Zero;
-	mSumOfForces = Vector2::Zero;
+	mForceVelocity = Vector3::Zero;
+	mSumOfForces = Vector3::Zero;
 }

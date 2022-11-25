@@ -7,6 +7,7 @@
 #include "include/CircleComponent.h"
 #include "include/Laser.h"
 #include "include/Asteroid.h"
+#include "include/Texture.h"
 #include <SDL2/SDL.h>
 #include <iostream>
 
@@ -15,9 +16,7 @@ Ship::Ship(Game* game) :
 	mFireKey(SDL_SCANCODE_SPACE), mFireCooldown(0.3f), 
 	mActivateLaserIdx(0), mSpawnCooldown(1.5f)
 {
-	GameObject::GetTransform()->SetPosition(Vector2(game->GetWindowWidth() / 2, game->GetWindowHeight() / 2));
-
-	mSpriteComponent = new SpriteComponent(this);
+	mSpriteComponent = new SpriteComponent(this, 21);
 	mSpriteComponent->SetTexture(game->GetTexture("Assets/Chapter3/Ship.png"));
 	
 	mInputComponent = new InputComponent(this);
@@ -43,9 +42,10 @@ void Ship::ProcessGameObjectInput(const uint8_t* keyState)
 		Laser* laser = mLasers[mActivateLaserIdx];
 		if (laser->GetState() == GameObject::State::EActive) return;
 		
-		Vector2 offsetForward = GameObject::GetForward() * 10.0f;
+		Vector3 offsetForward = GameObject::GetForward() * 10.0f;
 		laser->SetState(GameObject::State::EActive);
-		laser->GetTransform()->SetPosition(GameObject::GetTransform()->GetPosition() + offsetForward);
+		laser->GetTransform()->SetPosition(GameObject::GetTransform()->GetPosition() + 
+			offsetForward);
 		laser->GetTransform()->SetRotation(GameObject::GetTransform()->GetRotation());
 		laser->GetMoveComponent()->AddForce(GameObject::GetForward() * 2000.0f, 
 			MoveComponent::ForceMode::Constant);
@@ -69,18 +69,15 @@ void Ship::Cooldown(float deltaTime)
 {
 	mSpawnCooldown -= deltaTime;
 	if (mSpawnCooldown <= 0) {
-		this->ActAfterCooldown();
+		this->Respawn();
 	}
 }
 
-void Ship::ActAfterCooldown()
+void Ship::Respawn()
 {
 	mSpawnCooldown = 1.5f;
 	// Reset ship position to the center of the screen if collided with asteroid
-	GameObject::GetTransform()->SetPosition(Vector2(
-		GameObject::GetGame()->GetWindowWidth() / 2.0f,
-		GameObject::GetGame()->GetWindowHeight() / 2.0f
-	));
+	GameObject::GetTransform()->SetPosition(Vector3::Zero);
 	// Reset game object states
 	GameObject::GetTransform()->SetRotation(0.0f);
 	GameObject::GetGame()->GetCooldownManager()->Release(this);
@@ -101,22 +98,24 @@ void Ship::ConstraintInScreenBounds()
 {
 	float newXPos = GameObject::GetTransform()->GetPosition().x;
 	float newYPos = GameObject::GetTransform()->GetPosition().y;
+	float xBound = GameObject::GetGame()->GetWindowWidth() / 2.0f;
+	float yBound = GameObject::GetGame()->GetWindowHeight() / 2.0f;
 
-	if (GameObject::GetTransform()->GetPosition().x > GameObject::GetGame()->GetWindowWidth()) {
-		newXPos = GameObject::GetGame()->GetWindowWidth();
+	if (GameObject::GetTransform()->GetPosition().x > xBound) {
+		newXPos = xBound;
 	}
-	else if (GameObject::GetTransform()->GetPosition().x < 0.0f) {
-		newXPos = 0.0f;
-	}
-
-	if (GameObject::GetTransform()->GetPosition().y > GameObject::GetGame()->GetWindowHeight()) {
-		newYPos = GameObject::GetGame()->GetWindowHeight();
-	}
-	else if (GameObject::GetTransform()->GetPosition().y < 0.0f) {
-		newYPos = 0.0f;
+	else if (GameObject::GetTransform()->GetPosition().x < -xBound) {
+		newXPos = -xBound;
 	}
 
-	GameObject::GetTransform()->SetPosition(Vector2(newXPos, newYPos));
+	if (GameObject::GetTransform()->GetPosition().y > yBound) {
+		newYPos = yBound;
+	}
+	else if (GameObject::GetTransform()->GetPosition().y < -yBound) {
+		newYPos = -yBound;
+	}
+
+	GameObject::GetTransform()->SetPosition(Vector3(newXPos, newYPos, 0.0f));
 }
 
 void Ship::CheckCollsision()
