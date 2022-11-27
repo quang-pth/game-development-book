@@ -25,6 +25,7 @@ public:
 	EMovement GetState() const;
 	bool AtRightBounds();
 	bool AtLeftBounds();
+	std::vector<class Tile*> GetTiles() const;
 private:
 	void LoadTileData(const char* filePath);
 	void SetTexture(const char* filePath);

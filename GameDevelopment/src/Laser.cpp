@@ -4,10 +4,12 @@
 #include "include/SpriteComponent.h"
 #include "include/CircleComponent.h"
 #include "include/TransformComponent.h"
+#include "include/TileMap.h"
 #include "include/Asteroid.h"
 #include "include/Health.h"
 #include "include/Enemy.h"
 #include "include/Mario.h"
+#include "include/Tile.h"
 #include <iostream>
 
 Laser::Laser(Game* game, bool enemyLaser, const std::string& name) :
@@ -24,7 +26,7 @@ Laser::Laser(Game* game, bool enemyLaser, const std::string& name) :
 	mSpriteComponent->SetTexture(GameObject::GetGame()->GetTexture("Assets/Shooter/Hero/Bullet/tile000.png"));
 
 	mCircleComponent = new CircleComponent(this);
-	mCircleComponent->SetRadius(5.0f);
+	mCircleComponent->SetRadius(4.0f);
 }
 
 void Laser::UpdateGameObject(float deltaTime)

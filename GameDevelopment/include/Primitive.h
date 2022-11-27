@@ -11,11 +11,11 @@ namespace EssentialMath
 			this->Empty();
 		};
 		~AABB3() {};
-		void Empty() {
+		inline void Empty() {
 			mMin.x = mMin.y = mMin.z = std::numeric_limits<float>::infinity();
 			mMax.x = mMax.y = mMax.z = -std::numeric_limits<float>::infinity();
 		}
-		void Add(const Vector3& point) {
+		inline void Add(const Vector3& point) {
 			// MIN bound
 			mMin.x = std::min(point.x, mMin.x);
 			mMin.y = std::min(point.y, mMin.y);
@@ -25,7 +25,7 @@ namespace EssentialMath
 			mMax.y = std::max(point.y, mMax.y);
 			mMax.z = std::max(point.z, mMax.z);
 		}
-		void Transform(float matrix[4][3]) 
+		inline void Transform(float matrix[4][3]) 
 		{
 			// Get translation part - the location of the origin after transform
 			float* min = matrix[3];
@@ -151,11 +151,16 @@ namespace EssentialMath
 			return (1.0f / (points.size())) * (avgPoint.Dot(normal));
 		}
 	public:
-		float DistanceToPoint(Vector3* point) {
+		inline float DistanceToPoint(Vector3* point) {
 			return point->Dot(mNormal) - mDistance;
 		}
 	private:
 		Vector3 mNormal;
 		float mDistance;
+	};
+	
+	class Triangle {
+	public:
+
 	};
 }

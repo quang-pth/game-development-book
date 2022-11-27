@@ -13,6 +13,7 @@ public:
 	void SetTileData(const Vector2& dimension, const Vector2& srcPosition,
 		const Vector2& layout, SDL_Texture* texture);
 	void Cooldown(float deltaTime) override;
+	Vector2 GetPosition() const;
 	class TileDataComponent* GetTileDataComponent() const;
 private:
 	bool IsInBound();

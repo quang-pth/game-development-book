@@ -82,6 +82,11 @@ bool TileMap::AtLeftBounds()
 	return mOffset.x <= 0;
 }
 
+std::vector<class Tile*> TileMap::GetTiles() const
+{
+	return mTiles;
+}
+
 void TileMap::LoadTileData(const char* filePath)
 {
 	std::vector<std::vector<int>> tiles = std::vector<std::vector<int>>();

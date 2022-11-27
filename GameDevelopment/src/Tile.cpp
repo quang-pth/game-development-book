@@ -4,6 +4,7 @@
 #include "include/TileDataComponent.h"
 #include "include/TransformComponent.h"
 #include "include/RigidBodyComponent.h"
+#include "include/CircleComponent.h"
 #include "include/TileMap.h"
 #include "include/CooldownManager.h"
 #include "include/Unit.h"
@@ -46,6 +47,11 @@ void Tile::Cooldown(float deltaTime)
 	else {
 		GameObject::SetState(State::EDeactive);
 	}
+}
+
+Vector2 Tile::GetPosition() const
+{
+	return mTileDataComponent->GetCurrentPosition();
 }
 
 TileDataComponent* Tile::GetTileDataComponent() const
