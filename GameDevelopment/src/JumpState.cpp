@@ -7,7 +7,7 @@
 
 JumpState::JumpState(Hero* owner) : 
 	DamagableState(owner),
-	mMaxHeight(35.0f), mMaxTime(0.9f)
+	mMaxHeight(200.0f), mMaxTime(.8f)
 {
 	float timeToApex = mMaxTime / 2.0f;
 	mForce = (2 * mMaxHeight) / timeToApex;

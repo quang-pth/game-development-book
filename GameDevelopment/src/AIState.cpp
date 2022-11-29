@@ -19,5 +19,5 @@ AIState::~AIState()
 
 bool AIState::CanAttack() const
 {
-	return mAgent->IsNearPlayer() && mAgent->IsSawPlayer();
+	return mAgent->CanAttack();
 }

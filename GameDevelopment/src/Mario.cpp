@@ -15,7 +15,9 @@
 #include "include/IdleState.h"
 #include "include/JumpState.h"
 #include "include/HurtState.h"
+#include "include/DeathState.h"
 #include "include/Weapon.h"
+#include "include/Health.h"
 #include <SDL2/SDL.h>
 #include <iostream>
 
@@ -84,10 +86,13 @@ Hero::Hero(Game* game, const std::string& name) :
 	rigidBodyComponent->SetDimension(Vector2(TILE_SIZE, TILE_SIZE) * pTransform->GetScale() * 0.3f);
 	rigidBodyComponent->Init();
 
+	mHealth.reset(new Health(20));
+
 	mStateMap.emplace("IdleState", new IdleState(this));
 	mStateMap.emplace("WalkState", new WalkState(this));
 	mStateMap.emplace("JumpState", new JumpState(this));
 	mStateMap.emplace("HurtState", new HurtState(this));
+	mStateMap.emplace("DeathState", new DeathState(this));
 	this->ChangeState("IdleState");
 	mCurrentState->Enter();
 }
@@ -108,6 +113,11 @@ void Hero::ProcessGameObjectInput(const uint8_t* keyState)
 	mCurrentState->HandleInput(keyState);
 }
 
+void Hero::DeactivateGameObject()
+{
+	rigidBodyComponent->SetActive(false);
+}
+
 void Hero::StartCooldown()
 {
 	GameObject::SetState(State::EDeactive);
@@ -116,6 +126,11 @@ void Hero::StartCooldown()
 bool Hero::IsMoving() const
 {
 	return inputComponent->GetForwardSpeed() != 0.0f;
+}
+
+bool Hero::IsDead() const
+{
+	return mHealth->IsDead();
 }
 
 void Hero::SetMoveDirection(Direction direction)
@@ -150,6 +165,12 @@ bool Hero::IsImageFlipped()
 void Hero::Fire()
 {
 	mWeapon->Fire();
+}
+
+void Hero::ReceiveDamage(float amount)
+{
+	this->SetIsAttacked(true);
+	mHealth->ReceiveDamage(amount);
 }
 
 bool Hero::IsAttacked() const

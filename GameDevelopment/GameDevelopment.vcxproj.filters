@@ -50,6 +50,7 @@
     <ClCompile Include="src\Martian.cpp" />
     <ClCompile Include="src\MrCircuit.cpp" />
     <ClCompile Include="src\Primitive.cpp" />
+    <ClCompile Include="src\DeathState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Enemy.h" />
@@ -123,13 +124,11 @@
     <ClCompile Include="src\BackgroundSpriteComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EsstenialMath.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Animation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClInclude Include="include\Primitive.h" />
+    <ClInclude Include="include\DeathState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Game.h">
@@ -151,9 +150,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\BackgroundSpriteComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="EsstenialMath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Animation.h">

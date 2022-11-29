@@ -3,6 +3,7 @@
 #include"include/Component.h"
 #include"include/CustomMath.h"
 #include<box2d/b2_body.h>
+#include <box2d/b2_fixture.h>
 
 enum class EBody
 {
@@ -13,6 +14,10 @@ enum class EBody
 class RigidBodyComponent : public Component
 {
 public:
+	float density;
+	float friction;
+public:
+	RigidBodyComponent() = default;
 	RigidBodyComponent(class GameObject* mOwner, int updateOrder = 60,
 		const std::string& name = "RigibodyComponent");
 	~RigidBodyComponent();
@@ -25,14 +30,16 @@ public:
 	void SetDimension(const Vector2& dimension);
 	void SetGravity(float gravity);
 	void WakeUp(bool wakeUp);
+	void SetActive(bool isActive);
+	b2Fixture* GetFixture() const;
 	void Init();
 	b2Body* GetBody() const;
-	float density;
-	float friction;
 private:
 	b2Body* mBody;
+	b2Fixture* mFixture;
 	EBody mType;
 	b2Vec2 mPosition, mDimension;
+	b2FixtureDef mFixtureDef;
 	b2BodyDef mBodyDef;
 };
 

@@ -75,19 +75,22 @@ namespace EssentialMath
 		static Vector3 Min;
 		static Vector3 Max;
 	public:
-		Vector3() = default;
-		Vector3(float value) : x(value), y(value), z(value) {}
+		Vector3(float value = 0.0f) : x(value), y(value), z(value) {}
 		Vector3(float x, float y, float z) : x(x), y(y), z(z) {}
 
-		Vector3 operator+(const Vector3& other) {
+		Vector3 operator+(const Vector3& other) const {
 			return Vector3(this->x + other.x, this->y + other.y, this->z + other.z);
 		}
 		
-		Vector3 operator-(const Vector3& other) {
+		Vector3 operator-(const Vector3& other) const {
 			return (*this) + other * (-1.0f);
 		}
 
 		Vector3 operator*(float scalar) const {
+			return Vector3(x * scalar, y * scalar, z * scalar);
+		}
+
+		Vector3 Mult(float scalar) const {
 			return Vector3(x * scalar, y * scalar, z * scalar);
 		}
 
@@ -103,7 +106,7 @@ namespace EssentialMath
 			return (*this) * (-1);
 		}
 
-		float Dot(const Vector3& other) {
+		float Dot(const Vector3& other) const {
 			const Vector3& otherNormal = other.Normalize();
 
 			return Normalize().x * otherNormal.x + 
@@ -111,12 +114,12 @@ namespace EssentialMath
 				Normalize().z * otherNormal.z;
 		}
 
-		Vector3 Cross(const Vector3& other) {
-			x = this->y * other.z - this->z * other.y;
-			y = this->z * other.x - this->x * other.z;
-			z = this->x * other.y - this->y * other.x;
+		Vector3 Cross(const Vector3& other) const {
+			float crossX = this->y * other.z - this->z * other.y;
+			float crossY = this->z * other.x - this->x * other.z;
+			float croosZ = this->x * other.y - this->y * other.x;
 
-			return { x, y, z };
+			return { crossX, crossY, crossX };
 		}
 
 		float Magnitude() const {

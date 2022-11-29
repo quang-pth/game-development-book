@@ -96,15 +96,30 @@ void Enemy::SetIsAttacked(bool isAtacked)
 	mIsAttacked = isAtacked;
 }
 
+bool Enemy::CanAttack()
+{
+	return this->PlayerIsActive() && this->IsSawPlayer() && this->IsNearPlayer();
+}
+
 void Enemy::ReceiveDamage(float amount)
 {
 	mIsAttacked = true;
 	mHealth->ReceiveDamage(amount);
 }
 
+void Enemy::DeactivateGameObject()
+{
+	mRigidBodyComponent->SetActive(false);
+}
+
 bool Enemy::IsDead() const
 {
 	return mHealth->IsDead();
+}
+
+bool Enemy::PlayerIsActive()
+{
+	return mGame->GetHero()->GetState() == State::EActive;
 }
 
 bool Enemy::IsSawPlayer()

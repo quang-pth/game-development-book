@@ -5,12 +5,11 @@
 #include "include/TileMap.h"
 #include "include/Unit.h"
 #include<box2d/b2_polygon_shape.h>
-#include <box2d/b2_fixture.h>
 #include <iostream>
 
 RigidBodyComponent::RigidBodyComponent(GameObject* mOwner, int updateOrder, const std::string& name) :
 	Component(mOwner, updateOrder, name),
-	mType(EBody::STATIC), mBody(),
+	mType(EBody::STATIC), mBody(), mFixtureDef(), mFixture(),
 	density(0.0f), friction(0.0f)
 {
 	mPosition.SetZero();
@@ -56,7 +55,8 @@ void RigidBodyComponent::Jump(float force)
 	prevVelocity.y = 0;
 	b2Vec2 jumpVelocity = Unit::PixelsToMeters(Vector2(0.0f, -force));
 
-	mBody->SetLinearVelocity(prevVelocity + jumpVelocity);
+	mBody->ApplyForceToCenter(jumpVelocity, true);
+	//mBody->SetLinearVelocity((prevVelocity + jumpVelocity) * 0.8);
 }
 
 void RigidBodyComponent::SetDimension(const Vector2& dimension)
@@ -74,11 +74,20 @@ void RigidBodyComponent::WakeUp(bool wakeUp)
 	mBody->SetAwake(wakeUp);
 }
 
+void RigidBodyComponent::SetActive(bool isActive)
+{
+	mBody->SetEnabled(isActive);
+}
+
+b2Fixture* RigidBodyComponent::GetFixture() const
+{
+	return mFixture;
+}
+
 void RigidBodyComponent::Init()
 {
 	b2PolygonShape polygonShape;
-	b2FixtureDef fixtureDef;
-
+	
 	switch (mType)
 	{
 	case EBody::DYNAMIC:
@@ -87,10 +96,10 @@ void RigidBodyComponent::Init()
 		mBodyDef.userData.pointer = reinterpret_cast<uintptr_t>(mOwner);
 		mBody = mOwner->GetGame()->GetPhysicWorld()->CreateBody(&mBodyDef);
 		polygonShape.SetAsBox(mDimension.x, mDimension.y);
-		fixtureDef.shape = &polygonShape;
-		fixtureDef.density = this->density;
-		fixtureDef.friction = this->friction;
-		mBody->CreateFixture(&fixtureDef);
+		mFixtureDef.shape = &polygonShape;
+		mFixtureDef.density = this->density;
+		mFixtureDef.friction = this->friction;
+		mFixture = mBody->CreateFixture(&mFixtureDef);
 		break;
 	case EBody::STATIC:
 		mBodyDef.position.Set(mPosition.x, mPosition.y);

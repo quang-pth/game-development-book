@@ -77,7 +77,7 @@ OrchidOwl::OrchidOwl(Game* game, const std::string& name) :
 	mRigidBodyComponent->SetPosition(pTransform->GetPosition() + offsetPos);
 	mRigidBodyComponent->SetDimension(Vector2(TILE_SIZE, TILE_SIZE) * pTransform->GetScale() * 0.3f);
 	mRigidBodyComponent->Init();
-	mRigidBodyComponent->WakeUp(false);
+	mRigidBodyComponent->SetActive(false);
 }
 
 OrchidOwl::~OrchidOwl()
@@ -121,4 +121,5 @@ void OrchidOwl::Patrol(float deltaTime)
 
 void OrchidOwl::Death(float deltaTime)
 {
+	mRigidBodyComponent->SetActive(true);
 }

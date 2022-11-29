@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\DeathState.cpp" />
     <ClCompile Include="src\MrCircuit.cpp" />
     <ClCompile Include="src\Martian.cpp" />
     <ClCompile Include="src\AIInjured.cpp" />
@@ -196,6 +197,7 @@
     <ClCompile Include="src\Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\DeathState.h" />
     <ClInclude Include="include\AIInjured.h" />
     <ClInclude Include="include\AIDamagable.h" />
     <ClInclude Include="include\DamagableState.h" />

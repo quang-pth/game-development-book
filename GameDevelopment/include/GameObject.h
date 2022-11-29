@@ -16,7 +16,7 @@ class GameObject
 {
 public:
 	std::string name;
-
+public:
 	GameObject();
 	GameObject(class Game* game, std::string name = "");
 	virtual ~GameObject();
@@ -30,17 +30,22 @@ public:
 	void RemoveComponent(class Component* component);
 	virtual void RemoveGameObjectComponent(class Component* component);
 	State GetState() const;
-	void SetState(State state);
+	virtual void SetState(State state);
+	void Activate();
+	void Deactivate();
 	class Component* GetComponent(const std::string& name);
 	Vector2 GetForward() const;
 	class Game* GetGame() const;
 	class TransformComponent *pTransform;
 	bool IsActive() const;
+protected:
+	class Game *mGame;
+protected:
+	virtual void ActivateGameObject();
+	virtual void DeactivateGameObject();
 private:
 	void AddDefaultComponents();
 	State mState;
 	std::vector<class Component*> mpComponents;
-protected:
-	class Game *mGame;
 };
 

@@ -93,6 +93,26 @@ void GameObject::SetState(State state)
 	mState = state;
 }
 
+void GameObject::Activate()
+{
+	mState = State::EActive;
+	this->ActivateGameObject();
+}
+
+void GameObject::ActivateGameObject()
+{
+}
+
+void GameObject::Deactivate()
+{
+	mState = State::EDeactive;
+	this->DeactivateGameObject();
+}
+
+void GameObject::DeactivateGameObject()
+{
+}
+
 Component* GameObject::GetComponent(const std::string& name)
 {
 	std::vector<Component*>::iterator iter = std::find_if(mpComponents.begin(), mpComponents.end(),

@@ -33,6 +33,11 @@ public:
 	float GetAttackRadius() const;
 	bool IsAttacked() const;
 	void SetIsAttacked(bool isAtacked);
+	bool CanAttack();
+protected:
+	virtual void DeactivateGameObject() override;
+private:
+	bool PlayerIsActive();
 	bool IsSawPlayer();
 	bool IsNearPlayer();
 protected:

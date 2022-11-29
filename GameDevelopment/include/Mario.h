@@ -21,14 +21,19 @@ public:
 	void UpdateGameObject(float deltaTime) override;
 	void ProcessGameObjectInput(const uint8_t* keyState) override;
 	bool IsMoving() const;
+	bool IsDead() const;
 	void SetMoveDirection(Direction direction);
-	class InputComponent* GetInputComponent() const;
 	bool MoveExceedCenterPoint(bool toTheRight);
 	bool IsImageFlipped();
 	void Fire();
+	void ReceiveDamage(float amount);
 	bool IsAttacked() const;
 	void SetIsAttacked(bool isAttacked);
 	void ChangeState(const std::string& name);
+protected:
+	virtual void DeactivateGameObject() override;
+public:
+	class InputComponent* GetInputComponent() const;
 	// Components
 	class InputComponent *inputComponent;
 	class CircleComponent *circleComponent;
@@ -41,6 +46,7 @@ private:
 	// Combat
 	std::unique_ptr<class Weapon> mWeapon;
 	bool mIsAttacked;
+	std::unique_ptr<class Health> mHealth;
 	// States
 	Vector2 mCenterPosition;
 	class GameObjectState *mCurrentState;
