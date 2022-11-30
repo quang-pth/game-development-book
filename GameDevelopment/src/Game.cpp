@@ -113,11 +113,11 @@ void Game::InitSpriteVertices()
 {
 	// Vertex buffer
 	float vertexBuffer[] = {
-		 // Position		// Texel - invert the V coordinate
-		-0.5f,  0.5f, 0.0f,	 0.0f,  0.0f, // top-left
-		 0.5f,  0.5f, 0.0f,	 1.0f,  0.0f,	 // top-right
-		 0.5f, -0.5f, 0.0f,  1.0f,  1.0f,  // bottom-right
-		-0.5f, -0.5f, 0.0f,  0.0f,  1.0f// bottom-left
+		 // Position		 //Color			// Texel - invert the V coordinate
+		-0.5f,  0.5f, 0.0f,	-0.5f,  0.5f, 0.0f,	 0.0f,  0.0f, // top-left
+		 0.5f,  0.5f, 0.0f,  0.5f,  0.5f, 0.0f,  1.0f,  0.0f,	 // top-right
+		 0.5f, -0.5f, 0.0f,  0.5f, -0.5f, 0.0f,  1.0f,  1.0f,  // bottom-right
+		-0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f,  0.0f,  1.0f// bottom-left
 	};
 	std::uint32_t indexBuffer[] = {
 		0, 1, 2, // First triangle
@@ -193,9 +193,9 @@ void Game::UpdateGame()
 
 static float transitionDuration = 2.0f;
 static Vector3 colors[] = {
-	Vector3(1.0f, 0.0f, 0.0f),
-	Vector3(0.0f, 1.0f, 0.0f),
-	Vector3(0.0f, 0.0f, 1.0f),
+	Vector3(1.0f, 1.0f, 0.0f),
+	Vector3(0.0f, 1.0f, 1.0f),
+	Vector3(1.0f, 0.0f, 1.0f),
 };
 
 static uint8_t colorIdx = 0;

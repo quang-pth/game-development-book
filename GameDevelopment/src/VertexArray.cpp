@@ -11,17 +11,19 @@ VertexArray::VertexArray(const float* vertices, const std::uint32_t numOfVertice
 	// VBO
 	glGenBuffers(1, &mVertexBufferId);
 	glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferId);
-	glBufferData(GL_ARRAY_BUFFER, mNumOfVertices * 5 * sizeof(float), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, mNumOfVertices * 8 * sizeof(float), vertices, GL_STATIC_DRAW);
 	// EBO
 	glGenBuffers(1, &mIndexBufferId);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferId);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mNumOfIndices * sizeof(std::uint32_t), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mNumOfIndices * sizeof(std::uint32_t), 
+		indices, GL_STATIC_DRAW);
 	// Config attribute pointer
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), nullptr);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), nullptr);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 
-		5 * sizeof(float), reinterpret_cast<void*>(3 * sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), reinterpret_cast<void*>(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), reinterpret_cast<void*>(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 }
 
 VertexArray::~VertexArray()
