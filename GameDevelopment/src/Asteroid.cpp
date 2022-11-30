@@ -14,8 +14,8 @@ Asteroid::Asteroid(Game* game, std::string name) : GameObject(game, name)
 		Vector3(game->GetWindowWidth(), game->GetWindowHeight(), 0.0f));
 	GameObject::GetTransform()->SetPosition(randomPosition);
 
-	float randomRotation = Random::GetFloatRange(0.0f, Math::TwoPi);
-	GameObject::GetTransform()->SetRotation(randomRotation);
+	float randomAngle = Random::GetFloatRange(0.0f, Math::TwoPi);
+	GameObject::GetTransform()->SetRotation(Quaternion(Vector3::UnitZ, randomAngle));
 
 	mMoveComponent = new MoveComponent(this);
 	mMoveComponent->AddForce(GameObject::GetForward() * 1000.0f, MoveComponent::ForceMode::Impulse);

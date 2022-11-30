@@ -7,7 +7,7 @@ TransformComponent::TransformComponent(GameObject* owner, int updateOrder, std::
 	mRecomputeWorldTransform(true),
 	mPosition(Vector3::Zero),
 	mScale(1.0f), 
-	mRotation(0.0f)
+	mRotation()
 {
 	this->ComputeWorldTransform();
 }
@@ -23,7 +23,7 @@ void TransformComponent::ComputeWorldTransform()
 		mRecomputeWorldTransform = false;
 		
 		mWorldTransform = Matrix4::CreateScale(mScale);
-		mWorldTransform *= Matrix4::CreateRotationZ(mRotation);
+		mWorldTransform *= Matrix4::CreateFromQuaternion(mRotation);
 		mWorldTransform *= Matrix4::CreateTranslation(mPosition);
 		
 		for (auto component : mOwner->GetComponents()) {

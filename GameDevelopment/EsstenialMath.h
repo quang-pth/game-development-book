@@ -4,67 +4,132 @@
 #include<vector>
 #include<iostream>
 
-namespace EssentialMath 
+namespace EssentialMath
 {
-	class Vector3
-	{
-	public:
-		float x, y, z;
-		Vector3(float x = 0.0f, float y = 0.0f, float z = 0.0f) : x(x), y(y), z(z) {}
+#define PI 3.14
+#define DEGREE_TO_RADIAN (PI / 180.0)
+#define RADIAN_TO_DEGREE (180.0 / PI)
 
-		Vector3 operator*(float scalar) {
-			return Vector3(x * scalar, y * scalar, z * scalar);
-		}
-	};
-
-	class Vector2 
+	class Vector2
 	{
 	public:
 		float x, y;
-		Vector2(float x = 0.0f, float y = 0.0f) : x(x), y(y) {}
-		
-		Vector2 operator*(float scalar) const {
-			return Vector2(x * scalar, y * scalar);
-		}
-
-		Vector2 operator-(const Vector2& other) const {
-			return Vector2(x - other.x, y - other.y);
-		}
-
-		Vector2 operator+(const Vector2& other) const {
-			return Vector2(x + other.x, y + other.y);
-		}
-
-		Vector2 Normalize() const {
-			float length = this->LengthSquared();
-			
-			if (length < 0.001f) {
-				return *this;
-			}
-
-			return Vector2(x / length, y / length);
-		}
-
-		float Dot(const Vector2& other) {
-			Vector2 otherNormalized = other.Normalize();
-			Vector2 thisNormalized = this->Normalize();
-
-			return thisNormalized.x * otherNormalized.x + thisNormalized.y * otherNormalized.y;
-		}
-
-		float Length() const {
-			return x * x + y * y;
-		}
-
-		float LengthSquared() const {
-			return sqrtf(x * x + y * y);
-		}
-
+	public:
+		static Vector2 Zero;
+		static Vector2 Min;
+		static Vector2 Max;
 		static Vector2 GetForwardVector(float angle) {
 			// Return a unit forward vector
 			return Vector2(cosf(angle), sinf(angle));
 		}
+	public:
+		Vector2() = default;
+		Vector2(float value) : x(value), y(value) {}
+		Vector2(float x, float y) : x(x), y(y) {}
 
+		Vector2 operator+(const Vector2& other) {
+			return Vector2(this->x + other.x, this->y + other.y);
+		}
+
+		Vector2 operator-(const Vector2& other) {
+			return this->operator+(other * (-1.0f));
+		}
+
+		Vector2 operator*(float scalar) const {
+			return Vector2(x * scalar, y * scalar);
+		}
+
+		Vector2 operator/(float scalar) const {
+			return this->operator*(1 / scalar);
+		}
+
+		Vector2 Normalize() const {
+			return Vector2(x, y) / this->Magnitude();
+		}
+
+		Vector2 Negate() const {
+			return (*this) * (-1);
+		}
+
+		float Dot(const Vector2& other) {
+			const Vector2& otherNormal = other.Normalize();
+
+			return Normalize().x * otherNormal.x + Normalize().y * otherNormal.y;
+		}
+
+		float Magnitude() const {
+			return sqrtf(x * x + y * y);
+		}
+
+		float MagnitudeSquared() {
+			return x * x + y * y;
+		}
+	};
+
+	class Vector3
+	{
+	public:
+		float x, y, z;
+	public:
+		static Vector3 Zero;
+		static Vector3 Min;
+		static Vector3 Max;
+	public:
+		Vector3() = default;
+		Vector3(float value) : x(value), y(value), z(value) {}
+		Vector3(float x, float y, float z) : x(x), y(y), z(z) {}
+
+		Vector3 operator+(const Vector3& other) {
+			return Vector3(this->x + other.x, this->y + other.y, this->z + other.z);
+		}
+
+		Vector3 operator-(const Vector3& other) {
+			return (*this) + other * (-1.0f);
+		}
+
+		Vector3 operator*(float scalar) const {
+			return Vector3(x * scalar, y * scalar, z * scalar);
+		}
+
+		friend Vector3 operator*(float scalar, const Vector3& vector) {
+			return Vector3(vector.x * scalar, vector.y * scalar, vector.z * scalar);
+		}
+
+		Vector3 operator/(float scalar) const {
+			return this->operator*(1 / scalar);
+		}
+
+		Vector3 Normalize() const {
+			return Vector3(x, y, z) / this->Magnitude();
+		}
+
+		Vector3 Negate() const {
+			return (*this) * (-1);
+		}
+
+		float Dot(const Vector3& other) {
+			const Vector3& otherNormal = other.Normalize();
+
+			return Normalize().x * otherNormal.x +
+				Normalize().y * otherNormal.y +
+				Normalize().z * otherNormal.z;
+		}
+
+		Vector3 Cross(const Vector3& other) {
+			x = this->y * other.z - this->z * other.y;
+			y = this->z * other.x - this->x * other.z;
+			z = this->x * other.y - this->y * other.x;
+
+			return { x, y, z };
+		}
+
+		float Magnitude() const {
+			return sqrtf(x * x + y * y + z * z);
+		}
+
+		float MagnitudeSquared() {
+			return x * x + y * y + z * z;
+		}
 	};
 
 	/*
@@ -83,41 +148,34 @@ namespace EssentialMath
 		}
 
 		// Set Quaternion component with an angle and an unit vector
-		Quaternion(float theta, Vector3 n) {
+		Quaternion(float theta, const Vector3& n) {
 			InitQuaternion(theta, n.x, n.y, n.z);
 		}
-		
-		Quaternion operator*(Quaternion other) {
+
+		Quaternion operator*(const Quaternion& other) const {
 			float w = this->w * other.w - this->x * other.x - this->y * other.y - this->z * other.z;
 			float x = this->w * other.x + this->x * other.w + this->y * other.z - this->z * other.y;
 			float y = this->w * other.y + this->y * other.w + this->z * other.x - this->x * other.z;
 			float z = this->w * other.z + this->z * other.w + this->x * other.y - this->y * other.x;
-			
+
 			return Quaternion(w, x, y, z);
 		}
-		
-		Quaternion operator*(float scalar) {
+
+		Quaternion Mult(const Quaternion& other) const {
+			return this->operator*(other);
+		}
+
+		Quaternion operator*(float scalar) const {
 			return Quaternion(w * scalar, x * scalar, y * scalar, z * scalar);
 		}
 
-		Quaternion operator+(Quaternion other) {
+		Quaternion operator+(const Quaternion& other) {
 			return Quaternion(this->w + other.w, this->x + other.x, this->y + other.y, this->z + other.z);
 		}
 
-		float Dot(Quaternion other) {
+		float Dot(const Quaternion& other) const {
 			// Dot product of two unit quaternions varies in range [-1, 1]
 			return w * other.w + x * other.x + y * other.y + z * other.z;
-		}
-
-		// Return a quaternion in form of exponential map
-		Quaternion Log() {
-			Vector3 originalUnitVector = this->GetOriginalUnitVector();
-			float alpha = this->GetAlpha();
-			float x = originalUnitVector.x * alpha;
-			float y = originalUnitVector.y * alpha;
-			float z = originalUnitVector.z * alpha;
-
-			return Quaternion(0.0f, x, y, z);
 		}
 
 		Quaternion Exp(float exponent) {
@@ -139,29 +197,20 @@ namespace EssentialMath
 			return *this;
 		}
 
-		Quaternion Conjungate() {
+		Quaternion Conjungate() const {
 			return Quaternion(w, -x, -y, -z);
 		}
 
-		Quaternion Inverse() {
+		Quaternion Inverse() const {
 			// This property only works with Unit Quaternion
 			return this->Conjungate();
 		}
-		
+
 		// Return an angular displacement from this quaternion to other quaternion
-		Quaternion Difference(Quaternion other) {
-			return other * Inverse();
+		Quaternion Difference(const Quaternion* other) {
+			return other->Mult(this->Inverse());
 		}
 
-		Vector3 GetOriginalUnitVector() const {
-			float alpha = this->GetAlpha();
-			float nx = x / sinf(alpha);
-			float ny = y / sinf(alpha);
-			float nz = z / sinf(alpha);
-
-			return Vector3(nx, ny, nz);
-		}
-		
 		float GetAlpha() const {
 			return acosf(w);
 		}
@@ -170,16 +219,17 @@ namespace EssentialMath
 			return Quaternion(1.0f, 0.0f, 0.0f, 0.0f);
 		}
 
-		static Quaternion Slerp(Quaternion startQuaterion, Quaternion endQuaternion, float t) {
+		static Quaternion Slerp(const Quaternion& startQuaterion, const Quaternion& endQuaternion, float t) {
 			// Omega is the difference angular displacement between two quaternions
 			float cosOmega = startQuaterion.Dot(endQuaternion);
 			// Negate one of the input quaternion to take the shortest arc in 4D
+			Quaternion quaternion = startQuaterion;
 			if (cosOmega < 0.0f) {
 				cosOmega = -cosOmega;
-				startQuaterion.w = -startQuaterion.w;
-				startQuaterion.x = -startQuaterion.x;
-				startQuaterion.y = -startQuaterion.y;
-				startQuaterion.z = -startQuaterion.z;
+				quaternion.w = -startQuaterion.w;
+				quaternion.x = -startQuaterion.x;
+				quaternion.y = -startQuaterion.y;
+				quaternion.z = -startQuaterion.z;
 			}
 
 			float k0, k1;
@@ -197,7 +247,27 @@ namespace EssentialMath
 				k1 = sin(t) * omega * oneOverSinOmega;
 			}
 
-			return startQuaterion * k0 + endQuaternion * k1;
+			return quaternion * k0 + endQuaternion * k1;
+		}
+
+		Vector3 GetVector() const {
+			return Vector3(this->x, this->y, this->z);
+		}
+		public:
+		// Concatenate Quaternion (rotate by p then followed by q)
+		static Quaternion Concatenate(const Quaternion& q, const Quaternion& p) {
+			Vector3 pqVector = q.GetVector() * p.w + p.GetVector() * q.w + p.GetVector().Cross(q.GetVector());
+			float scalar = p.w * q.w - p.GetVector().Dot(q.GetVector());
+
+			return { scalar, pqVector};
+		}
+
+		static Vector3 Transform(const Vector3& vector, const Quaternion& quaternion) {
+			Quaternion vectorQuaternion = Quaternion(0.0f, vector);
+			// Grammann product
+			Quaternion concatedQuaternion = quaternion * vectorQuaternion * quaternion.Inverse();
+
+			return concatedQuaternion.GetVector();
 		}
 	private:
 		float Magnitude() {
@@ -206,25 +276,29 @@ namespace EssentialMath
 
 		void InitQuaternion(float theta, float x, float y, float z) {
 			float alpha = theta / 2;
-			
+
 			this->w = cosf(alpha);
 			this->x = sinf(alpha) * x;
 			this->y = sinf(alpha) * y;
 			this->z = sinf(alpha) * z;
-			
+
 			magnitude = this->Magnitude();
 		}
 	};
 
-	#define PI 180.0f
-	
 	class EulerAngle
 	{
 	public:
 		float head, pitch, bank;
 
-		EulerAngle(float head = 0.0, float pitch = 0.0, float bank = 0.0) : 
-			head(head), pitch(pitch), bank(bank) {}
+		EulerAngle(float head, float pitch, float bank) :
+			head(head), pitch(pitch), bank(bank)
+		{
+		}
+
+		EulerAngle(float angle) : head(angle), pitch(angle), bank(angle)
+		{
+		}
 
 		// Wrap theta in range (-180; 180] degrees
 		static float WrapPI(float theta) {
@@ -235,43 +309,54 @@ namespace EssentialMath
 			return theta;
 		};
 
-		static void ToCanonicalSet(float& head, float& pitch, float& bank)
-		{
-			// Head [-180, 180)
-			// Pitch [-90, 90]
-			// Bank [-180, 180)
+		static bool IsCanonical(const EulerAngle& angle) {
+			if (angle.head > PI || angle.head <= -PI) {
+				return false;
+			}
+
+			if (angle.bank > PI || angle.bank <= -PI) {
+				return false;
+			}
+
+			if (abs(angle.pitch) > PI / 2.0f) {
+				return false;
+			}
+
+			if (abs(angle.pitch) == PI / 2.0f && angle.bank != 0.0f) {
+				return false;
+			}
+
+			return true;
 		}
 	};
 
-#define PI 3.14159265
-#define DEGREE_TO_RADIAN (PI / 180.0)
-
-	class ConvertHelper {
+	class RepresentationConverter {
 	public:
-		// Convert an Euler Angle representation to Matrix form
+		// Convert an Euler Angle to a Matrix
 		// head, pitch and bank must be mesured in object's space 
-		static void ObjectToUprightRotationMatrix(const EulerAngle& angle, float matrix[3][3]) {
+		static void EulerAngleToObjectToUpRightMatrix(const EulerAngle& angle, float matrix[3][3]) {
 			float cosHead = cosf(angle.head);
 			float sinHead = sinf(angle.head);
 			float cosPitch = cosf(angle.pitch);
 			float sinPitch = sinf(angle.pitch);
 			float cosBank = cosf(angle.bank);
 			float sinBank = sinf(angle.bank);
-			
+
 			matrix[0][0] = cosHead * cosBank + sinHead * sinPitch * sinBank;
 			matrix[0][1] = sinBank * cosPitch;
 			matrix[0][2] = -sinHead * cosBank + cosHead * sinPitch * sinBank;
-		
+
 			matrix[1][0] = -cosHead * sinBank + sinHead * sinPitch * cosBank;
 			matrix[1][1] = cosBank * cosPitch;
 			matrix[1][2] = sinBank * sinPitch + cosHead * sinPitch * cosBank;
-			
+
 			matrix[2][0] = sinHead * cosPitch;
 			matrix[2][1] = -sinPitch;
 			matrix[2][2] = cosHead * cosPitch;
 		}
 
-		static EulerAngle ObjectToUprightEulerAngle(float matrix[3][3]) {
+		// Convert an Object-To-Upright Matrix to an Euler Angle
+		static EulerAngle MatrixToEulerAngle(float matrix[3][3]) {
 			float head, pitch, bank;
 
 			float sinPitch = -matrix[2][1];
@@ -296,6 +381,107 @@ namespace EssentialMath
 			}
 
 			return EulerAngle(head, pitch, bank);
+		}
+
+		// Convert a Unit Quaternion to a Matrix
+		static void QuaternionToMatrix(const Quaternion& quaternion, float matrix[3][3]) {
+			matrix[0][0] = 1 - 2 * std::pow(quaternion.y, 2) - 2 * std::pow(quaternion.z, 2);
+			matrix[0][1] = 2 * quaternion.x * quaternion.y + 2 * quaternion.w * quaternion.z;
+			matrix[0][2] = 2 * quaternion.x * quaternion.z - 2 * quaternion.w * quaternion.y;
+
+			matrix[1][0] = 2 * quaternion.x * quaternion.y - 2 * quaternion.w * quaternion.z;
+			matrix[1][1] = 1 - 2 * std::pow(quaternion.x, 2) - 2 * std::pow(quaternion.z, 2);
+			matrix[1][2] = 2 * quaternion.y * quaternion.z + 2 * quaternion.w * quaternion.x;
+
+			matrix[2][0] = 2 * quaternion.x * quaternion.z + 2 * quaternion.w * quaternion.y;
+			matrix[2][1] = 2 * quaternion.y * quaternion.z - 2 * quaternion.w * quaternion.x;
+			matrix[2][2] = 1 - 2 * std::pow(quaternion.x, 2) - 2 * std::pow(quaternion.y, 2);
+		}
+
+		// Convert a Matrix to an Unit Quaternion
+		static Quaternion MatrixToQuaternion(float matrix[3][3]) {
+			float w = std::sqrtf(matrix[0][0] + matrix[1][1] + matrix[2][2] + 1) / 2;
+			float x = std::sqrtf(matrix[0][0] - matrix[1][1] - matrix[2][2] + 1) / 2;
+			float y = std::sqrtf(-matrix[0][0] + matrix[1][1] - matrix[2][2] + 1) / 2;
+			float z = std::sqrtf(-matrix[0][0] - matrix[1][1] + matrix[2][2] + 1) / 2;
+			float temp[] = { w, x, y, z };
+
+			float maxValue = w;
+			for (unsigned int i = 0; i < 4; i++) {
+				if (temp[i] > maxValue) {
+					maxValue = temp[i];
+				}
+			}
+
+			float delimeter = 4 * maxValue;
+			if (maxValue == w) {
+				x = (matrix[1][2] - matrix[2][1]) / delimeter;
+				y = (matrix[2][0] - matrix[0][2]) / delimeter;
+				z = (matrix[0][1] - matrix[1][0]) / delimeter;
+			}
+			else if (maxValue == x) {
+				w = (matrix[1][2] - matrix[2][1]) / delimeter;
+				y = (matrix[0][1] + matrix[1][0]) / delimeter;
+				z = (matrix[2][0] + matrix[0][2]) / delimeter;
+			}
+			else if (maxValue == y) {
+				w = (matrix[2][0] - matrix[0][2]) / delimeter;
+				x = (matrix[0][1] + matrix[1][0]) / delimeter;
+				z = (matrix[1][2] + matrix[2][1]) / delimeter;
+			}
+			else {
+				w = (matrix[0][1] - matrix[1][0]) / delimeter;
+				x = (matrix[2][0] + matrix[0][2]) / delimeter;
+				y = (matrix[1][2] + matrix[2][1]) / delimeter;
+			}
+
+			return { w, x, y , z };
+		}
+
+		// Convert an Euler Angle to an unit Object-To-UpRight Quaternion
+		static Quaternion EulerAngleToObjectToUpRightQuaternion(const EulerAngle& angle, bool objToUpRight = true) {
+			Quaternion head = Quaternion(cosf(angle.head * 0.5f), 0.0f, sinf(angle.head * 0.5f), 0.0f);
+			Quaternion pitch = Quaternion(cosf(angle.pitch * 0.5f), sinf(angle.pitch * 0.5f), 0.0f, 0.0f);
+			Quaternion bank = Quaternion(cosf(angle.bank * 0.5f), 0.0f, 0.0f, sinf(angle.bank * 0.5f));
+
+			if (objToUpRight) {
+				return head * pitch * bank;
+			}
+
+			return (head * pitch * bank).Conjungate();
+		}
+
+		// Convert an Unit Quaternion to an Euler Angle
+		static EulerAngle QuaternionToEulerAngle(const Quaternion& quaternion, bool objToUpright = true) {
+			float w, x, y, z;
+			w = quaternion.w;
+
+			if (objToUpright) {
+				x = quaternion.x;
+				y = quaternion.y;
+				z = quaternion.z;
+			}
+			else {
+				x = -quaternion.x;
+				y = -quaternion.y;
+				z = -quaternion.z;
+			}
+
+			float head, pitch, bank;
+			float sinPitch = -2 * (y * z - w * x);
+			// Avoid Glimbal lock
+			if (abs(sinPitch) > 0.9999f) {
+				pitch = (PI / 2) * sinPitch; // Look straight up or down
+				head = atan2(-x * z + w * y, 0.5 - y * y - z * z);
+				bank = 0;
+			}
+			else {
+				pitch = asinf(sinPitch);
+				head = atan2(x * z + w * y, 0.5 - x * x - y * y);
+				bank = atan2(x * y + w * z, 0.5 - x * x - z * z);
+			}
+
+			return { head, pitch, bank };
 		}
 	};
 }

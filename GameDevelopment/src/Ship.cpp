@@ -79,7 +79,7 @@ void Ship::Respawn()
 	// Reset ship position to the center of the screen if collided with asteroid
 	GameObject::GetTransform()->SetPosition(Vector3::Zero);
 	// Reset game object states
-	GameObject::GetTransform()->SetRotation(0.0f);
+	GameObject::GetTransform()->SetRotation(Quaternion::Identity);
 	GameObject::GetGame()->GetCooldownManager()->Release(this);
 	GameObject::SetState(GameObject::State::EActive);
 	mInputComponent->ResetForce();

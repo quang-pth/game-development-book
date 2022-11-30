@@ -29,9 +29,11 @@ void MoveComponent::Update(float deltaTime)
 	transformComponent->SetPosition(position);
 
 	if (!Math::NearZero(mAngularSpeed)) {
-		float rotation = transformComponent->GetRotation();
-		rotation += mAngularSpeed * deltaTime;
-		transformComponent->SetRotation(rotation);
+		float angle = mAngularSpeed * deltaTime;
+		Quaternion inc(Vector3::UnitZ, angle);
+		transformComponent->SetRotation(
+			Quaternion::Concatenate(transformComponent->GetRotation(), inc)
+		);
 	}
 }
 

@@ -115,7 +115,7 @@ std::vector<class Component*> GameObject::GetComponents() const
 
 Vector3 GameObject::GetForward() const
 {
-	return Vector3(Math::Cos(mTransform->GetRotation()), Math::Sin(mTransform->GetRotation()), 0.0f);
+	return Vector3::Transform(Vector3::UnitX, mTransform->GetRotation());
 }
 
 Game* GameObject::GetGame() const
