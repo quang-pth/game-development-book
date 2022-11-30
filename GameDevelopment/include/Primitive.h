@@ -342,4 +342,45 @@ namespace EssentialMath
 			outRadius = sqrtf((d1 + d2) * (d2 + d3) * (d1 + d3) / c) / 2;
 		}
 	};
+	
+	class Polygon {
+	public:
+		inline static bool IsConvex(const Vector3 vertices[], int numOfVertices) {
+			float angleSum = 0.0f;
+
+			for (uint8_t i = 0; i < numOfVertices; i++) {
+				Vector3 e1, e2;
+
+				if (i == 0) {
+					e1 = vertices[numOfVertices - 1] - vertices[0];
+				}
+				else {
+					e1 = vertices[i - 1] - vertices[i];
+				}
+
+				if (i == numOfVertices - 1) {
+					e2 = vertices[0] - vertices[i];
+				}
+				else {
+					e2 = vertices[i + 1] - vertices[i];
+				}
+
+				e1 = e1.Normalize();
+				e2 = e2.Normalize();
+
+				// Get smaller angle (exterior or interior)
+				float dot = e1.Dot(e2);
+
+				angleSum += std::acosf(dot);
+			}
+
+			float convexSumAngle = (numOfVertices - 2) * PI;
+
+			if (angleSum < convexSumAngle - numOfVertices * 0.0001f) {
+				return false;
+			}
+
+			return true;
+		}
+	};
 }
