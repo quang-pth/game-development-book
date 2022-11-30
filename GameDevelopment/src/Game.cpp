@@ -77,7 +77,7 @@ bool Game::Initialize()
 
 void Game::RunLoop()
 {
-	while (mIsRunning) {
+	while (mIsRunning) {		
 		this->ProcessInput();
 		this->UpdateGame();
 		this->GenerateOutput();
@@ -152,6 +152,7 @@ void Game::ProcessInput()
 	mUpdatingGameObjects = false;
 }
 
+float dt;
 void Game::UpdateGame()
 {
 	// Limit game runs on 60FPS
@@ -159,6 +160,7 @@ void Game::UpdateGame()
 	// Game delta time measured in seconds
 	float deltaTime = (SDL_GetTicks() - mTicksCount) / 1000.0f;
 	mTicksCount = SDL_GetTicks();
+	dt = deltaTime;
 
 	// Clamp the delta time for debugging
 	if (deltaTime > 0.05f) {
@@ -189,9 +191,31 @@ void Game::UpdateGame()
 	}
 }
 
+static float transitionDuration = 2.0f;
+static Vector3 colors[] = {
+	Vector3(1.0f, 0.0f, 0.0f),
+	Vector3(0.0f, 1.0f, 0.0f),
+	Vector3(0.0f, 0.0f, 1.0f),
+};
+
+static uint8_t colorIdx = 0;
+static float transFactor = 0.4f;
+static Vector3 currentColor = colors[colorIdx];
+static Vector3 nextColor = colors[colorIdx + 1];
+
 void Game::GenerateOutput()
 {
-	glClearColor(0.86f, 0.86f, 0.86f, 1.0f);
+	transitionDuration -= dt * transFactor;
+	if (transitionDuration < 0.0f) {
+		transitionDuration = 2.0f;
+
+		colorIdx = (++colorIdx + 1) % 3;
+		nextColor = colors[colorIdx];
+	}
+
+	currentColor = Vector3::Lerp(currentColor, nextColor, dt * transFactor);
+
+	glClearColor(currentColor.x, currentColor.y, currentColor.z, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
