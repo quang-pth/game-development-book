@@ -3,6 +3,7 @@
 #include "include/TransformComponent.h";
 #include "include/Game.h";
 #include "include/Texture.h";
+#include "include/Renderer.h";
 #include<fstream>
 #include<sstream>
 #include <iostream>
@@ -80,7 +81,7 @@ void TileMapComponent::LoadTileData(const char* filePath)
 
 void TileMapComponent::SetTexture(const char* filePath)
 {
-	Texture* texture = this->mOwner->GetGame()->GetTexture(filePath);
+	Texture* texture = this->mOwner->GetGame()->GetRenderer()->GetTexture(filePath);
 	SpriteComponent::SetTexture(texture);
 }
 

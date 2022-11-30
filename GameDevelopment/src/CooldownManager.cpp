@@ -1,8 +1,10 @@
 #include "include/CooldownManager.h"
+#include "include/GameObject.h"
 #include "include/ICooldownable.h"
 
 CooldownManager::CooldownManager() : 
-	GameObject(), mCooldownableGameObjects()
+	GameObject(), 
+	mCooldownableGameObjects()
 {
 }
 

@@ -5,18 +5,19 @@
 #include "include/Game.h"
 #include "include/Shader.h"
 #include "include/Texture.h"
+#include "include/Renderer.h"
 #include <iostream>
 
 SpriteComponent::SpriteComponent(GameObject* owner, int drawOrder) : 
 	Component(owner), mTexture(nullptr),
 	mDrawOrder(drawOrder), mTextureWidth(32), mTextureHeight(32)
 {
-	mOwner->GetGame()->AddSprite(this);
+	mOwner->GetGame()->GetRenderer()->AddSprite(this);
 }
 
 SpriteComponent::~SpriteComponent()
 {
-	mOwner->GetGame()->RemoveSprite(this);
+	mOwner->GetGame()->GetRenderer()->RemoveSprite(this);
 }
 
 void SpriteComponent::Draw(SDL_Renderer* renderer)

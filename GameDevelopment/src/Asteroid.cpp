@@ -5,6 +5,7 @@
 #include "include/TransformComponent.h"
 #include "include/CircleComponent.h"
 #include "include/Texture.h"
+#include "include/Renderer.h"
 #include "include/CustomMath.h"
 #include "include/Random.h"
 
@@ -20,7 +21,7 @@ Asteroid::Asteroid(Game* game, std::string name) : GameObject(game, name)
 	mMoveComponent = new MoveComponent(this);
 	mMoveComponent->AddForce(GameObject::GetForward() * 1000.0f, MoveComponent::ForceMode::Impulse);
 	mSpriteComponent = new SpriteComponent(this, 20);
-	mSpriteComponent->SetTexture(game->GetTexture("Assets/Chapter3/Asteroid.png"));
+	mSpriteComponent->SetTexture(game->GetRenderer()->GetTexture("Assets/Chapter3/Asteroid.png"));
 	
 	mCircleComponent = new CircleComponent(this);
 	mCircleComponent->SetRadius(mSpriteComponent->GetTextureWidth() - 10.0f);

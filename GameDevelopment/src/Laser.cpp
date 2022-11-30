@@ -7,6 +7,7 @@
 #include "include/Asteroid.h"
 #include "include/Ship.h"
 #include "include/Texture.h"
+#include "include/Renderer.h"
 #include <iostream>
 
 Laser::Laser(Game* game, std::string name) : 
@@ -16,7 +17,7 @@ Laser::Laser(Game* game, std::string name) :
 	GameObject::GetTransform()->SetScale(0.3f);
 
 	mSpriteComponent = new SpriteComponent(this);
-	mSpriteComponent->SetTexture(GameObject::GetGame()->GetTexture("Assets/Chapter3/Laser.png"));
+	mSpriteComponent->SetTexture(GameObject::GetGame()->GetRenderer()->GetTexture("Assets/Chapter3/Laser.png"));
 
 	mCircleComponent = new CircleComponent(this);
 	mCircleComponent->SetRadius(mSpriteComponent->GetTextureWidth() - 3.0f);

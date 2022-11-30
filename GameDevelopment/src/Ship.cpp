@@ -7,6 +7,7 @@
 #include "include/CircleComponent.h"
 #include "include/Laser.h"
 #include "include/Asteroid.h"
+#include "include/Renderer.h"
 #include "include/Texture.h"
 #include <SDL2/SDL.h>
 #include <iostream>
@@ -17,7 +18,7 @@ Ship::Ship(Game* game) :
 	mActivateLaserIdx(0), mSpawnCooldown(1.5f)
 {
 	mSpriteComponent = new SpriteComponent(this, 21);
-	mSpriteComponent->SetTexture(game->GetTexture("Assets/Chapter3/Ship.png"));
+	mSpriteComponent->SetTexture(game->GetRenderer()->GetTexture("Assets/Chapter3/Ship.png"));
 	
 	mInputComponent = new InputComponent(this);
 	mInputComponent->SetMaxForwardSpeed(300.0f);
