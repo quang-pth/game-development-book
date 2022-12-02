@@ -1,18 +1,23 @@
 #include "include/Renderer.h"
+#include "include/Game.h"
+#include "include/GameObject.h"
+#include "include/TransformComponent.h"
 #include "include/SpriteComponent.h"
+#include "include/MeshComponent.h"
 #include "include/Shader.h"
 #include "include/Texture.h"
 #include "include/VertexArray.h"
 #include "include/Mesh.h"
 #include <SDL2/SDL_image.h>
 
-Renderer::Renderer() :
+Renderer::Renderer(Game* game) :
+	mGame(game),
 	mSpriteShader(nullptr),
 	mSpriteVertices(nullptr),
-	mSprites(), mTextures(), mMeshes(),
+	mSprites(), mLoadedTextures(), mLoadedMeshes(),
 	mGlewExperimental(GL_FALSE),
 	mWindowWidth(0.0f), mWindowHeight(0.0f),
-	mWindow(), mContext()
+	mWindow(), mContext(), mCamera(nullptr), mMeshShader(nullptr)
 {
 
 }
@@ -44,6 +49,7 @@ bool Renderer::Intialize(float screenWidth, float screenHeight)
 	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1); // Enable double-buffering
 	SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1); // Run OpenGL on GPU
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24); // Set OpenGL depth buffer context
 	// Init Window
 	mWindow = SDL_CreateWindow("Graphics with OpenGL 330", 100, 40, mWindowWidth, mWindowHeight,
 		SDL_WINDOW_OPENGL);
@@ -78,6 +84,9 @@ void Renderer::ShutDown()
 	mSpriteShader->Unload();
 	delete mSpriteShader;
 	
+	mMeshShader->Unload();
+	delete mMeshShader;
+
 	SDL_GL_DeleteContext(mContext);
 	SDL_DestroyWindow(mWindow);
 
@@ -87,22 +96,35 @@ void Renderer::ShutDown()
 
 void Renderer::Unload()
 {
-	for (std::pair<const std::string&, Texture*> iter : mTextures) {
+	for (std::pair<const std::string&, Texture*> iter : mLoadedTextures) {
 		iter.second->Unload();
 		delete iter.second;
 	}
-	mTextures.clear();
-	for (std::pair<const std::string&, Mesh*> iter : mMeshes) {
+	mLoadedTextures.clear();
+	for (std::pair<const std::string&, Mesh*> iter : mLoadedMeshes) {
 		iter.second->Unload();
 		delete iter.second;
 	}
-	mMeshes.clear();
+	mLoadedMeshes.clear();
 }
 
 void Renderer::Draw()
 {
-	glClearColor(0.86f, 0.86f, 0.86f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// ============= MESH SHADER  =================
+	glEnable(GL_DEPTH_TEST);
+	mMeshShader->SetActive();
+	mMeshShader->SetMatrixUniform("uViewMatrix", mViewMatrix);
+	mMeshShader->SetMatrixUniform("uProjectionMatrix", mProjectionMatrix);
+	for (MeshComponent* mesh : mMeshes) {
+		mesh->Draw(mMeshShader);
+	}
+	glDisable(GL_DEPTH_TEST);
+	// ============= END MESH SHADER  =================
+
+	// ============= SPRITE SHADER  =================
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -112,6 +134,8 @@ void Renderer::Draw()
 	for (SpriteComponent* sprite : mSprites) {
 		sprite->Draw(mSpriteShader);
 	}
+	glDisable(GL_BLEND);
+	// ============= END SPRITE SHADER  =================
 
 	SDL_GL_SwapWindow(mWindow);
 }
@@ -136,27 +160,43 @@ void Renderer::RemoveSprite(SpriteComponent* sprite)
 	}
 }
 
+void Renderer::AddMesh(MeshComponent* mesh)
+{
+	auto iter = std::find(mMeshes.begin(), mMeshes.end(), mesh);
+	if (iter == mMeshes.end()) {
+		mMeshes.emplace_back(mesh);
+	}
+}
+
+void Renderer::RemoveMesh(MeshComponent* mesh)
+{
+	auto iter = std::find(mMeshes.begin(), mMeshes.end(), mesh);
+	if (iter != mMeshes.end()) {
+		mMeshes.erase(iter);
+	}
+}
+
 Texture* Renderer::GetTexture(const std::string& fileName)
 {
 	// Get texture if already loaded
-	std::unordered_map<std::string, Texture*>::iterator iter = mTextures.find(fileName);
-	if (iter != mTextures.end()) {
-		return mTextures[fileName];
+	std::unordered_map<std::string, Texture*>::iterator iter = mLoadedTextures.find(fileName);
+	if (iter != mLoadedTextures.end()) {
+		return iter->second;
 	}
 
 	Texture* texture = new Texture();
 	if (!texture->Load(fileName)) 
 		return nullptr;
 
-	mTextures.insert({ fileName, texture });
+	mLoadedTextures.insert({ fileName, texture });
 	return texture;
 }
 
 Mesh* Renderer::GetMesh(const std::string& fileName)
 {
-	std::unordered_map<std::string, Mesh*>::iterator iter = mMeshes.find(fileName);
-	if (iter != mMeshes.end()) {
-		return mMeshes[fileName];
+	std::unordered_map<std::string, Mesh*>::iterator iter = mLoadedMeshes.find(fileName);
+	if (iter != mLoadedMeshes.end()) {
+		return iter->second;
 	}
 
 	Mesh* mesh = new Mesh();
@@ -164,16 +204,19 @@ Mesh* Renderer::GetMesh(const std::string& fileName)
 	if (!mesh->Load(fileName, this)) {
 		return nullptr;
 	};
-	mMeshes.insert({ fileName, mesh });
+	mLoadedMeshes.insert({ fileName, mesh });
 
 	return mesh;
 }
 
 bool Renderer::LoadShaders()
 {
+	// =========== SPRITE SHADER ================
 	mSpriteShader = new Shader();
 
 	if (!mSpriteShader->Load("Shader/sprite-vert.glsl", "Shader/sprite-frag.glsl")) {
+		delete mSpriteShader;
+		mSpriteShader = nullptr;
 		return false;
 	}
 
@@ -183,6 +226,31 @@ bool Renderer::LoadShaders()
 		static_cast<float>(mWindowHeight)
 	);
 	mSpriteShader->SetMatrixUniform("uViewProj", viewProj);
+	// =========== END SPRITE SHADER ================
+
+	// =========== MESH SHADER ================
+	mMeshShader = new Shader();
+
+	if (!mMeshShader->Load("Shader/basic-mesh-vert.glsl", "Shader/basic-mesh-frag.glsl")) {
+		delete mMeshShader;
+		mMeshShader = nullptr;
+		return false;
+	}
+
+	mMeshShader->SetActive();
+	// Construct view matrix
+	mViewMatrix = Matrix4::CreateLookAt(Vector3::Zero, Vector3::UnitX, Vector3::UnitZ);
+	mMeshShader->SetMatrixUniform("uViewMatrix", mViewMatrix);
+	// Construct projection matrix
+	mProjectionMatrix = Matrix4::CreatePerspectiveFOV(
+		Math::ToRadians(75.0f), 
+		mWindowWidth,
+		mWindowHeight, 
+		25.0f, 
+		10000.0f
+	);
+	mMeshShader->SetMatrixUniform("uProjectionMatrix", mProjectionMatrix);
+	// =========== END MESH SHADER ================
 
 	return true;
 }
@@ -190,17 +258,17 @@ bool Renderer::LoadShaders()
 void Renderer::InitSpriteVertices()
 {
 	// Vertex buffer
-	float vertexBuffer[] = {
-		// Position		 //Color			// Texel - invert the V coordinate
-	   -0.5f,  0.5f, 0.0f,	-0.5f,  0.5f, 0.0f,	 0.0f,  0.0f, // top-left
-		0.5f,  0.5f, 0.0f,  0.5f,  0.5f, 0.0f,  1.0f,  0.0f,	 // top-right
-		0.5f, -0.5f, 0.0f,  0.5f, -0.5f, 0.0f,  1.0f,  1.0f,  // bottom-right
-	   -0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f,  0.0f,  1.0f// bottom-left
+	float vertices[] = {
+		// Position		    //Normal			// Texel - invert the V coordinate
+	   -0.5f,  0.5f, 0.0f,  0.0f, 0.0f, 0.0f,  0.0f,  0.0f, // top-left
+		0.5f,  0.5f, 0.0f,  0.0f, 0.0f, 0.0f,  1.0f,  0.0f,	 // top-right
+		0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 0.0f,  1.0f,  1.0f,  // bottom-right
+	   -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 0.0f,  0.0f,  1.0f// bottom-left
 	};
-	std::uint32_t indexBuffer[] = {
+	std::uint32_t indicies[] = {
 		0, 1, 2, // First triangle
 		2, 3, 0, // Second triangle
 	};
-	mSpriteVertices = new VertexArray(vertexBuffer, sizeof(vertexBuffer) / sizeof(float),
-		indexBuffer, sizeof(indexBuffer) / sizeof(std::uint32_t));
+	mSpriteVertices = new VertexArray(vertices, sizeof(vertices) / sizeof(float),
+		indicies, sizeof(indicies) / sizeof(std::uint32_t));
 }

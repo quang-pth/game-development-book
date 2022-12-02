@@ -14,6 +14,7 @@ public:
 	void RemoveGameObject(class GameObject* gameObject);
 	class std::vector<class Asteroid*> GetAsteroids() const;
 	class Ship* GetShip() const;
+	class GameObject* GetCamera() const;
 	class Renderer* GetRenderer() const;
 	class CooldownManager* GetCooldownManager() const;
 	int GetWindowWidth() const;
@@ -35,6 +36,7 @@ private:
 	std::vector<class GameObject*> mPendingGameObjects;
 	std::vector<class Asteroid*> mAsteroids;
 	class CooldownManager* mCooldownManager;
+	class GameObject* mCamera;
 	class Ship* mShip;
 	class Renderer* mRenderer;
 	bool mUpdatingGameObjects;

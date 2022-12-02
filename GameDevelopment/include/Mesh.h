@@ -8,7 +8,7 @@ class Mesh
 public:
 	Mesh();
 	~Mesh();
-	bool Load(const std::string& fileName, class Renderer* game);
+	bool Load(const std::string& fileName, class Renderer* renderer);
 	void Unload();
 	class VertexArray* GetVetexArray() const { return mVertexArray; }
 	class Texture* GetTexture(size_t index) const;

@@ -130,6 +130,8 @@ namespace EssentialMath
 		float MagnitudeSquared() {
 			return x * x + y * y + z * z;
 		}
+	public:
+		static Vector3 Transform(const Vector3& vector, const class Quaternion& quaternion);
 	};
 
 	/*
@@ -219,7 +221,11 @@ namespace EssentialMath
 			return Quaternion(1.0f, 0.0f, 0.0f, 0.0f);
 		}
 
-		static Quaternion Slerp(const Quaternion& startQuaterion, const Quaternion& endQuaternion, float t) {
+		static Quaternion Slerp(
+			const Quaternion& startQuaterion, 
+			const Quaternion& endQuaternion, 
+			float t) 
+		{
 			// Omega is the difference angular displacement between two quaternions
 			float cosOmega = startQuaterion.Dot(endQuaternion);
 			// Negate one of the input quaternion to take the shortest arc in 4D
@@ -260,14 +266,6 @@ namespace EssentialMath
 			float scalar = p.w * q.w - p.GetVector().Dot(q.GetVector());
 
 			return { scalar, pqVector};
-		}
-
-		static Vector3 Transform(const Vector3& vector, const Quaternion& quaternion) {
-			Quaternion vectorQuaternion = Quaternion(0.0f, vector);
-			// Grammann product
-			Quaternion concatedQuaternion = quaternion * vectorQuaternion * quaternion.Inverse();
-
-			return concatedQuaternion.GetVector();
 		}
 	private:
 		float Magnitude() {

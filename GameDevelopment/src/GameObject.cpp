@@ -9,7 +9,7 @@ GameObject::GameObject() : mGame(), name(), mState(), mTransform()
 {
 }
 
-GameObject::GameObject(Game* game, std::string name) :
+GameObject::GameObject(Game* game, const std::string& name) :
 	mGame(game), name(name), mState(GameObject::State::EActive)
 {
 	mGame->AddGameObject(this);

@@ -16,7 +16,7 @@ public:
 	std::string name;
 
 	GameObject();
-	GameObject(class Game* game, std::string name = "");
+	GameObject(class Game* game, const std::string& name = "");
 	virtual ~GameObject();
 	
 	void Update(float deltaTime);

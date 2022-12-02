@@ -145,6 +145,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Cube.cpp" />
+    <ClCompile Include="src\Sphere.cpp" />
+    <ClCompile Include="src\MeshComponent.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\Shader.cpp" />
@@ -173,6 +176,7 @@
     <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Cube.h" />
     <ClInclude Include="include\ICooldownable.h" />
     <ClInclude Include="include\CooldownManager.h" />
     <ClInclude Include="include\CircleComponent.h" />
@@ -198,9 +202,13 @@
     <ClInclude Include="include\Texture.h" />
     <ClInclude Include="include\Mesh.h" />
     <ClInclude Include="include\Renderer.h" />
+    <ClInclude Include="include\MeshComponent.h" />
+    <ClInclude Include="include\Sphere.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\basic-frag.glsl" />
+    <None Include="Shader\basic-mesh-frag.glsl" />
+    <None Include="Shader\basic-mesh-vert.glsl" />
     <None Include="Shader\basic-vert.glsl" />
     <None Include="Shader\sprite-frag.glsl" />
     <None Include="Shader\sprite-vert.glsl" />

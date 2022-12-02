@@ -12,5 +12,5 @@ int main(int argc, char* args[])
 
 	game.ShutDown();
 
-	return 0;
+	std::cin.get();
 }

@@ -56,12 +56,12 @@ Vector2 Vector2::Transform(const Vector2& vec, const Matrix3& mat, float w /*= 1
 Vector3 Vector3::Transform(const Vector3& vec, const Matrix4& mat, float w /*= 1.0f*/)
 {
 	Vector3 retVal;
-	retVal.x = vec.x * mat.mat[0][0] + vec.y * mat.mat[1][0] +
-		vec.z * mat.mat[2][0] + w * mat.mat[3][0];
-	retVal.y = vec.x * mat.mat[0][1] + vec.y * mat.mat[1][1] +
-		vec.z * mat.mat[2][1] + w * mat.mat[3][1];
-	retVal.z = vec.x * mat.mat[0][2] + vec.y * mat.mat[1][2] +
-		vec.z * mat.mat[2][2] + w * mat.mat[3][2];
+	retVal.x = vec.x * mat.matrix[0][0] + vec.y * mat.matrix[1][0] +
+		vec.z * mat.matrix[2][0] + w * mat.matrix[3][0];
+	retVal.y = vec.x * mat.matrix[0][1] + vec.y * mat.matrix[1][1] +
+		vec.z * mat.matrix[2][1] + w * mat.matrix[3][1];
+	retVal.z = vec.x * mat.matrix[0][2] + vec.y * mat.matrix[1][2] +
+		vec.z * mat.matrix[2][2] + w * mat.matrix[3][2];
 	//ignore w since we aren't returning a new value for it...
 	return retVal;
 }
@@ -70,14 +70,14 @@ Vector3 Vector3::Transform(const Vector3& vec, const Matrix4& mat, float w /*= 1
 Vector3 Vector3::TransformWithPerspDiv(const Vector3& vec, const Matrix4& mat, float w /*= 1.0f*/)
 {
 	Vector3 retVal;
-	retVal.x = vec.x * mat.mat[0][0] + vec.y * mat.mat[1][0] +
-		vec.z * mat.mat[2][0] + w * mat.mat[3][0];
-	retVal.y = vec.x * mat.mat[0][1] + vec.y * mat.mat[1][1] +
-		vec.z * mat.mat[2][1] + w * mat.mat[3][1];
-	retVal.z = vec.x * mat.mat[0][2] + vec.y * mat.mat[1][2] +
-		vec.z * mat.mat[2][2] + w * mat.mat[3][2];
-	float transformedW = vec.x * mat.mat[0][3] + vec.y * mat.mat[1][3] +
-		vec.z * mat.mat[2][3] + w * mat.mat[3][3];
+	retVal.x = vec.x * mat.matrix[0][0] + vec.y * mat.matrix[1][0] +
+		vec.z * mat.matrix[2][0] + w * mat.matrix[3][0];
+	retVal.y = vec.x * mat.matrix[0][1] + vec.y * mat.matrix[1][1] +
+		vec.z * mat.matrix[2][1] + w * mat.matrix[3][1];
+	retVal.z = vec.x * mat.matrix[0][2] + vec.y * mat.matrix[1][2] +
+		vec.z * mat.matrix[2][2] + w * mat.matrix[3][2];
+	float transformedW = vec.x * mat.matrix[0][3] + vec.y * mat.matrix[1][3] +
+		vec.z * mat.matrix[2][3] + w * mat.matrix[3][3];
 	if (!Math::NearZero(Math::Abs(transformedW)))
 	{
 		transformedW = 1.0f / transformedW;
@@ -92,7 +92,7 @@ Vector3 Vector3::Transform(const Vector3& v, const Quaternion& q)
 	// v + 2.0*cross(q.xyz, cross(q.xyz,v) + q.w*v);
 	Vector3 qv(q.x, q.y, q.z);
 	Vector3 retVal = v;
-	retVal += 2.0f * Vector3::Cross(qv, Vector3::Cross(qv, v) + q.w * v);
+	retVal += 2.0f * qv.Cross(qv.Cross(v) + q.w * v);
 	return retVal;
 }
 
@@ -107,28 +107,28 @@ void Matrix4::Invert()
 
 	// Transpose matrix
 	// row 1 to col 1
-	src[0] = mat[0][0];
-	src[4] = mat[0][1];
-	src[8] = mat[0][2];
-	src[12] = mat[0][3];
+	src[0] = matrix[0][0];
+	src[4] = matrix[0][1];
+	src[8] = matrix[0][2];
+	src[12] = matrix[0][3];
 
 	// row 2 to col 2
-	src[1] = mat[1][0];
-	src[5] = mat[1][1];
-	src[9] = mat[1][2];
-	src[13] = mat[1][3];
+	src[1] = matrix[1][0];
+	src[5] = matrix[1][1];
+	src[9] = matrix[1][2];
+	src[13] = matrix[1][3];
 
 	// row 3 to col 3
-	src[2] = mat[2][0];
-	src[6] = mat[2][1];
-	src[10] = mat[2][2];
-	src[14] = mat[2][3];
+	src[2] = matrix[2][0];
+	src[6] = matrix[2][1];
+	src[10] = matrix[2][2];
+	src[14] = matrix[2][3];
 
 	// row 4 to col 4
-	src[3] = mat[3][0];
-	src[7] = mat[3][1];
-	src[11] = mat[3][2];
-	src[15] = mat[3][3];
+	src[3] = matrix[3][0];
+	src[7] = matrix[3][1];
+	src[11] = matrix[3][2];
+	src[15] = matrix[3][3];
 
 	// Calculate cofactors
 	tmp[0] = src[10] * src[15];
@@ -206,7 +206,7 @@ void Matrix4::Invert()
 	{
 		for (int j = 0; j < 4; j++)
 		{
-			mat[i][j] = dst[i * 4 + j];
+			matrix[i][j] = dst[i * 4 + j];
 		}
 	}
 }

@@ -4,8 +4,11 @@
 #include"include/SpriteComponent.h"
 #include"include/BackgroundSpriteComponent.h"
 #include"include/TransformComponent.h"
+#include"include/MeshComponent.h"
 #include"include/TileMapComponent.h"
 #include"include/Ship.h"
+#include"include/Sphere.h"
+#include"include/Cube.h"
 #include"include/Asteroid.h"
 #include"include/VertexArray.h"
 #include"include/Texture.h"
@@ -27,7 +30,7 @@ Game::Game() :
 
 bool Game::Initialize()
 {
-	mRenderer = new Renderer();
+	mRenderer = new Renderer(this);
 	
 	if (!mRenderer->Intialize(mWindowWidth, mWindowHeight)) {
 		SDL_Log("Failed to initialize renderer");
@@ -110,16 +113,17 @@ void Game::UpdateGame()
 	}
 	mPendingGameObjects.clear();
 	// Get dead gameobjects
-	std::vector<GameObject*> deadActors;
+	std::vector<GameObject*> deadGameObjects;
 	for (GameObject* gameObject : mGameObjects) {
 		if (gameObject->GetState() == GameObject::State::EDead) {
-			deadActors.emplace_back(gameObject);
+			deadGameObjects.emplace_back(gameObject);
 		}
 	}
 	// Delete dead gameobjects
-	for (GameObject* gameObject : deadActors) {
+	for (GameObject* gameObject : deadGameObjects) {
 		delete gameObject;
 	}
+	deadGameObjects.clear();
 }
 
 void Game::GenerateOutput()
@@ -129,11 +133,14 @@ void Game::GenerateOutput()
 
 void Game::LoadData()
 {
-	mShip = new Ship(this);
+	/*mShip = new Ship(this);
 
 	for (unsigned int i = 0; i < 20; i++) {
 		mAsteroids.emplace_back(new Asteroid(this));
-	}
+	}*/
+
+	new Sphere(this);
+	new Cube(this);
 }
 
 void Game::UnloadData()
@@ -155,6 +162,11 @@ std::vector<class Asteroid*> Game::GetAsteroids() const
 Ship* Game::GetShip() const
 {
 	return mShip;
+}
+
+GameObject* Game::GetCamera() const
+{
+	return mCamera;
 }
 
 Renderer* Game::GetRenderer() const
