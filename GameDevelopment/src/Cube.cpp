@@ -10,6 +10,7 @@ Cube::Cube(Game* game, const std::string& name) :
 {
 	GameObject::GetTransform()->SetPosition(Vector3(25.0f, 10.0f, 0.0f));
 	GameObject::GetTransform()->SetScale(10.0f);
+	GameObject::GetTransform()->SetRotation(Quaternion(Vector3::UnitX, 180.0f));
 	mMesh = new MeshComponent(this);
 	mMesh->SetMesh(game->GetRenderer()->GetMesh("Assets/Chapter6/Cube.gpmesh"));
 }
@@ -22,7 +23,7 @@ void Cube::UpdateGameObject(float deltaTime)
 {
 	GameObject::GetTransform()->SetRotation(
 		Quaternion::Concatenate(
-			Quaternion(Vector3::UnitY, deltaTime), 
+			Quaternion(Vector3::UnitZ, deltaTime), 
 			GameObject::GetTransform()->GetRotation())
 	);
 }

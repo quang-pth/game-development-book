@@ -14,6 +14,7 @@ public:
 	class Texture* GetTexture(size_t index) const;
 	std::string GetShaderName() const { return mShaderName; }
 	float GetRadius() const { return mRadius; }
+	float GetSpecularPower() const { return mSpecPower; }
 private:
 	class std::vector<class Texture*> mTextures;
 	class VertexArray* mVertexArray;

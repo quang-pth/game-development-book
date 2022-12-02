@@ -17,9 +17,12 @@ Renderer::Renderer(Game* game) :
 	mSprites(), mLoadedTextures(), mLoadedMeshes(),
 	mGlewExperimental(GL_FALSE),
 	mWindowWidth(0.0f), mWindowHeight(0.0f),
-	mWindow(), mContext(), mCamera(nullptr), mMeshShader(nullptr)
+	mWindow(), mContext(), mCamera(nullptr), mMeshShader(nullptr),
+	mAmbientLight(Vector3(0.2, 0.2, 0.2))
 {
-
+	mDirectionalLight.mDirection = Vector3(0, -.7f, -.7f);
+	mDirectionalLight.mDiffuseColor = Vector3(0.0f, 1.0f, 0.0f);
+	mDirectionalLight.mSpecularColor = Vector3(0.5f, 1.0f, 0.5f);
 }
 
 Renderer::~Renderer()
@@ -140,6 +143,19 @@ void Renderer::Draw()
 	SDL_GL_SwapWindow(mWindow);
 }
 
+void Renderer::SetLightUniforms(Shader* shader)
+{
+	Matrix4 cameraView = mViewMatrix;
+	cameraView.Invert();
+
+	shader->SetActive();
+	shader->SetVec3Uniform("uCameraPos", cameraView.GetTranslation());
+	shader->SetVec3Uniform("uAmbientLight", mAmbientLight);
+	shader->SetVec3Uniform("uDirLight.mDirection", mDirectionalLight.mDirection);
+	shader->SetVec3Uniform("uDirLight.mDiffuseColor", mDirectionalLight.mDiffuseColor);
+	shader->SetVec3Uniform("uDirLight.mSpecularColor", mDirectionalLight.mSpecularColor);
+}
+
 void Renderer::AddSprite(SpriteComponent* sprite)
 {
 	int currentSpriteDrawOrder = sprite->GetDrawOrder();
@@ -231,7 +247,7 @@ bool Renderer::LoadShaders()
 	// =========== MESH SHADER ================
 	mMeshShader = new Shader();
 
-	if (!mMeshShader->Load("Shader/basic-mesh-vert.glsl", "Shader/basic-mesh-frag.glsl")) {
+	if (!mMeshShader->Load("Shader/phong-vert.glsl", "Shader/phong-frag.glsl")) {
 		delete mMeshShader;
 		mMeshShader = nullptr;
 		return false;
@@ -250,6 +266,7 @@ bool Renderer::LoadShaders()
 		10000.0f
 	);
 	mMeshShader->SetMatrixUniform("uProjectionMatrix", mProjectionMatrix);
+	this->SetLightUniforms(mMeshShader);
 	// =========== END MESH SHADER ================
 
 	return true;

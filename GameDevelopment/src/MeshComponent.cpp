@@ -26,6 +26,7 @@ void MeshComponent::Draw(Shader* shader)
 		shader->SetActive();
 		shader->SetMatrixUniform("uWorldTransform", 
 			mOwner->GetTransform()->GetWorldTransformMatrix());
+		shader->SetFloatUniform("uSpecularPower", mMesh->GetSpecularPower());
 
 		Texture* texture = mMesh->GetTexture(mTextureIdx);
 		if (texture) {

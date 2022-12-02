@@ -210,6 +210,8 @@
     <None Include="Shader\basic-mesh-frag.glsl" />
     <None Include="Shader\basic-mesh-vert.glsl" />
     <None Include="Shader\basic-vert.glsl" />
+    <None Include="Shader\phong-frag.glsl" />
+    <None Include="Shader\phong-vert.glsl" />
     <None Include="Shader\sprite-frag.glsl" />
     <None Include="Shader\sprite-vert.glsl" />
     <None Include="Shader\transform-vert.glsl" />

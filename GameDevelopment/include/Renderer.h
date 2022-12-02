@@ -6,6 +6,12 @@
 #include <GL/glew.h>
 #include"include/CustomMath.h"
 
+struct DirectionalLight {
+	Vector3 mDirection;
+	Vector3 mDiffuseColor;
+	Vector3 mSpecularColor;
+};
+
 class Renderer
 {
 public:
@@ -15,7 +21,8 @@ public:
 	void ShutDown();
 	void Unload();
 	void Draw();
-
+	void SetLightUniforms(class Shader* shader);
+	
 	void AddSprite(class SpriteComponent* sprite);
 	void RemoveSprite(class SpriteComponent* sprite);
 	void AddMesh(class MeshComponent* mesh);
@@ -37,6 +44,11 @@ private:
 	std::vector<class MeshComponent*> mMeshes;
 	std::unordered_map<std::string, class Texture*> mLoadedTextures;
 	std::unordered_map<std::string, class Mesh*> mLoadedMeshes;
+private:
+	/*================LIGHTING===================*/
+	DirectionalLight mDirectionalLight;
+	Vector3 mAmbientLight;
+	/*================LIGHTING===================*/
 private:
 	GLboolean mGlewExperimental;
 	float mWindowWidth, mWindowHeight;
