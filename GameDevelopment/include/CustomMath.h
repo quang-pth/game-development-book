@@ -266,6 +266,10 @@ public:
 		, z(inZ)
 	{}
 
+	explicit Vector3(float scale) :
+		x(scale), y(scale), z(scale) 
+	{}
+
 	// Cast to a const float pointer
 	const float* GetAsFloatPtr() const
 	{

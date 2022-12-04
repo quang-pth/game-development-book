@@ -7,7 +7,7 @@ TransformComponent::TransformComponent(GameObject* owner, int updateOrder, std::
 	mRecomputeWorldTransform(true),
 	mPosition(Vector3::Zero),
 	mScale(1.0f), 
-	mRotation()
+	mRotation(Quaternion::Identity)
 {
 	this->ComputeWorldTransform();
 }

@@ -36,8 +36,8 @@ void TileMapComponent::Draw(SDL_Renderer* renderer)
 			srcrect.y = static_cast<int>(mTileHeight * (tile / mTilePerRow));
 
 			SDL_Rect destrect;
-			destrect.w = static_cast<int>(mTileWidth * mOwner->GetTransform()->GetScale());
-			destrect.h = static_cast<int>(mTileHeight * mOwner->GetTransform()->GetScale());
+			destrect.w = static_cast<int>(mTileWidth * mOwner->GetTransform()->GetScale().x);
+			destrect.h = static_cast<int>(mTileHeight * mOwner->GetTransform()->GetScale().y);
 			destrect.x = static_cast<int>(mOwner->GetTransform()->GetPosition().x + destrect.w * col);
 			destrect.y = static_cast<int>(mOwner->GetTransform()->GetPosition().y + destrect.h * row);
 

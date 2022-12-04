@@ -22,7 +22,8 @@ public:
 	void Unload();
 	void Draw();
 	void SetLightUniforms(class Shader* shader);
-	
+	bool BeginScene(class Camera* camera);
+
 	void AddSprite(class SpriteComponent* sprite);
 	void RemoveSprite(class SpriteComponent* sprite);
 	void AddMesh(class MeshComponent* mesh);
@@ -34,9 +35,9 @@ private:
 	void InitSpriteVertices();
 private:
 	class Game* mGame;
+	class Camera* mCamera;
 	class Shader* mSpriteShader;
 	class Shader* mMeshShader;
-	class GameObject* mCamera;
 	Matrix4 mViewMatrix;
 	Matrix4 mProjectionMatrix;
 	class VertexArray* mSpriteVertices;

@@ -1,15 +1,18 @@
 #include"include/Game.h"
 #include"include/GameObject.h"
+
 #include"include/CooldownManager.h"
 #include"include/SpriteComponent.h"
 #include"include/BackgroundSpriteComponent.h"
 #include"include/TransformComponent.h"
 #include"include/MeshComponent.h"
 #include"include/TileMapComponent.h"
-#include"include/Ship.h"
+
+#include"include/Level.h"
+#include"include/Camera.h"
 #include"include/Sphere.h"
 #include"include/Cube.h"
-#include"include/Asteroid.h"
+#include"include/Icon.h"
 #include"include/VertexArray.h"
 #include"include/Texture.h"
 #include"include/Mesh.h"
@@ -38,8 +41,12 @@ bool Game::Initialize()
 		mRenderer = nullptr;
 		return false;
 	};
-
+	
 	this->LoadData();
+
+	if (!mRenderer->BeginScene(mCamera)) {
+		return false;
+	}
 
 	mTicksCount = SDL_GetTicks();
 
@@ -133,14 +140,21 @@ void Game::GenerateOutput()
 
 void Game::LoadData()
 {
-	/*mShip = new Ship(this);
+	mCamera = new Camera(this);
 
-	for (unsigned int i = 0; i < 20; i++) {
-		mAsteroids.emplace_back(new Asteroid(this));
-	}*/
-
+	new Level(this);
 	new Sphere(this);
 	new Cube(this);
+	
+	Icon* healthbar = new Icon(this);
+	healthbar->SetTexture(mRenderer->GetTexture("Assets/Chapter6/HealthBar.png"));
+	healthbar->GetTransform()->SetScale(8.0f, 1.0f, 1.0f);
+	healthbar->GetTransform()->SetPosition(Vector3(-mWindowWidth / 2.0f + 150.0f, -mWindowHeight / 2.0f + 100.0f, 0.0f));
+	
+	Icon* radar = new Icon(this);
+	radar->SetTexture(mRenderer->GetTexture("Assets/Chapter6/Radar.png"));
+	radar->GetTransform()->SetScale(5.0f);
+	radar->GetTransform()->SetPosition(Vector3(mWindowWidth / 2.0f - 100.0f, -mWindowHeight / 2.0f + 100.0f, 0.0f));
 }
 
 void Game::UnloadData()
@@ -154,17 +168,7 @@ void Game::UnloadData()
 		mRenderer->Unload();
 }
 
-std::vector<class Asteroid*> Game::GetAsteroids() const
-{
-	return mAsteroids;
-}
-
-Ship* Game::GetShip() const
-{
-	return mShip;
-}
-
-GameObject* Game::GetCamera() const
+Camera* Game::GetCamera() const
 {
 	return mCamera;
 }
@@ -172,11 +176,6 @@ GameObject* Game::GetCamera() const
 Renderer* Game::GetRenderer() const
 {
 	return mRenderer;
-}
-
-CooldownManager* Game::GetCooldownManager() const
-{
-	return mCooldownManager;
 }
 
 int Game::GetWindowWidth() const

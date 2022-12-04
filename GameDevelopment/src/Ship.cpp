@@ -63,7 +63,6 @@ void Ship::ProcessGameObjectInput(const uint8_t* keyState)
 void Ship::StartCooldown()
 {
 	GameObject::SetState(GameObject::State::EDeactive);
-	GameObject::GetGame()->GetCooldownManager()->Observe(this);
 }
 
 void Ship::Cooldown(float deltaTime)
@@ -81,7 +80,6 @@ void Ship::Respawn()
 	GameObject::GetTransform()->SetPosition(Vector3::Zero);
 	// Reset game object states
 	GameObject::GetTransform()->SetRotation(Quaternion::Identity);
-	GameObject::GetGame()->GetCooldownManager()->Release(this);
 	GameObject::SetState(GameObject::State::EActive);
 	mInputComponent->ResetForce();
 }
@@ -121,7 +119,7 @@ void Ship::ConstraintInScreenBounds()
 
 void Ship::CheckCollsision()
 {
-	for (Asteroid* asteroid : GameObject::GetGame()->GetAsteroids()) {
+	/*for (Asteroid* asteroid : GameObject::GetGame()->GetAsteroids()) {
 		if (asteroid->GetState() == GameObject::State::EActive) {
 			bool isCollided = CircleComponent::IsIntersect(this->mCircleComponent, 
 				asteroid->GetCircleComponent());
@@ -129,5 +127,5 @@ void Ship::CheckCollsision()
 				this->StartCooldown();
 			}
 		}
-	}
+	}*/
 }

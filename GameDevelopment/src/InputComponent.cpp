@@ -33,15 +33,14 @@ void InputComponent::ProcessInput(const uint8_t* keyState)
 	if (keyState[mBackwardKey]) {
 		forwardSpeed -= mMaxForwardSpeed;
 	}
-	Vector3 force = mOwner->GetForward() * forwardSpeed;
-	MoveComponent::AddForce(force, MoveComponent::ForceMode::Impulse);
+	MoveComponent::SetForwardSpeed(forwardSpeed);
 	// Set rotation
 	float angularSpeed = 0.0f;
 	if (keyState[mClockwiseKey]) {
-		angularSpeed += mMaxAngularSpeed;
+		angularSpeed -= mMaxAngularSpeed;
 	}
 	if (keyState[mCounterClockwiseKey]) {
-		angularSpeed -= mMaxAngularSpeed;
+		angularSpeed += mMaxAngularSpeed;
 	}
 	MoveComponent::SetAngularSpeed(angularSpeed);
 }

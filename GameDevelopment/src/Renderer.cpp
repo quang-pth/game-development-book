@@ -1,13 +1,16 @@
 #include "include/Renderer.h"
 #include "include/Game.h"
-#include "include/GameObject.h"
+
 #include "include/TransformComponent.h"
 #include "include/SpriteComponent.h"
 #include "include/MeshComponent.h"
+
+#include "include/Camera.h"
 #include "include/Shader.h"
 #include "include/Texture.h"
 #include "include/VertexArray.h"
 #include "include/Mesh.h"
+
 #include <SDL2/SDL_image.h>
 
 Renderer::Renderer(Game* game) :
@@ -72,11 +75,6 @@ bool Renderer::Intialize(float screenWidth, float screenHeight)
 
 	IMG_Init(IMG_INIT_PNG);
 
-	this->InitSpriteVertices();
-	if (!this->LoadShaders()) {
-		return false;
-	}
-
 	return true;
 }
 
@@ -119,7 +117,7 @@ void Renderer::Draw()
 	// ============= MESH SHADER  =================
 	glEnable(GL_DEPTH_TEST);
 	mMeshShader->SetActive();
-	mMeshShader->SetMatrixUniform("uViewMatrix", mViewMatrix);
+	mMeshShader->SetMatrixUniform("uViewMatrix", mGame->GetCamera()->GetViewMatrix());
 	mMeshShader->SetMatrixUniform("uProjectionMatrix", mProjectionMatrix);
 	for (MeshComponent* mesh : mMeshes) {
 		mesh->Draw(mMeshShader);
@@ -154,6 +152,18 @@ void Renderer::SetLightUniforms(Shader* shader)
 	shader->SetVec3Uniform("uDirLight.mDirection", mDirectionalLight.mDirection);
 	shader->SetVec3Uniform("uDirLight.mDiffuseColor", mDirectionalLight.mDiffuseColor);
 	shader->SetVec3Uniform("uDirLight.mSpecularColor", mDirectionalLight.mSpecularColor);
+}
+
+bool Renderer::BeginScene(Camera* camera)
+{
+	mCamera = camera;
+
+	this->InitSpriteVertices();
+	if (!this->LoadShaders()) {
+		return false;
+	}
+
+	return true;
 }
 
 void Renderer::AddSprite(SpriteComponent* sprite)
@@ -255,14 +265,13 @@ bool Renderer::LoadShaders()
 
 	mMeshShader->SetActive();
 	// Construct view matrix
-	mViewMatrix = Matrix4::CreateLookAt(Vector3::Zero, Vector3::UnitX, Vector3::UnitZ);
-	mMeshShader->SetMatrixUniform("uViewMatrix", mViewMatrix);
+	mMeshShader->SetMatrixUniform("uViewMatrix", mCamera->GetViewMatrix());
 	// Construct projection matrix
 	mProjectionMatrix = Matrix4::CreatePerspectiveFOV(
 		Math::ToRadians(75.0f), 
 		mWindowWidth,
 		mWindowHeight, 
-		25.0f, 
+		25.0f,
 		10000.0f
 	);
 	mMeshShader->SetMatrixUniform("uProjectionMatrix", mProjectionMatrix);

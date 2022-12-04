@@ -7,7 +7,7 @@
 MoveComponent::MoveComponent(GameObject* owner, int updateOrder, std::string name) : 
 	Component(owner, updateOrder, name), 
 	mForwardSpeed(0.0f), mAngularSpeed(0.0f),
-	mMass(1.0f), mSumOfForces(Vector3::Zero), mForceVelocity(Vector3::Zero), 
+	mMass(1.0f), mSumOfForces(Vector3::Zero), mVelocity(Vector3::Zero), 
 	mForceMode(ForceMode::Impulse)
 {
 }
@@ -16,16 +16,9 @@ void MoveComponent::Update(float deltaTime)
 {
 	TransformComponent* transformComponent = mOwner->GetTransform();
 
-	// Velocity of forces that applied on the gameobject
-	Vector3 acceleration = mSumOfForces * (1 / mMass);
-	mForceVelocity += acceleration * deltaTime;
-	if (mForceMode == ForceMode::Impulse) {
-		mSumOfForces = Vector3::Zero;
-	}
-	// Move the gameobject by forces
 	Vector3 position = transformComponent->GetPosition();
 
-	position += mForceVelocity * deltaTime;
+	position += mOwner->GetForward() * mForwardSpeed * deltaTime;
 	transformComponent->SetPosition(position);
 
 	if (!Math::NearZero(mAngularSpeed)) {
@@ -54,7 +47,7 @@ float MoveComponent::GetAngularSpeed() const
 
 void MoveComponent::SetForwardSpeed(float speed)
 {
-	mSumOfForces = mOwner->GetForward() * mForwardSpeed;
+	mForwardSpeed = speed;
 }
 
 void MoveComponent::SetAngularSpeed(float speed)
@@ -70,6 +63,6 @@ void MoveComponent::AddForce(const Vector3& force, ForceMode forceMode)
 
 void MoveComponent::ResetForce()
 {
-	mForceVelocity = Vector3::Zero;
+	mVelocity = Vector3::Zero;
 	mSumOfForces = Vector3::Zero;
 }

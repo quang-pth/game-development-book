@@ -145,6 +145,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\Decoration.cpp" />
+    <ClCompile Include="src\Level.cpp" />
+    <ClCompile Include="src\Icon.cpp" />
     <ClCompile Include="src\Cube.cpp" />
     <ClCompile Include="src\Sphere.cpp" />
     <ClCompile Include="src\MeshComponent.cpp" />
@@ -176,13 +180,16 @@
     <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Camera.h" />
+    <ClInclude Include="include\Decoration.h" />
+    <ClInclude Include="include\Icon.h" />
     <ClInclude Include="include\Cube.h" />
     <ClInclude Include="include\ICooldownable.h" />
     <ClInclude Include="include\CooldownManager.h" />
     <ClInclude Include="include\CircleComponent.h" />
     <ClInclude Include="include\Asteroid.h" />
     <ClInclude Include="include\Animation.h" />
-    <ClInclude Include="EsstenialMath.h" />
+    <ClInclude Include="src\EsstenialMath.h" />
     <ClInclude Include="include\BackgroundSpriteComponent.h" />
     <ClInclude Include="include\AnimatorComponent.h" />
     <ClInclude Include="include\Component.h" />
@@ -204,6 +211,7 @@
     <ClInclude Include="include\Renderer.h" />
     <ClInclude Include="include\MeshComponent.h" />
     <ClInclude Include="include\Sphere.h" />
+    <ClInclude Include="include\Level.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\basic-frag.glsl" />

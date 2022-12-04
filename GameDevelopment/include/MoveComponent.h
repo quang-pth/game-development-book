@@ -27,7 +27,7 @@ protected:
 	float mAngularSpeed; // Rotation angle measured in radians/second
 	// Newtonian Physics
 	float mMass;
-	Vector3 mForceVelocity;
+	Vector3 mVelocity;
 	Vector3 mSumOfForces;
 	ForceMode mForceMode;
 };
