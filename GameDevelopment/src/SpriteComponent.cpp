@@ -34,7 +34,7 @@ void SpriteComponent::Draw(Shader* shader)
 		1.0f);
 	Matrix4 worldTransform = scaleMatrix * mOwner->GetTransform()->GetWorldTransformMatrix();
 
-	shader->SetMatrixUniform("uWorldTransform", worldTransform);
+	shader->SetMatrix4Uniform("uWorldTransform", worldTransform);
 	mTexture->SetActive();
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 }

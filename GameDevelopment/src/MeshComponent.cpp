@@ -12,7 +12,6 @@ MeshComponent::MeshComponent(GameObject* owner) :
 	Component(owner),
 	mMesh(nullptr), mTextureIdx(0)
 {
-	mOwner->GetGame()->GetRenderer()->AddMesh(this);
 }
 
 MeshComponent::~MeshComponent()
@@ -24,7 +23,7 @@ void MeshComponent::Draw(Shader* shader)
 {
 	if (mMesh) {
 		shader->SetActive();
-		shader->SetMatrixUniform("uWorldTransform", 
+		shader->SetMatrix4Uniform("uWorldTransform", 
 			mOwner->GetTransform()->GetWorldTransformMatrix());
 		shader->SetFloatUniform("uSpecularPower", mMesh->GetSpecularPower());
 
@@ -41,6 +40,14 @@ void MeshComponent::Draw(Shader* shader)
 void MeshComponent::SetMesh(Mesh* mesh)
 {
 	mMesh = mesh;
+	if (mMesh != nullptr) {
+		mOwner->GetGame()->GetRenderer()->AddMesh(this);
+	}
+}
+
+Mesh* MeshComponent::GetMesh() const
+{
+	return mMesh;
 }
 
 void MeshComponent::SetTextureIndex(size_t idx)

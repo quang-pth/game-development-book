@@ -12,6 +12,7 @@ public:
 	void Unload();
 	class VertexArray* GetVetexArray() const { return mVertexArray; }
 	class Texture* GetTexture(size_t index) const;
+	class Shader* GetShader() const { return mShader; }
 	std::string GetShaderName() const { return mShaderName; }
 	float GetRadius() const { return mRadius; }
 	float GetSpecularPower() const { return mSpecPower; }
@@ -19,6 +20,7 @@ private:
 	class std::vector<class Texture*> mTextures;
 	class VertexArray* mVertexArray;
 	std::string mShaderName;
+	class Shader* mShader;
 	float mRadius, mSpecPower;
 };
 

@@ -114,6 +114,12 @@
     <ClCompile Include="src\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\BasicShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PhongShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Game.h">
@@ -210,6 +216,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BasicShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PhongShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

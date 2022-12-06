@@ -1,5 +1,6 @@
 #include "Shader.h"
 
+#include"include/Renderer.h"
 #include<SDL2/SDL.h>
 #include<fstream>
 #include<sstream>
@@ -40,11 +41,38 @@ void Shader::SetActive()
 	glUseProgram(mShaderProgram);
 }
 
-void Shader::SetMatrixUniform(const char* name, const Matrix4& matrix)
+void Shader::SetUniforms(Renderer* renderer)
+{
+}
+
+void Shader::SetBoolUniform(const char* name, bool value)
 {
 	GLuint location = glGetUniformLocation(mShaderProgram, name);
-	glUniformMatrix4fv(location, 1, GL_TRUE /*Transpose if use row vectors*/,
-		matrix.GetAsFloatPtr());
+	glUniform1i(location, static_cast<int>(value));
+}
+
+void Shader::SetFloatUniform(const char* name, float value)
+{
+	GLuint location = glGetUniformLocation(mShaderProgram, name);
+	glUniform1f(location, value);
+}
+
+void Shader::SetIntUniform(const char* name, int value)
+{
+	GLuint location = glGetUniformLocation(mShaderProgram, name);
+	glUniform1i(location, value);
+}
+
+void Shader::SetVec2Uniform(const char* name, const Vector2& vec2)
+{
+	GLuint location = glGetUniformLocation(mShaderProgram, name);
+	glUniform2fv(location, 1, vec2.GetAsFloatPtr());
+}
+
+void Shader::SetVec2Uniform(const char* name, float x, float y)
+{
+	GLuint location = glGetUniformLocation(mShaderProgram, name);
+	glUniform2f(location, x, y);
 }
 
 void Shader::SetVec3Uniform(const char* name, const Vector3& vec3)
@@ -53,10 +81,29 @@ void Shader::SetVec3Uniform(const char* name, const Vector3& vec3)
 	glUniform3fv(location, 1, vec3.GetAsFloatPtr());
 }
 
-void Shader::SetFloatUniform(const char* name, float value)
+void Shader::SetVec3Uniform(const char* name, float x, float y, float z)
 {
 	GLuint location = glGetUniformLocation(mShaderProgram, name);
-	glUniform1f(location, value);
+	glUniform3f(location, x, y, z);
+}
+
+void Shader::SetVec4Uniform(const char* name, float x, float y, float z, float w)
+{
+	GLuint location = glGetUniformLocation(mShaderProgram, name);
+	glUniform4f(location, x, y, z, w);
+}
+
+void Shader::SetMatrix4Uniform(const char* name, const Matrix4& matrix)
+{
+	GLuint location = glGetUniformLocation(mShaderProgram, name);
+	glUniformMatrix4fv(location, 1, GL_TRUE /*Transpose if use row vectors*/,
+		matrix.GetAsFloatPtr());
+}
+
+void Shader::SetMatrix3Uniform(const char* name, const Matrix3& matrix)
+{
+	GLuint location = glGetUniformLocation(mShaderProgram, name);
+	glUniformMatrix3fv(location, 1, GL_TRUE, matrix.GetAsFloatPtr());
 }
 
 bool Shader::CompileShader(const std::string& shaderFilePath, GLenum shaderType, GLuint& outShader)

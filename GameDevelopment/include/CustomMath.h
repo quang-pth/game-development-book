@@ -190,6 +190,10 @@ public:
 		return *this;
 	}
 
+	const float* GetAsFloatPtr() const {
+		return reinterpret_cast<const float*>(&x);
+	}
+
 	// Length squared of vector
 	float LengthSquared() const
 	{

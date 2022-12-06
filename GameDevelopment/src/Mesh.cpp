@@ -1,8 +1,12 @@
 #include "include/Mesh.h"
+
 #include "include/Game.h"
 #include "include/Renderer.h"
 #include "include/VertexArray.h"
 #include "include/CustomMath.h"
+#include "include/Shader.h"
+#include "include/BasicShader.h"
+#include "include/PhongShader.h"
 
 #include<rapidjson/document.h>
 #include<SDL2/SDL.h>
@@ -12,6 +16,7 @@
 Mesh::Mesh() :
 	mTextures(), 
 	mVertexArray(nullptr),
+	mShader(new Shader()),
 	mShaderName("BasicShader"), 
 	mRadius(0.0f), 
 	mSpecPower(100.0f)
@@ -54,6 +59,24 @@ bool Mesh::Load(const std::string& fileName, Renderer* renderer)
 	}
 
 	mShaderName = doc["shader"].GetString();
+	std::string vertFilePath, fragFilePath;
+	vertFilePath = "Shader/basic-mesh-vert.glsl";
+	fragFilePath = "Shader/basic-mesh-frag.glsl";
+	if (mShaderName == "BasicShader") {
+		mShader = new BasicShader();
+		vertFilePath = "Shader/basic-mesh-vert.glsl";
+		fragFilePath = "Shader/basic-mesh-frag.glsl";
+	}
+	else if (mShaderName == "PhongShader") {
+		mShader = new PhongShader();
+		vertFilePath = "Shader/phong-vert.glsl";
+		fragFilePath = "Shader/phong-frag.glsl";
+	}
+	// Load Shader
+	if (!mShader->Load(vertFilePath, fragFilePath)) {
+		SDL_Log("Cannot load %s with file path: %s %s", mShaderName.c_str(), vertFilePath.c_str(), fragFilePath.c_str());
+		return false;
+	}
 
 	// Skip the vertex format/shader for now
 	// (This is changed in a later chapter's code)

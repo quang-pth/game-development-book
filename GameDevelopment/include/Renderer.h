@@ -19,17 +19,20 @@ public:
 	~Renderer();
 	bool Intialize(float screenWidth, float screenHeight);
 	void ShutDown();
+	bool BeginScene(class Camera* camera);
 	void Unload();
 	void Draw();
 	void SetLightUniforms(class Shader* shader);
-	bool BeginScene(class Camera* camera);
 
+	void AddMesh(class MeshComponent* meshComponent);
 	void AddSprite(class SpriteComponent* sprite);
 	void RemoveSprite(class SpriteComponent* sprite);
-	void AddMesh(class MeshComponent* mesh);
 	void RemoveMesh(class MeshComponent* mesh);
 	class Texture* GetTexture(const std::string& fileName);
 	class Mesh* GetMesh(const std::string& fileName);
+	class Game* GetGame() const;
+	const Matrix4& GetViewMatrix() const;
+	const Matrix4& GetProjectionMatrix() const;
 private:
 	bool LoadShaders();
 	void InitSpriteVertices();
@@ -37,12 +40,12 @@ private:
 	class Game* mGame;
 	class Camera* mCamera;
 	class Shader* mSpriteShader;
-	class Shader* mMeshShader;
+	std::unordered_map<std::string, class Shader*> mShaderMap;
+	std::unordered_map<std::string, std::vector<class MeshComponent*>> mMeshMap;
 	Matrix4 mViewMatrix;
 	Matrix4 mProjectionMatrix;
 	class VertexArray* mSpriteVertices;
 	std::vector<class SpriteComponent*> mSprites;
-	std::vector<class MeshComponent*> mMeshes;
 	std::unordered_map<std::string, class Texture*> mLoadedTextures;
 	std::unordered_map<std::string, class Mesh*> mLoadedMeshes;
 private:

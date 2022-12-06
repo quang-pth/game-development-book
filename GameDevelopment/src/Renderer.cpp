@@ -16,16 +16,17 @@
 Renderer::Renderer(Game* game) :
 	mGame(game),
 	mSpriteShader(nullptr),
+	mShaderMap(), mMeshMap(),
 	mSpriteVertices(nullptr),
 	mSprites(), mLoadedTextures(), mLoadedMeshes(),
 	mGlewExperimental(GL_FALSE),
 	mWindowWidth(0.0f), mWindowHeight(0.0f),
-	mWindow(), mContext(), mCamera(nullptr), mMeshShader(nullptr),
-	mAmbientLight(Vector3(0.2, 0.2, 0.2))
+	mWindow(), mContext(), mCamera(nullptr),
+	mAmbientLight(Vector3(.3f, .3f, .3f))
 {
 	mDirectionalLight.mDirection = Vector3(0, -.7f, -.7f);
-	mDirectionalLight.mDiffuseColor = Vector3(0.0f, 1.0f, 0.0f);
-	mDirectionalLight.mSpecularColor = Vector3(0.5f, 1.0f, 0.5f);
+	mDirectionalLight.mDiffuseColor = Vector3(1.0f, 1.0f, 1.0f);
+	mDirectionalLight.mSpecularColor = Vector3(0.70f, 0.65f, .6f);
 }
 
 Renderer::~Renderer()
@@ -36,7 +37,15 @@ bool Renderer::Intialize(float screenWidth, float screenHeight)
 {
 	mWindowWidth = screenWidth;
 	mWindowHeight = screenHeight;
-	
+	// Construct Projection matrix
+	mProjectionMatrix = Matrix4::CreatePerspectiveFOV(
+		Math::ToRadians(75.0f),
+		mWindowWidth,
+		mWindowHeight,
+		25.0f,
+		10000.0f
+	);
+
 	// Init SDL
 	int sdlResult = SDL_Init(SDL_INIT_VIDEO);
 	if (sdlResult != 0) {
@@ -84,9 +93,6 @@ void Renderer::ShutDown()
 
 	mSpriteShader->Unload();
 	delete mSpriteShader;
-	
-	mMeshShader->Unload();
-	delete mMeshShader;
 
 	SDL_GL_DeleteContext(mContext);
 	SDL_DestroyWindow(mWindow);
@@ -102,11 +108,18 @@ void Renderer::Unload()
 		delete iter.second;
 	}
 	mLoadedTextures.clear();
+	
 	for (std::pair<const std::string&, Mesh*> iter : mLoadedMeshes) {
 		iter.second->Unload();
 		delete iter.second;
 	}
 	mLoadedMeshes.clear();
+
+	for (std::pair<const std::string&, Shader*> iter : mShaderMap) {
+		iter.second->Unload();
+		delete iter.second;
+	}
+	mShaderMap.clear();
 }
 
 void Renderer::Draw()
@@ -116,11 +129,14 @@ void Renderer::Draw()
 
 	// ============= MESH SHADER  =================
 	glEnable(GL_DEPTH_TEST);
-	mMeshShader->SetActive();
-	mMeshShader->SetMatrixUniform("uViewMatrix", mGame->GetCamera()->GetViewMatrix());
-	mMeshShader->SetMatrixUniform("uProjectionMatrix", mProjectionMatrix);
-	for (MeshComponent* mesh : mMeshes) {
-		mesh->Draw(mMeshShader);
+	for (std::pair<const std::string&, Shader*> shaderMapIter : mShaderMap) {
+		shaderMapIter.second->SetActive();
+		shaderMapIter.second->SetUniforms(this);
+		// Render meshes that use the current-bounded shader
+		for (MeshComponent*  mesh : mMeshMap[shaderMapIter.first]) 
+		{
+			mesh->Draw(shaderMapIter.second);
+		}
 	}
 	glDisable(GL_DEPTH_TEST);
 	// ============= END MESH SHADER  =================
@@ -143,7 +159,7 @@ void Renderer::Draw()
 
 void Renderer::SetLightUniforms(Shader* shader)
 {
-	Matrix4 cameraView = mViewMatrix;
+	Matrix4 cameraView = mCamera->GetViewMatrix();
 	cameraView.Invert();
 
 	shader->SetActive();
@@ -166,6 +182,22 @@ bool Renderer::BeginScene(Camera* camera)
 	return true;
 }
 
+void Renderer::AddMesh(MeshComponent* mesh)
+{
+	// ============== INSERT SHADER TO SHADER MAP
+	const std::string& name = mesh->GetMesh()->GetShaderName();
+	auto shaderMapIter = mShaderMap.find(name);
+	if (shaderMapIter == mShaderMap.end()) {
+		mShaderMap.insert({ name, mesh->GetMesh()->GetShader() });
+	}
+	// ============== INSERT MESH TO MESH MAP
+	auto meshMapIter = mMeshMap.find(name);
+	if (meshMapIter == mMeshMap.end()) {
+		mMeshMap.insert({ name, std::vector<MeshComponent*>() });
+	}
+	mMeshMap.find(name)->second.emplace_back(mesh);
+}
+
 void Renderer::AddSprite(SpriteComponent* sprite)
 {
 	int currentSpriteDrawOrder = sprite->GetDrawOrder();
@@ -186,19 +218,12 @@ void Renderer::RemoveSprite(SpriteComponent* sprite)
 	}
 }
 
-void Renderer::AddMesh(MeshComponent* mesh)
-{
-	auto iter = std::find(mMeshes.begin(), mMeshes.end(), mesh);
-	if (iter == mMeshes.end()) {
-		mMeshes.emplace_back(mesh);
-	}
-}
-
 void Renderer::RemoveMesh(MeshComponent* mesh)
 {
-	auto iter = std::find(mMeshes.begin(), mMeshes.end(), mesh);
-	if (iter != mMeshes.end()) {
-		mMeshes.erase(iter);
+	std::vector<MeshComponent*> meshComponents = mMeshMap.find(mesh->GetMesh()->GetShaderName())->second;
+	auto iter = std::find(meshComponents.begin(), meshComponents.end(), mesh);
+	if (iter != meshComponents.end()) {
+		meshComponents.erase(iter);
 	}
 }
 
@@ -235,6 +260,21 @@ Mesh* Renderer::GetMesh(const std::string& fileName)
 	return mesh;
 }
 
+Game* Renderer::GetGame() const
+{
+	return mGame;
+}
+
+const Matrix4& Renderer::GetViewMatrix() const
+{
+	return mViewMatrix;
+}
+
+const Matrix4& Renderer::GetProjectionMatrix() const
+{
+	return mProjectionMatrix;
+}
+
 bool Renderer::LoadShaders()
 {
 	// =========== SPRITE SHADER ================
@@ -251,33 +291,8 @@ bool Renderer::LoadShaders()
 		static_cast<float>(mWindowWidth),
 		static_cast<float>(mWindowHeight)
 	);
-	mSpriteShader->SetMatrixUniform("uViewProj", viewProj);
+	mSpriteShader->SetMatrix4Uniform("uViewProj", viewProj);
 	// =========== END SPRITE SHADER ================
-
-	// =========== MESH SHADER ================
-	mMeshShader = new Shader();
-
-	if (!mMeshShader->Load("Shader/phong-vert.glsl", "Shader/phong-frag.glsl")) {
-		delete mMeshShader;
-		mMeshShader = nullptr;
-		return false;
-	}
-
-	mMeshShader->SetActive();
-	// Construct view matrix
-	mMeshShader->SetMatrixUniform("uViewMatrix", mCamera->GetViewMatrix());
-	// Construct projection matrix
-	mProjectionMatrix = Matrix4::CreatePerspectiveFOV(
-		Math::ToRadians(75.0f), 
-		mWindowWidth,
-		mWindowHeight, 
-		25.0f,
-		10000.0f
-	);
-	mMeshShader->SetMatrixUniform("uProjectionMatrix", mProjectionMatrix);
-	this->SetLightUniforms(mMeshShader);
-	// =========== END MESH SHADER ================
-
 	return true;
 }
 
