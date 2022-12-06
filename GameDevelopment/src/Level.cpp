@@ -22,10 +22,10 @@ void Level::Init()
 {
 	Vector3 positions[] = {
 		Vector3(0.0f, 0.0f, -100.0f), // Ground
-		Vector3(220.0f, 0.0f, 0.0f), // Forward Wall
-		Vector3(-220.0f, 0.0f, 0.0f), // Back Wall
-		Vector3(0.0f, -220.0f, 0.0f), // Left Wall
-		Vector3(0.0f, 220.0f, 0.0f), // Right Wall
+		Vector3(250.0f, 0.0f, 50.0f), // Forward Wall
+		Vector3(-250.0f, 0.0f, 50.0f), // Back Wall
+		Vector3(0.0f, -250.0f, 50.0f), // Left Wall
+		Vector3(0.0f, 250.0f, 50.0f), // Right Wall
 	};
 	Vector3 scales[] = {
 		Vector3(5.0f), 

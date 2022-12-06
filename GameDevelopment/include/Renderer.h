@@ -14,10 +14,13 @@ struct DirectionalLight {
 
 struct PointLight {
 	Vector3 mPosition;
+	Vector3 mAmbient;
 	Vector3 mDiffuseColor;
 	Vector3 mSpecularColor;
 	float mSpecularPower;
-	float mRadius;
+	float mConstant;
+	float mLinear;
+	float mQuadratic;
 };
 
 class Renderer

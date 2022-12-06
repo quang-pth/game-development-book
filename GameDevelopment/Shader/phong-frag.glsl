@@ -16,10 +16,13 @@ struct DirectionalLight {
 
 struct PointLight {
 	vec3 mPosition;
+	vec3 mAmbient;
 	vec3 mDiffuseColor;
 	vec3 mSpecularColor;
 	float mSpecularPower;
-	float mRadius;
+	float mConstant;
+	float mLinear;
+	float mQuadratic;
 };
 
 #define NR_POINT_LIGHTS 4
@@ -49,16 +52,17 @@ void main() {
 	// ========== POINT LIGHT =====================
 	for (int i = 0; i < NR_POINT_LIGHTS; i++) {
 		PointLight pointLight = uPointLights[i];
-		bool isInRanged = distance(fragWorldPos, pointLight.mPosition) <= pointLight.mRadius;
-		if (isInRanged) {
-			vec3 fragToPointLightDir = normalize(pointLight.mPosition - fragWorldPos);
-			vec3 diffuseColor = pointLight.mDiffuseColor * fragToPointLightDir;
+		vec3 fragToPointLightDir = normalize(pointLight.mPosition - fragWorldPos);
+		vec3 diffuseColor = pointLight.mDiffuseColor * max(0, dot(fragToPointLightDir, normal));
 			
-			vec3 reflectDir = normalize(reflect(-fragToPointLightDir, normal));
-			vec3 specularColor = pointLight.mSpecularColor * pow(max(0, dot(reflectDir, fragToCamera)), pointLight.mSpecularPower);
+		vec3 reflectDir = normalize(reflect(-fragToPointLightDir, normal));
+		vec3 specularColor = pointLight.mSpecularColor * pow(max(0, dot(reflectDir, fragToCamera)), pointLight.mSpecularPower);
 			
-			Phong += diffuseColor + specularColor;
-		}	
+		float fragToPointLightDistance = length(pointLight.mPosition - fragWorldPos);
+		float attenuation = 1.0 / 
+		(pointLight.mConstant + pointLight.mLinear * fragToPointLightDistance + pointLight.mQuadratic * fragToPointLightDistance * fragToPointLightDistance);
+
+		Phong += (pointLight.mAmbient + diffuseColor + specularColor) * attenuation;
 	}
 	// ========== POINT LIGHT =====================
 
