@@ -1,7 +1,7 @@
 {
 	"version":1,
 	"vertexformat":"PosNormTex",
-	"shader":"BasicShader",
+	"shader":"PhongShader",
 	"textures":[
 		"Assets/Chapter6/Plane.png"
 	],

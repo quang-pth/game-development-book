@@ -15,16 +15,16 @@ public:
 public:
 	// ============== UNIFORMS ======================
 	virtual void SetUniforms(class Renderer* renderer);
-	void SetBoolUniform(const char* name, bool value);
-	void SetIntUniform(const char* name, int value);
-	void SetFloatUniform(const char* name, float value);
-	void SetVec2Uniform(const char* name, const Vector2& vec2);
-	void SetVec2Uniform(const char* name, float x, float y);
-	void SetVec3Uniform(const char* name, const Vector3& vec3);
-	void SetVec3Uniform(const char* name, float x, float y, float z);
-	void SetVec4Uniform(const char* name, float x, float y, float z, float w);
-	void SetMatrix4Uniform(const char* name, const Matrix4& matrix);
-	void SetMatrix3Uniform(const char* name, const Matrix3& matrix);
+	void SetBoolUniform(const std::string& name, bool value);
+	void SetIntUniform(const std::string& name, int value);
+	void SetFloatUniform(const std::string& name, float value);
+	void SetVec2Uniform(const std::string& name, const Vector2& vec2);
+	void SetVec2Uniform(const std::string& name, float x, float y);
+	void SetVec3Uniform(const std::string& name, const Vector3& vec3);
+	void SetVec3Uniform(const std::string& name, float x, float y, float z);
+	void SetVec4Uniform(const std::string& name, float x, float y, float z, float w);
+	void SetMatrix4Uniform(const std::string& name, const Matrix4& matrix);
+	void SetMatrix3Uniform(const std::string& name, const Matrix3& matrix);
 	// ============== UNIFORMS ======================
 protected:
 	GLuint mVertexShader;

@@ -45,64 +45,64 @@ void Shader::SetUniforms(Renderer* renderer)
 {
 }
 
-void Shader::SetBoolUniform(const char* name, bool value)
+void Shader::SetBoolUniform(const std::string& name, bool value)
 {
-	GLuint location = glGetUniformLocation(mShaderProgram, name);
+	GLuint location = glGetUniformLocation(mShaderProgram, name.c_str());
 	glUniform1i(location, static_cast<int>(value));
 }
 
-void Shader::SetFloatUniform(const char* name, float value)
+void Shader::SetFloatUniform(const std::string& name, float value)
 {
-	GLuint location = glGetUniformLocation(mShaderProgram, name);
+	GLuint location = glGetUniformLocation(mShaderProgram, name.c_str());
 	glUniform1f(location, value);
 }
 
-void Shader::SetIntUniform(const char* name, int value)
+void Shader::SetIntUniform(const std::string& name, int value)
 {
-	GLuint location = glGetUniformLocation(mShaderProgram, name);
+	GLuint location = glGetUniformLocation(mShaderProgram, name.c_str());
 	glUniform1i(location, value);
 }
 
-void Shader::SetVec2Uniform(const char* name, const Vector2& vec2)
+void Shader::SetVec2Uniform(const std::string& name, const Vector2& vec2)
 {
-	GLuint location = glGetUniformLocation(mShaderProgram, name);
+	GLuint location = glGetUniformLocation(mShaderProgram, name.c_str());
 	glUniform2fv(location, 1, vec2.GetAsFloatPtr());
 }
 
-void Shader::SetVec2Uniform(const char* name, float x, float y)
+void Shader::SetVec2Uniform(const std::string& name, float x, float y)
 {
-	GLuint location = glGetUniformLocation(mShaderProgram, name);
+	GLuint location = glGetUniformLocation(mShaderProgram, name.c_str());
 	glUniform2f(location, x, y);
 }
 
-void Shader::SetVec3Uniform(const char* name, const Vector3& vec3)
+void Shader::SetVec3Uniform(const std::string& name, const Vector3& vec3)
 {
-	GLuint location = glGetUniformLocation(mShaderProgram, name);
+	GLuint location = glGetUniformLocation(mShaderProgram, name.c_str());
 	glUniform3fv(location, 1, vec3.GetAsFloatPtr());
 }
 
-void Shader::SetVec3Uniform(const char* name, float x, float y, float z)
+void Shader::SetVec3Uniform(const std::string& name, float x, float y, float z)
 {
-	GLuint location = glGetUniformLocation(mShaderProgram, name);
+	GLuint location = glGetUniformLocation(mShaderProgram, name.c_str());
 	glUniform3f(location, x, y, z);
 }
 
-void Shader::SetVec4Uniform(const char* name, float x, float y, float z, float w)
+void Shader::SetVec4Uniform(const std::string& name, float x, float y, float z, float w)
 {
-	GLuint location = glGetUniformLocation(mShaderProgram, name);
+	GLuint location = glGetUniformLocation(mShaderProgram, name.c_str());
 	glUniform4f(location, x, y, z, w);
 }
 
-void Shader::SetMatrix4Uniform(const char* name, const Matrix4& matrix)
+void Shader::SetMatrix4Uniform(const std::string& name, const Matrix4& matrix)
 {
-	GLuint location = glGetUniformLocation(mShaderProgram, name);
+	GLuint location = glGetUniformLocation(mShaderProgram, name.c_str());
 	glUniformMatrix4fv(location, 1, GL_TRUE /*Transpose if use row vectors*/,
 		matrix.GetAsFloatPtr());
 }
 
-void Shader::SetMatrix3Uniform(const char* name, const Matrix3& matrix)
+void Shader::SetMatrix3Uniform(const std::string& name, const Matrix3& matrix)
 {
-	GLuint location = glGetUniformLocation(mShaderProgram, name);
+	GLuint location = glGetUniformLocation(mShaderProgram, name.c_str());
 	glUniformMatrix3fv(location, 1, GL_TRUE, matrix.GetAsFloatPtr());
 }
 

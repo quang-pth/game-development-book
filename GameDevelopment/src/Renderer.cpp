@@ -24,9 +24,8 @@ Renderer::Renderer(Game* game) :
 	mWindow(), mContext(), mCamera(nullptr),
 	mAmbientLight(Vector3(.3f, .3f, .3f))
 {
-	mDirectionalLight.mDirection = Vector3(0, -.7f, -.7f);
-	mDirectionalLight.mDiffuseColor = Vector3(1.0f, 1.0f, 1.0f);
-	mDirectionalLight.mSpecularColor = Vector3(0.70f, 0.65f, .6f);
+	this->InitDirectionalLight();
+	this->InitPointLights();
 }
 
 Renderer::~Renderer()
@@ -138,6 +137,7 @@ void Renderer::Draw()
 			mesh->Draw(shaderMapIter.second);
 		}
 	}
+
 	glDisable(GL_DEPTH_TEST);
 	// ============= END MESH SHADER  =================
 
@@ -165,9 +165,24 @@ void Renderer::SetLightUniforms(Shader* shader)
 	shader->SetActive();
 	shader->SetVec3Uniform("uCameraPos", cameraView.GetTranslation());
 	shader->SetVec3Uniform("uAmbientLight", mAmbientLight);
+	// =============== DIRECTIONAL LIGHT UNIFORMS ===============
 	shader->SetVec3Uniform("uDirLight.mDirection", mDirectionalLight.mDirection);
 	shader->SetVec3Uniform("uDirLight.mDiffuseColor", mDirectionalLight.mDiffuseColor);
 	shader->SetVec3Uniform("uDirLight.mSpecularColor", mDirectionalLight.mSpecularColor);
+	// =============== DIRECTIONAL LIGHT UNIFORMS ===============
+	// =========================================================
+	// =============== POINT LIGHT UNIFORMS ===============
+	for (std::uint8_t i = 0; i < sizeof(mPointLights) / sizeof(PointLight); i++) 
+	{
+		const std::string& idx = std::to_string(i);
+		shader->SetVec3Uniform("uPointLights[" + idx + "].mPosition", mPointLights[i].mPosition);
+		shader->SetVec3Uniform("uPointLights[" + idx + "].mDiffuseColor", mPointLights[i].mDiffuseColor);
+		shader->SetVec3Uniform("uPointLights[" + idx + "].mSpecularColor", mPointLights[i].mSpecularColor);
+		shader->SetFloatUniform("uPointLights[" + idx + "].mSpecularPower", mPointLights[i].mSpecularPower);
+		shader->SetFloatUniform("uPointLights[" + idx + "].mRadius", mPointLights[i].mRadius);
+	}
+	// =============== POINT LIGHT UNIFORMS ===============
+	// =========================================================
 }
 
 bool Renderer::BeginScene(Camera* camera)
@@ -312,4 +327,42 @@ void Renderer::InitSpriteVertices()
 	};
 	mSpriteVertices = new VertexArray(vertices, sizeof(vertices) / sizeof(float),
 		indicies, sizeof(indicies) / sizeof(std::uint32_t));
+}
+
+void Renderer::InitDirectionalLight()
+{
+	mDirectionalLight.mDirection = Vector3(0, -.7f, -.7f);
+	mDirectionalLight.mDiffuseColor = Vector3(1.0f, 1.0f, 1.0f);
+	mDirectionalLight.mSpecularColor = Vector3(0.70f, 0.65f, .6f);
+}
+
+void Renderer::InitPointLights()
+{
+	Vector3 positions[] = {
+		Vector3(30.0f, 0.0f, 100.0f),
+		Vector3(0.0f, -30.0f, 50.0f),
+		Vector3(0.0f, 0.0f, 0.0f),
+		Vector3(-40.0f, 30.0f, 20.0f),
+	};
+	Vector3 diffuseColors[] = {
+		Vector3(0.3f, 0.5f, 0.6f),
+		Vector3(0.9f, 0.8f, 0.2f),
+		Vector3(0.1f, 0.1f, 0.1f),
+		Vector3(0.4f, 0.3f, 0.2f),
+	};
+	Vector3 specularColors[] = {
+		Vector3(0.4f, 0.6f, 0.7f),
+		Vector3(1.0f, 0.9f, 0.3f),
+		Vector3(0.2f, 0.2f, 0.2f),
+		Vector3(0.5f, 0.4f, 0.3f),
+	};
+	float specularPowers[] = {32.0f, 64.0f, 16.0f, 128.0f};
+	float radius[] = {200.0f, 330.0f, 190.0f, 300.0f};
+	for (std::uint8_t i = 0; i < sizeof(mPointLights) / sizeof(PointLight); i++) {
+		mPointLights[i].mPosition = positions[i];
+		mPointLights[i].mDiffuseColor = diffuseColors[i];
+		mPointLights[i].mSpecularColor = specularColors[i];
+		mPointLights[i].mSpecularPower = specularPowers[i];
+		mPointLights[i].mRadius= radius[i];
+	}
 }

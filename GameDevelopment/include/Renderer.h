@@ -12,6 +12,14 @@ struct DirectionalLight {
 	Vector3 mSpecularColor;
 };
 
+struct PointLight {
+	Vector3 mPosition;
+	Vector3 mDiffuseColor;
+	Vector3 mSpecularColor;
+	float mSpecularPower;
+	float mRadius;
+};
+
 class Renderer
 {
 public:
@@ -23,7 +31,6 @@ public:
 	void Unload();
 	void Draw();
 	void SetLightUniforms(class Shader* shader);
-
 	void AddMesh(class MeshComponent* meshComponent);
 	void AddSprite(class SpriteComponent* sprite);
 	void RemoveSprite(class SpriteComponent* sprite);
@@ -36,6 +43,8 @@ public:
 private:
 	bool LoadShaders();
 	void InitSpriteVertices();
+	void InitDirectionalLight();
+	void InitPointLights();
 private:
 	class Game* mGame;
 	class Camera* mCamera;
@@ -50,8 +59,9 @@ private:
 	std::unordered_map<std::string, class Mesh*> mLoadedMeshes;
 private:
 	/*================LIGHTING===================*/
-	DirectionalLight mDirectionalLight;
 	Vector3 mAmbientLight;
+	DirectionalLight mDirectionalLight;
+	PointLight mPointLights[4];
 	/*================LIGHTING===================*/
 private:
 	GLboolean mGlewExperimental;
