@@ -18,7 +18,10 @@ bool SoundEvent::IsValid()
 
 void SoundEvent::Restart()
 {
-
+	FMOD::Studio::EventInstance* e = this->GetEventInstance();
+	if (e) {
+		e->start();
+	}
 }
 
 void SoundEvent::Stop(bool allowedFadeOut)

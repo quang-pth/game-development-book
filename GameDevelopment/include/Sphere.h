@@ -1,6 +1,7 @@
 #pragma once
 
 #include"include/GameObject.h"
+#include"include/SoundEvent.h"
 
 class Sphere : public GameObject
 {
@@ -10,5 +11,7 @@ public:
 	virtual void UpdateGameObject(float deltaTime) override;
 private:
 	class MeshComponent* mMeshComponent;
+	class AudioComponent* mAudioComponent;
+	SoundEvent mGrassEvent;
 };
 

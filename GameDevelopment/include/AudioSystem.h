@@ -1,8 +1,8 @@
 #pragma once
 
 #include<unordered_map>
-#include"include/CustomMath.h"
 #include<fmod_common.h>
+#include"include/CustomMath.h"
 
 // Forward declartions
 namespace FMOD {
@@ -10,6 +10,7 @@ namespace FMOD {
 	namespace Studio {
 		class System;
 		class Bank;
+		class Bus;
 		class EventDescription;
 		class EventInstance;
 	};
@@ -28,6 +29,10 @@ public:
 	~AudioSystem();
 	bool Initialize();
 	SoundEvent PlayEvent(const std::string& name);
+	float GetBusVolume(const std::string& name) const;
+	bool GetBusPaused(const std::string& name) const;
+	void SetBusVolume(const std::string& name, float value);
+	void SetBusPause(const std::string& name, bool pause);
 	void SetListener(const Matrix4& viewMatrix);
 	void Shutdown();
 	void Update(float deltaTime);
@@ -46,4 +51,5 @@ private:
 	std::unordered_map<std::string, FMOD::Studio::Bank*> mBanks;
 	std::unordered_map<std::string, FMOD::Studio::EventDescription*> mEvents;
 	std::unordered_map<std::uint32_t, FMOD::Studio::EventInstance*> mEventInstances;
+	std::unordered_map<std::string, FMOD::Studio::Bus*> mBuses;
 };

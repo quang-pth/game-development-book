@@ -29,11 +29,11 @@ public:
 	float GetPitch() const;
 	float GetParameter(const std::string& name) const;
 	bool Is3D() const;
-	FMOD::Studio::EventInstance* GetEventInstance() const;
 protected:
 	friend class AudioSystem;
 	SoundEvent(class AudioSystem* audioSystem, std::uint32_t id);
 private:
+	FMOD::Studio::EventInstance* GetEventInstance() const;
 	class AudioSystem* mAudioSystem;
 	std::uint32_t mID;
 };

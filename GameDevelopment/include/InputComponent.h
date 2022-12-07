@@ -10,6 +10,7 @@ public:
 	void ProcessInput(const uint8_t* keyState) override;
 	float GetMaxForwardSpeed() const;
 	float GetMaxAngularSpeed() const;
+	bool IsKeyPressed(const uint8_t* keyState);
 	void SetMaxForwardSpeed(float speed);
 	void SetMaxAngularSpeed(float speed);
 private:

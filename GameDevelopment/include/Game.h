@@ -2,6 +2,7 @@
 
 #include<vector>
 #include<unordered_map>
+#include"include/SoundEvent.h"
 
 class Game
 {
@@ -19,6 +20,7 @@ public:
 	int GetWindowHeight() const;
 private:
 	void ProcessInput();
+	void HandlKeyPress(std::uint32_t key);
 	void UpdateGame();
 	void GenerateOutput();
 	void LoadData();
@@ -35,5 +37,7 @@ private:
 	class Camera* mCamera;
 	class Renderer* mRenderer;
 	class AudioSystem* mAudioSystem;
+	SoundEvent mMusicEvent;
+	SoundEvent mReverbSnap;
 	bool mUpdatingGameObjects;
 };

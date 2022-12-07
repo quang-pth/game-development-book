@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\AudioComponent.cpp" />
     <ClCompile Include="src\SoundEvent.cpp" />
     <ClCompile Include="src\AudioSystem.cpp" />
     <ClCompile Include="src\BasicShader.cpp" />
@@ -184,6 +185,7 @@
     <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\AudioComponent.h" />
     <ClInclude Include="include\AudioSystem.h" />
     <ClInclude Include="include\BasicShader.h" />
     <ClInclude Include="include\Camera.h" />

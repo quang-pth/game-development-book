@@ -55,6 +55,11 @@ float InputComponent::GetMaxAngularSpeed() const
 	return mMaxAngularSpeed;
 }
 
+bool InputComponent::IsKeyPressed(const uint8_t* keyState)
+{
+	return keyState[mForwardKey] || keyState[mBackwardKey];
+}
+
 void InputComponent::SetMaxForwardSpeed(float speed)
 {
 	mMaxForwardSpeed = speed;

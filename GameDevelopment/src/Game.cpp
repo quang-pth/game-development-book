@@ -26,14 +26,19 @@ Game::Game() :
 	mTicksCount(0.0f),
 	mUpdatingGameObjects(false),
 	mWindowWidth(800), mWindowHeight(600), 
-	mRenderer(nullptr)
+	mRenderer(nullptr), mCamera(nullptr), mAudioSystem(nullptr),
+	mMusicEvent(), mReverbSnap()
 {
 }
 
 bool Game::Initialize()
 {
+	mAudioSystem = new AudioSystem(this);
+	if (!mAudioSystem->Initialize()) {
+		return false;
+	}
+
 	mRenderer = new Renderer(this);
-	
 	if (!mRenderer->Intialize(mWindowWidth, mWindowHeight)) {
 		SDL_Log("Failed to initialize renderer");
 		delete mRenderer;
@@ -44,11 +49,6 @@ bool Game::Initialize()
 	this->LoadData();
 
 	if (!mRenderer->BeginScene(mCamera)) {
-		return false;
-	}
-
-	mAudioSystem = new AudioSystem(this);
-	if (!mAudioSystem->Initialize()) {
 		return false;
 	}
 
@@ -82,6 +82,11 @@ void Game::ProcessInput()
 		case SDL_QUIT:
 			mIsRunning = false;
 			break;
+		case SDL_KEYDOWN:
+			if (!sdlEvent.key.repeat) {
+				this->HandlKeyPress(sdlEvent.key.keysym.sym);
+			}
+			break;
 		}
 	}
 
@@ -96,6 +101,54 @@ void Game::ProcessInput()
 		gameObject->ProcessInput(keyboardState);
 	}
 	mUpdatingGameObjects = false;
+}
+
+void Game::HandlKeyPress(std::uint32_t key)
+{
+	float volume, value;
+	switch (key) {
+	case '-':
+		// Reduce master volume
+		volume = mAudioSystem->GetBusVolume("bus:/");
+		volume = Math::Max(0.0f, volume - 0.1f);
+		mAudioSystem->SetBusVolume("bus:/", volume);
+		break;
+	case '=':
+		// Increase master volume
+		volume = mAudioSystem->GetBusVolume("bus:/");
+		volume = Math::Min(1.0f, volume + 0.1f);
+		mAudioSystem->SetBusVolume("bus:/", volume);
+		break;
+	case 'e':
+		// Play explosion
+		mAudioSystem->PlayEvent("event:/Explosion2D");
+		break;
+	case 'm':
+		// Toggle background music pause state
+		mMusicEvent.SetPaused(!mMusicEvent.GetPaused());
+		break;
+	case 'r':
+		// Enable/Disable reverb on SFX bus
+		if (!mReverbSnap.IsValid()) {
+			mReverbSnap = mAudioSystem->PlayEvent("snapshot:/WithReverb");
+		}
+		else {
+			mReverbSnap.Stop();
+		}
+		break;
+	case '1':
+		// Set footstep parameter to default
+		value = 0.0f;
+		mCamera->SetFootstepSurface(value);
+		break;
+	case '2':
+		// Set footstep parameter to grass
+		value = 0.5f;
+		mCamera->SetFootstepSurface(value);
+		break;
+	default:
+		break;
+	}
 }
 
 void Game::UpdateGame()
@@ -160,6 +213,8 @@ void Game::LoadData()
 	radar->SetTexture(mRenderer->GetTexture("Assets/Chapter6/Radar.png"));
 	radar->GetTransform()->SetScale(5.0f);
 	radar->GetTransform()->SetPosition(Vector3(mWindowWidth / 2.0f - 100.0f, -mWindowHeight / 2.0f + 100.0f, 0.0f));
+	
+	mMusicEvent = mAudioSystem->PlayEvent("event:/Music");
 }
 
 void Game::UnloadData()
