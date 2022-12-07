@@ -137,7 +137,6 @@ void Renderer::Draw()
 			mesh->Draw(shaderMapIter.second);
 		}
 	}
-
 	glDisable(GL_DEPTH_TEST);
 	// ============= END MESH SHADER  =================
 
@@ -343,8 +342,8 @@ void Renderer::InitPointLights()
 {
 	Vector3 ambients[] = {
 		Vector3(1.0f, 0.0f, 0.0f),
-		Vector3(0.0f, 1.0f, 0.0f),
-		Vector3(0.5f, 0.0f, 1.0f),
+		Vector3(0.0f, 0.5f, 0.5f),
+		Vector3(0.5f, 0.2f, 1.0f),
 		Vector3(0.1f, 0.86f, 0.9f),
 	};
 	Vector3 positions[] = {
@@ -361,11 +360,11 @@ void Renderer::InitPointLights()
 	};
 	Vector3 specularColors[] = {
 		Vector3(0.4f, 0.6f, 0.7f),
-		Vector3(1.0f, 0.9f, 0.3f),
-		Vector3(0.2f, 0.2f, 0.2f),
-		Vector3(0.5f, 0.4f, 0.3f),
+		Vector3(0.6f, 0.9f, 0.3f),
+		Vector3(0.1f, 0.2f, 0.6f),
+		Vector3(0.1f, 0.4f, 0.23f),
 	};
-	float specularPowers[] = {32.0f, 64.0f, 32.0f, 128.0f};
+	float specularPowers[] = {32.0f, 64.0f, 8.0f, 128.0f};
 	float constant = 1.0f;
 	float linears[] = {0.00014, 0.00014, 0.00014, 0.00014 };
 	float quadratics[] = {0.000007, 0.000007, 0.000007, 0.000007 };

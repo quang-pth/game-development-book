@@ -14,6 +14,7 @@ public:
 	void RemoveGameObject(class GameObject* gameObject);
 	class Camera* GetCamera() const;
 	class Renderer* GetRenderer() const;
+	class AudioSystem* GetAudioSystem() const;
 	int GetWindowWidth() const;
 	int GetWindowHeight() const;
 private:
@@ -31,10 +32,8 @@ private:
 	// Game Objects
 	std::vector<class GameObject*> mGameObjects;
 	std::vector<class GameObject*> mPendingGameObjects;
-	std::vector<class Asteroid*> mAsteroids;
-	class CooldownManager* mCooldownManager;
 	class Camera* mCamera;
-	class Ship* mShip;
 	class Renderer* mRenderer;
+	class AudioSystem* mAudioSystem;
 	bool mUpdatingGameObjects;
 };

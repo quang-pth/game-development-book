@@ -119,13 +119,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\ASUS\Desktop\Game Development\GameDevelopment\GameDevelopment;C:\Users\ASUS\Desktop\Game Development\GameDevelopment\GameDevelopment\include;C:\Users\ASUS\Desktop\Game Development\GameDevelopment\GameDevelopment\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\ASUS\Desktop\Game Development\GameDevelopment\GameDevelopment;C:\Users\ASUS\Desktop\Game Development\GameDevelopment\GameDevelopment\include;C:\Users\ASUS\Desktop\Game Development\GameDevelopment\GameDevelopment\src;C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studio\inc;C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\ASUS\Desktop\Game Development\GameDevelopment\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SOIL.lib;OpenGL32.lib;glew32d.lib;SDL2_image.lib;SDL2.lib;SDL2main.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studio\lib;C:\Users\ASUS\Desktop\Game Development\GameDevelopment\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>fmodL_vc.lib;fmod_vc.lib;fmod64_vc.lib;fmodL64_vc.lib;fmodstudio64_vc.lib;fmodstudioL64_vc.lib;fmodstudioL_vc.lib;fmodstudio_vc.lib;SOIL.lib;OpenGL32.lib;glew32d.lib;SDL2_image.lib;SDL2.lib;SDL2main.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -145,6 +145,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\SoundEvent.cpp" />
+    <ClCompile Include="src\AudioSystem.cpp" />
     <ClCompile Include="src\BasicShader.cpp" />
     <ClCompile Include="src\PhongShader.cpp" />
     <ClCompile Include="src\Camera.cpp" />
@@ -182,6 +184,7 @@
     <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\AudioSystem.h" />
     <ClInclude Include="include\BasicShader.h" />
     <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\Decoration.h" />
@@ -193,6 +196,7 @@
     <ClInclude Include="include\Asteroid.h" />
     <ClInclude Include="include\Animation.h" />
     <ClInclude Include="include\PhongShader.h" />
+    <ClInclude Include="include\SoundEvent.h" />
     <ClInclude Include="src\EsstenialMath.h" />
     <ClInclude Include="include\BackgroundSpriteComponent.h" />
     <ClInclude Include="include\AnimatorComponent.h" />

@@ -1,7 +1,6 @@
 #include"include/Game.h"
 #include"include/GameObject.h"
 
-#include"include/CooldownManager.h"
 #include"include/SpriteComponent.h"
 #include"include/BackgroundSpriteComponent.h"
 #include"include/TransformComponent.h"
@@ -9,6 +8,7 @@
 #include"include/TileMapComponent.h"
 
 #include"include/Level.h"
+#include"include/AudioSystem.h"
 #include"include/Camera.h"
 #include"include/Sphere.h"
 #include"include/Cube.h"
@@ -26,9 +26,8 @@ Game::Game() :
 	mTicksCount(0.0f),
 	mUpdatingGameObjects(false),
 	mWindowWidth(800), mWindowHeight(600), 
-	mShip(nullptr), mRenderer(nullptr)
+	mRenderer(nullptr)
 {
-	mCooldownManager = new CooldownManager(this);
 }
 
 bool Game::Initialize()
@@ -45,6 +44,11 @@ bool Game::Initialize()
 	this->LoadData();
 
 	if (!mRenderer->BeginScene(mCamera)) {
+		return false;
+	}
+
+	mAudioSystem = new AudioSystem(this);
+	if (!mAudioSystem->Initialize()) {
 		return false;
 	}
 
@@ -65,9 +69,8 @@ void Game::RunLoop()
 void Game::ShutDown()
 {
 	this->UnloadData();
-	
-	if (mRenderer)
-		mRenderer->ShutDown();
+	mRenderer->ShutDown();
+	mAudioSystem->Shutdown();
 }
 
 void Game::ProcessInput()
@@ -131,6 +134,8 @@ void Game::UpdateGame()
 		delete gameObject;
 	}
 	deadGameObjects.clear();
+	// ============ AUDIO SYSTEM ==================
+	mAudioSystem->Update(deltaTime);
 }
 
 void Game::GenerateOutput()
@@ -176,6 +181,11 @@ Camera* Game::GetCamera() const
 Renderer* Game::GetRenderer() const
 {
 	return mRenderer;
+}
+
+AudioSystem* Game::GetAudioSystem() const
+{
+	return mAudioSystem;
 }
 
 int Game::GetWindowWidth() const
