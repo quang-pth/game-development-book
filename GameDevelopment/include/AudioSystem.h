@@ -1,6 +1,8 @@
 #pragma once
 
 #include<unordered_map>
+#include"include/CustomMath.h"
+#include<fmod_common.h>
 
 // Forward declartions
 namespace FMOD {
@@ -15,6 +17,8 @@ namespace FMOD {
 
 class SoundEvent;
 
+FMOD_VECTOR VecToFMOD(const Vector3& vector);
+
 class AudioSystem
 {
 public:
@@ -24,6 +28,7 @@ public:
 	~AudioSystem();
 	bool Initialize();
 	SoundEvent PlayEvent(const std::string& name);
+	void SetListener(const Matrix4& viewMatrix);
 	void Shutdown();
 	void Update(float deltaTime);
 	void LoadBank(const std::string& name);

@@ -66,6 +66,23 @@ SoundEvent AudioSystem::PlayEvent(const std::string& name)
 	return SoundEvent(this, returnID);
 }
 
+void AudioSystem::SetListener(const Matrix4& viewMatrix)
+{
+	Matrix4 invertMatrix = viewMatrix;
+	invertMatrix.Invert();
+	// Setup listener by its World Position and World Orientation
+	FMOD_3D_ATTRIBUTES listener;
+	listener.position = VecToFMOD(invertMatrix.GetTranslation());
+	listener.forward = VecToFMOD(invertMatrix.GetZAxis());
+	listener.up = VecToFMOD(invertMatrix.GetYAxis());
+	listener.velocity = { 0.0f };
+	// Send listener to FMOD
+	mSystem->setListenerAttributes(
+		0, // Only 1 listener
+		&listener // Listener attributes
+	);
+}
+
 FMOD::Studio::EventInstance* AudioSystem::GetEventInstance(const std::uint32_t& id) const
 {
 	const auto& iter = mEventInstances.find(id);
@@ -176,4 +193,15 @@ void AudioSystem::ReleaseEventInstances()
 	for (auto& iter : doneEventInstances) {
 		mEventInstances.erase(iter);
 	}
+}
+
+// Convert vector from (x+ forward, y+ right, z+ up) coords
+// to FMOD coords (x+ right, y+ up, z+ forward)
+FMOD_VECTOR VecToFMOD(const Vector3& vector)
+{
+	FMOD_VECTOR vect;
+	vect.x = vector.y;
+	vect.y = vector.z;
+	vect.z = vector.x;
+	return vect;
 }

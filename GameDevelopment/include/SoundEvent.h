@@ -1,7 +1,14 @@
 #pragma once
 
-#include <cstdint>
+#include<cstdint>
 #include<string>
+#include"include/CustomMath.h"
+
+namespace FMOD {
+	namespace Studio {
+		class EventInstance;
+	}
+}
 
 class SoundEvent
 {
@@ -15,11 +22,14 @@ public:
 	void SetVolume(float value);
 	void SetPitch(float value);
 	void SetParameter(const std::string& name, float value);
+	void Set3DAttributes(const Matrix4& worldTransformMatrix);
 public:
 	bool GetPaused() const;
 	float GetVolume() const;
 	float GetPitch() const;
 	float GetParameter(const std::string& name) const;
+	bool Is3D() const;
+	FMOD::Studio::EventInstance* GetEventInstance() const;
 protected:
 	friend class AudioSystem;
 	SoundEvent(class AudioSystem* audioSystem, std::uint32_t id);
