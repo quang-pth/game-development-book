@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ControllerState.cpp" />
     <ClCompile Include="src\MouseState.cpp" />
     <ClCompile Include="src\KeyboardState.cpp" />
     <ClCompile Include="src\InputSystem.cpp" />
@@ -188,6 +189,7 @@
     <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\ControllerState.h" />
     <ClInclude Include="include\AudioComponent.h" />
     <ClInclude Include="include\AudioSystem.h" />
     <ClInclude Include="include\BasicShader.h" />

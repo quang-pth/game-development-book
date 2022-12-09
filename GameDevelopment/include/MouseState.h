@@ -19,8 +19,8 @@ public:
 private:
 	Vector2 mCurrentPosition;
 	Vector2 mScrollWheel;
-	Uint32 mCurrentButtons;
-	Uint32 mPreviousButtons;
+	Uint32 mCurrentButton;
+	Uint32 mPreviousButton;
 	bool mIsRelative;
 };
 

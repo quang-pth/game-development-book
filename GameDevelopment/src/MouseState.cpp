@@ -4,8 +4,8 @@
 MouseState::MouseState() : 
 	mCurrentPosition(Vector2::Zero),
 	mScrollWheel(Vector2::Zero),
-	mCurrentButtons(),
-	mPreviousButtons(),
+	mCurrentButton(),
+	mPreviousButton(),
 	mIsRelative(false)
 {
 }
@@ -19,8 +19,8 @@ bool MouseState::GetButtonValue(unsigned int button) const
 
 ButtonState MouseState::GetButtonState(unsigned int button) const
 {
-	if (!(mPreviousButtons & SDL_BUTTON(button))) {
-		if (mCurrentButtons & SDL_BUTTON(button)) {
+	if (!(mPreviousButton & SDL_BUTTON(button))) {
+		if (mCurrentButton & SDL_BUTTON(button)) {
 			return ButtonState::EPressed;
 		} 
 		else {
@@ -28,7 +28,7 @@ ButtonState MouseState::GetButtonState(unsigned int button) const
 		}
 	}
 	else {
-		if (mCurrentButtons & SDL_BUTTON(button)) {
+		if (mCurrentButton & SDL_BUTTON(button)) {
 			return ButtonState::EHeld;
 		}
 		else {
