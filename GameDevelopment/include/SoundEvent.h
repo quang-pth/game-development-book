@@ -34,6 +34,7 @@ protected:
 	SoundEvent(class AudioSystem* audioSystem, std::uint32_t id);
 private:
 	FMOD::Studio::EventInstance* GetEventInstance() const;
+private:
 	class AudioSystem* mAudioSystem;
 	std::uint32_t mID;
 };

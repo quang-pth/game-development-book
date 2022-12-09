@@ -73,7 +73,7 @@ void SoundEvent::Set3DAttributes(const Matrix4& worldTransformMatrix)
 		attributes.position = VecToFMOD(worldTransformMatrix.GetTranslation());
 		attributes.forward = VecToFMOD(worldTransformMatrix.GetXAxis());
 		attributes.up = VecToFMOD(worldTransformMatrix.GetZAxis());
-		attributes.velocity = { 0.0f };
+		attributes.velocity = { 240.0f };
 		e->set3DAttributes(&attributes);
 	}
 }

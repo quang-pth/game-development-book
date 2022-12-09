@@ -43,7 +43,7 @@ bool AudioSystem::Initialize()
 		return false;
 	}
 	mLowLevelSystem->set3DSettings(
-		1.0f, // Doppler scale
+		10.0f, // Doppler scale
 		50.0f, // Game units (1 unit = 1 meter)
 		1.0f // Not for Doppler, let it be 1
 	);
@@ -112,16 +112,17 @@ void AudioSystem::SetBusPause(const std::string& name, bool pause)
 	}
 }
 
-void AudioSystem::SetListener(const Matrix4& viewMatrix)
+void AudioSystem::SetListener(const Matrix4& viewMatrix, const Vector3& offset)
 {
 	Matrix4 invertMatrix = viewMatrix;
 	invertMatrix.Invert();
+
 	// Setup listener by its World Position and World Orientation
 	FMOD_3D_ATTRIBUTES listener;
-	listener.position = VecToFMOD(invertMatrix.GetTranslation());
+	listener.position = VecToFMOD(invertMatrix.GetTranslation() - offset);
 	listener.forward = VecToFMOD(invertMatrix.GetZAxis());
 	listener.up = VecToFMOD(invertMatrix.GetYAxis());
-	listener.velocity = { 0.0f };
+	listener.velocity = { 240.0f };
 	// Send listener to FMOD
 	mSystem->setListenerAttributes(
 		0, // Only 1 listener

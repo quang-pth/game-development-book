@@ -25,4 +25,8 @@ Sphere::~Sphere()
 
 void Sphere::UpdateGameObject(float deltaTime)
 {
+	float scale = 1000.0f;
+	float time = SDL_GetTicks() / scale;
+	Vector3 position = GameObject::GetTransform()->GetPosition();
+	GameObject::GetTransform()->SetPosition(Vector3(position.x + std::sin(time), 0.0f, 0.0f));
 }

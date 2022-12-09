@@ -16,7 +16,10 @@ Camera::Camera(Game* game, const std::string& name) :
 	mFootStep = mAudioComponent->PlayEvent("event:/Footstep");
 	mFootStep.SetPaused(true);
 
-	GameObject::GetTransform()->SetPosition(Vector3::Zero);
+	// Compute third-person perspective camera
+	mOffset = GameObject::GetForward() * (-50.0f) + Vector3::UnitZ * 50.0f;
+	const Vector3& position = GameObject::GetTransform()->GetPosition() + mOffset;
+	GameObject::GetTransform()->SetPosition(position);
 	this->ComputeViewMatrix();
 }
 
@@ -47,13 +50,7 @@ void Camera::SetFootstepSurface(float value)
 void Camera::ComputeViewMatrix()
 {
 	const Vector3& position = GameObject::GetTransform()->GetPosition();
-	mTarget = position + GameObject::GetForward();
-
-	mViewMatrix = Matrix4::CreateLookAt(
-		position,
-		mTarget,
-		mWorldUp
-	);
-	
-	GameObject::GetGame()->GetAudioSystem()->SetListener(mViewMatrix);
+	mTarget = position + GameObject::GetForward() * 50.0f;
+	mViewMatrix = Matrix4::CreateLookAt(position, mTarget, mWorldUp);
+	GameObject::GetGame()->GetAudioSystem()->SetListener(mViewMatrix, mOffset);
 }

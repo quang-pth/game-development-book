@@ -20,9 +20,10 @@ private:
 private:
 	Matrix4 mViewMatrix;
 	Vector3 mTarget, mWorldUp;
+	Vector3 mOffset;
+	SoundEvent mFootStep;
 	InputComponent* mInputComponent;
 	AudioComponent* mAudioComponent;
-	SoundEvent mFootStep;
 	float mLastFootStep;
 	bool mRecomputeViewMatrix;
 };
