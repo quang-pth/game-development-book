@@ -44,21 +44,21 @@ namespace EssentialMath
 			}
 			
 			if (matrix[1][0] > 0.0f) {
-				min[0] += mMin.x * matrix[1][0];
-				max[0] += mMax.x * matrix[1][0];
+				min[0] += mMin.y * matrix[1][0];
+				max[0] += mMax.y * matrix[1][0];
 			}
 			else {
-				min[0] += mMax.x * matrix[1][0];
-				max[0] += mMin.x * matrix[1][0];
+				min[0] += mMax.y * matrix[1][0];
+				max[0] += mMin.y * matrix[1][0];
 			}
 			
 			if (matrix[2][0] > 0.0f) {
-				min[0] += mMin.x * matrix[2][0];
-				max[0] += mMax.x * matrix[2][0];
+				min[0] += mMin.z * matrix[2][0];
+				max[0] += mMax.z * matrix[2][0];
 			}
 			else {
-				min[0] += mMax.x * matrix[2][0];
-				max[0] += mMin.x * matrix[2][0];
+				min[0] += mMax.z * matrix[2][0];
+				max[0] += mMin.z * matrix[2][0];
 			}
 			// Y
 			if (matrix[0][1] > 0.0f) {
@@ -71,21 +71,21 @@ namespace EssentialMath
 			}
 
 			if (matrix[1][1] > 0.0f) {
-				min[1] += mMin.x * matrix[1][1];
-				max[1] += mMax.x * matrix[1][1];
+				min[1] += mMin.y * matrix[1][1];
+				max[1] += mMax.y * matrix[1][1];
 			}
 			else {
-				min[1] += mMax.x * matrix[1][1];
-				max[1] += mMin.x * matrix[1][1];
+				min[1] += mMax.y * matrix[1][1];
+				max[1] += mMin.y * matrix[1][1];
 			}
 
 			if (matrix[2][1] > 0.0f) {
-				min[1] += mMin.x * matrix[2][1];
-				max[1] += mMax.x * matrix[2][1];
+				min[1] += mMin.z * matrix[2][1];
+				max[1] += mMax.z * matrix[2][1];
 			}
 			else {
-				min[1] += mMax.x * matrix[2][1];
-				max[1] += mMin.x * matrix[2][1];
+				min[1] += mMax.z * matrix[2][1];
+				max[1] += mMin.z * matrix[2][1];
 			}
 			// Z
 			if (matrix[0][2] > 0.0f) {
@@ -98,22 +98,31 @@ namespace EssentialMath
 			}
 
 			if (matrix[1][2] > 0.0f) {
-				min[2] += mMin.x * matrix[1][2];
-				max[2] += mMax.x * matrix[1][2];
+				min[2] += mMin.y * matrix[1][2];
+				max[2] += mMax.y * matrix[1][2];
 			}
 			else {
-				min[2] += mMax.x * matrix[1][2];
-				max[2] += mMin.x * matrix[1][2];
+				min[2] += mMax.y * matrix[1][2];
+				max[2] += mMin.y * matrix[1][2];
 			}
 
 			if (matrix[2][2] > 0.0f) {
-				min[2] += mMin.x * matrix[2][2];
-				max[2] += mMax.x * matrix[2][2];
+				min[2] += mMin.z * matrix[2][2];
+				max[2] += mMax.z * matrix[2][2];
 			}
 			else {
-				min[2] += mMax.x * matrix[2][2];
-				max[2] += mMin.x * matrix[2][2];
+				min[2] += mMax.z * matrix[2][2];
+				max[2] += mMin.z * matrix[2][2];
 			}
+		}
+		inline Vector3 GetGenterPoint() {
+			return (mMin + mMax) * 0.5f;
+		}
+		inline Vector3 GetSizeVector() {
+			return mMax - mMin;
+		}
+		inline Vector3 GetRadiusVector() {
+			return this->GetSizeVector() * 0.5f;
 		}
 	private:
 		Vector3 mMin;
@@ -123,36 +132,45 @@ namespace EssentialMath
 	class Plane 
 	{
 	public:
-		static Vector3 ComputeBestFitNormal(const std::vector<Vector3*>& points) 
+		static Vector3 ComputeBestFitNormal(const std::vector<Vector3>& points) 
 		{
 			Vector3 normal = Vector3::Zero;
 			
 			auto iter = points.begin();
-			while ((iter + 1) != points.end()) {
-				Vector3* currentPoint = *iter;
-				Vector3* nextPoint = *++iter;
+			while (iter != points.end()) {
+				Vector3 currentPoint = *iter;
+				
+				Vector3 nextPoint;
+				if ((iter + 1) == points.end()) {
+					nextPoint = *(points.begin());
+				}
+				else {
+					nextPoint = *(iter + 1);
+				}
 
-				normal.x += (currentPoint->z + nextPoint->z) * (currentPoint->y - nextPoint->y);
-				normal.y += (currentPoint->x + nextPoint->x) * (currentPoint->z - nextPoint->z);
-				normal.z += (currentPoint->y + nextPoint->y) * (currentPoint->x - nextPoint->x);
+				normal.x += (currentPoint.z + nextPoint.z) * (currentPoint.y - nextPoint.y);
+				normal.y += (currentPoint.x + nextPoint.x) * (currentPoint.z - nextPoint.z);
+				normal.z += (currentPoint.y + nextPoint.y) * (currentPoint.x - nextPoint.x);
+
+				iter++;
 			}
 
 			return normal.Normalize();
 		}
 
-		static float ComputeBestFitPlane(const std::vector<Vector3*>& points, const Vector3& normal) 
+		static float ComputeBestFitPlane(const std::vector<Vector3>& points, const Vector3& normal) 
 		{
 			Vector3 avgPoint = Vector3::Zero;
 			
 			for (auto iter = points.begin(); iter != points.end(); iter++) {
-				avgPoint = avgPoint + (**iter);
+				avgPoint = avgPoint + (*iter);
 			}
 
-			return (1.0f / (points.size())) * (avgPoint.Dot(normal));
+			return avgPoint.Dot(normal) / points.size();
 		}
 	public:
-		inline float DistanceToPoint(Vector3* point) {
-			return point->Dot(mNormal) - mDistance;
+		inline float DistanceToPoint(const Vector3& point) {
+			return point.Dot(mNormal) - mDistance;
 		}
 	private:
 		Vector3 mNormal;
@@ -169,16 +187,19 @@ namespace EssentialMath
 		Vector3 v1, v2, v3;
 	public:
 		Triangle() = default;
+		Triangle(const Vector3& v1, const Vector3& v2, const Vector3& v3) :
+			v1(v1), v2(v2), v3(v3) 
+		{}
 		~Triangle() {};
 		
 		inline TriangleEdge GetEdges() const {
-			return {v2 - v1, v3 - v2, v1 - v3};
+			return {v3 - v2, v1 - v3, v2 - v1};
 		}
 
 		inline float GetPerimiter() const {
 			const TriangleEdge& edges = this->GetEdges();
 			
-			return (edges.e1 + edges.e2 + edges.e3).Magnitude();
+			return edges.e1.Magnitude() + edges.e2.Magnitude() + edges.e3.Magnitude();
 		}
 
 		inline float GetArea2D() const {
@@ -207,86 +228,82 @@ namespace EssentialMath
 			return e1.Cross(e2);
 		}
 
-		inline static bool ComputeBaryCentricPointProjectedOn2D(
+		inline static Vector3 ComputeBaryCentricPointProjectedOn2D(
 			const Triangle& triangle, 
-			const Vector3& point,
-			Vector3& outPoint)
+			const Vector3& point)
 		{
+			Vector3 outpoint;
 			const Vector3& normal = triangle.GetNormal();
 			float maxFactor = std::max(std::abs(normal.x), 
 				std::max(std::abs(normal.y), std::abs(normal.z)));
 
 			// Select plane of projection
-			Vector3 e3, e2;
+			Vector3 e1, e2;
 			Vector3 subE3, subE1;
 
-			if (maxFactor == std::abs(normal.x)) {
-				// Discard X, project on xz plane
-				e3.y = triangle.v1.y - triangle.v2.y;
-				e3.z = triangle.v1.z - triangle.v2.z;
-				e2.y = triangle.v3.y - triangle.v3.y;
-				e2.z = triangle.v3.z - triangle.v3.z;
+			e1 = triangle.v3 - triangle.v2;
+			e2 = triangle.v1 - triangle.v3;
+			subE1 = point - triangle.v1;
+			subE3 = point - triangle.v3;
 
-				subE3.y = point.y - triangle.v1.y;
-				subE3.z = point.z - triangle.v1.z;
-				subE1.y = point.y - triangle.v3.y;
-				subE1.z = point.z - triangle.v3.z;
+			if (maxFactor == std::abs(normal.x)) 
+			{
+				// Discard X, project on xz plane
+				e1.x = 0;
+				e2.x = 0;
+
+				subE1.x = 0;
+				subE3.x = 0;
 			}
 			else if (maxFactor == std::abs(normal.y)) {
 				// Discard Y, project on xz plane
-				e3.x = triangle.v1.x - triangle.v2.x;
-				e3.z = triangle.v1.z - triangle.v2.z;
-				e2.x = triangle.v3.x - triangle.v3.x;
-				e2.z = triangle.v3.z - triangle.v3.z;
-
-				subE3.x = point.x - triangle.v1.x;
-				subE3.z = point.z - triangle.v1.z;
-				subE1.x = point.x - triangle.v3.x;
-				subE1.z = point.z - triangle.v3.z;
+				e1.y = 0;
+				e2.y = 0;
+				
+				subE1.y = 0;
+				subE3.y = 0;
 			}
 			else {
-				// Discard Z, project on xy plane
-				e3.x = triangle.v1.x - triangle.v2.x;
-				e3.y = triangle.v1.y - triangle.v2.y;
-				e2.x = triangle.v3.x - triangle.v3.x;
-				e2.y = triangle.v3.y - triangle.v3.y;
+				// Discard Z, project on xy plane				
+				e1.z = 0;
+				e2.z = 0;
 
-				subE3.x = point.x - triangle.v1.x;
-				subE3.y = point.y - triangle.v1.y;
-				subE1.x = point.x - triangle.v3.x;
-				subE1.y = point.y - triangle.v3.y;
+				subE1.z = 0;
+				subE3.z = 0;
 			}
 
-			float denominator = e2.Cross(e3).Magnitude();
+			float denominator = e1.Cross(e2).Magnitude();
 			if (denominator == 0.0f) {
-				return false;
+				return outpoint;
 			}
 
-			float subTriangle1Area = subE3.Cross(e3).Magnitude();
-			float subTriangle2Area = subE1.Cross(e2).Magnitude();
+			float subTriangle1Area = e1.Cross(subE3).Magnitude();
+			float subTriangle2Area = e2.Cross(subE1).Magnitude();
 
-			outPoint.x = subTriangle1Area * (1 / denominator);
-			outPoint.y = subTriangle2Area * (1 / denominator);
-			outPoint.z = 1.0f - outPoint.x - outPoint.z;
+			outpoint.x = subTriangle1Area / denominator;
+			outpoint.y = subTriangle2Area / denominator;
+			outpoint.z = 1.0f - outpoint.x - outpoint.y;
 			
-			return true;
+			return outpoint;
 		}
 
-		// Better for SIMD instruction
+		// Compute Barycentric point in 3D - better for SIMD instructions
 		inline static Vector3 ComputeBaryCentricPoint(
 			const Triangle& triangle,
-			const Vector3& point,
-			Vector3& outPoint
-		)
+			const Vector3& point)
 		{
+			Vector3 outpoint;
+
 			const Vector3& surfaceNormal = triangle.GetNormal();
 			const Vector3& normalizedSurfaceNormal = surfaceNormal.Normalize();
 			const TriangleEdge& edges = triangle.GetEdges();
 			float denominator = edges.e1.Cross(edges.e2).Dot(normalizedSurfaceNormal);
 
-			outPoint.x = (edges.e1.Cross(point - edges.e3).Dot(normalizedSurfaceNormal)) / denominator;
-			outPoint.y = (edges.e2.Cross(point - edges.e1).Dot(normalizedSurfaceNormal)) / denominator;
-			outPoint.z = (edges.e3.Cross(point - edges.e2).Dot(normalizedSurfaceNormal)) / denominator;
+			outpoint.x = (edges.e1.Cross(point - triangle.v3).Dot(normalizedSurfaceNormal)) / denominator;
+			outpoint.y = (edges.e2.Cross(point - triangle.v1).Dot(normalizedSurfaceNormal)) / denominator;
+			outpoint.z = (edges.e3.Cross(point - triangle.v2).Dot(normalizedSurfaceNormal)) / denominator;
+			
+			return outpoint;
 		}
 		
 		inline void GetGravityPoint(
@@ -333,11 +350,11 @@ namespace EssentialMath
 			float c3 = d1 * d2;
 			float c = c1 + c2 + c3;
 
-			outPointInBaryCentric.x = c2 + c3 * (1 / 2 * c);
-			outPointInBaryCentric.y = c3 + c1 * (1 / 2 * c);
-			outPointInBaryCentric.z = c1 + c2 * (1 / 2 * c);
+			outPointInBaryCentric.x = (c2 + c3) / (2 * c);
+			outPointInBaryCentric.y = (c3 + c1) / (2 * c);
+			outPointInBaryCentric.z = (c1 + c2) / (2 * c);
 			
-			outPointInCartersian = (v1 * (c2 + c3) + v2 * (c3 + c1) + v3 * (c1 + c2)) / 2 * c;
+			outPointInCartersian = (v1 * (c2 + c3) + v2 * (c3 + c1) + v3 * (c1 + c2)) / (2 * c);
 			
 			outRadius = sqrtf((d1 + d2) * (d2 + d3) * (d1 + d3) / c) / 2;
 		}
