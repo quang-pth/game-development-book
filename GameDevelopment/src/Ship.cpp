@@ -37,9 +37,9 @@ void Ship::UpdateGameObject(float deltaTime)
 	this->CheckCollsision();
 }
 
-void Ship::ProcessGameObjectInput(const uint8_t* keyState)
+void Ship::ProcessGameObjectInput(const InputState& keyState)
 {
-	if (keyState[mFireKey] && mFireCooldown < 0.0f) {
+	/*if (keyState[mFireKey] && mFireCooldown < 0.0f) {
 		Laser* laser = mLasers[mActivateLaserIdx];
 		if (laser->GetState() == GameObject::State::EActive) return;
 		
@@ -57,7 +57,7 @@ void Ship::ProcessGameObjectInput(const uint8_t* keyState)
 		if (mActivateLaserIdx >= mLasers.size()) {
 			mActivateLaserIdx = 0;
 		}
-	}
+	}*/
 }
 
 void Ship::StartCooldown()

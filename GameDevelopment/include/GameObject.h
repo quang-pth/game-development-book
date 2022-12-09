@@ -2,7 +2,8 @@
 
 #include<vector>
 #include<string>
-#include"CustomMath.h"
+#include"include/CustomMath.h"
+#include"include/InputSystem.h"
 
 class GameObject
 {
@@ -21,9 +22,9 @@ public:
 	
 	void Update(float deltaTime);
 	void UpdateComponents(float deltaTime);
-	void ProcessInput(const uint8_t* keyState);
+	void ProcessInput(const InputState& inputState);
 	virtual void UpdateGameObject(float deltaTime);
-	virtual void ProcessGameObjectInput(const uint8_t* keyState);
+	virtual void ProcessGameObjectInput(const InputState& inputState);
 	// Add component in sorted order based-on its update order
 	void AddComponent(class Component* component);	
 	void RemoveComponent(class Component* component);

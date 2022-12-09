@@ -41,14 +41,14 @@ void GameObject::UpdateComponents(float deltaTime)
 	}
 }
 
-void GameObject::ProcessInput(const uint8_t* keyState)
+void GameObject::ProcessInput(const InputState& inputState)
 {
 	if (mState == GameObject::State::EActive) {
 		for (Component* component : mComponents) {
-			component->ProcessInput(keyState);
+			component->ProcessInput(inputState);
 		}
 	
-		ProcessGameObjectInput(keyState);
+		ProcessGameObjectInput(inputState);
 	}
 }
 
@@ -57,7 +57,7 @@ void GameObject::UpdateGameObject(float deltaTime)
 
 }
 
-void GameObject::ProcessGameObjectInput(const uint8_t* keyState)
+void GameObject::ProcessGameObjectInput(const InputState& inputState)
 {
 }
 

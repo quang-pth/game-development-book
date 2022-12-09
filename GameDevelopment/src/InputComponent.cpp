@@ -23,26 +23,27 @@ InputComponent::~InputComponent()
 {
 }
 
-void InputComponent::ProcessInput(const uint8_t* keyState)
+void InputComponent::ProcessInput(const InputState& inputState)
 {
-	// Set movement
-	float forwardSpeed = 0.0f;
-	if (keyState[mForwardKey]) {
-		forwardSpeed += mMaxForwardSpeed;
-	}
-	if (keyState[mBackwardKey]) {
-		forwardSpeed -= mMaxForwardSpeed;
-	}
-	MoveComponent::SetForwardSpeed(forwardSpeed);
-	// Set rotation
-	float angularSpeed = 0.0f;
-	if (keyState[mClockwiseKey]) {
-		angularSpeed -= mMaxAngularSpeed;
-	}
-	if (keyState[mCounterClockwiseKey]) {
-		angularSpeed += mMaxAngularSpeed;
-	}
-	MoveComponent::SetAngularSpeed(angularSpeed);
+	//// Set movement
+	//float forwardSpeed = 0.0f;
+	//if (keyState[mForwardKey]) {
+	//	forwardSpeed += mMaxForwardSpeed;
+	//}
+	//if (keyState[mBackwardKey]) {
+	//	forwardSpeed -= mMaxForwardSpeed;
+	//}
+	//MoveComponent::SetForwardSpeed(forwardSpeed);
+	//// Set rotation
+	//float angularSpeed = 0.0f;
+	//if (keyState[mClockwiseKey]) {
+	//	angularSpeed -= mMaxAngularSpeed;
+	//}
+	//if (keyState[mCounterClockwiseKey]) {
+	//	angularSpeed += mMaxAngularSpeed;
+	//}
+
+	//MoveComponent::SetAngularSpeed(angularSpeed);
 }
 
 float InputComponent::GetMaxForwardSpeed() const

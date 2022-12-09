@@ -18,6 +18,7 @@
 #include"include/Mesh.h"
 #include"include/Shader.h"
 #include"include/Renderer.h"
+#include"include/InputSystem.h"
 
 #include<iostream>
 
@@ -26,7 +27,7 @@ Game::Game() :
 	mTicksCount(0.0f),
 	mUpdatingGameObjects(false),
 	mWindowWidth(800), mWindowHeight(600), 
-	mRenderer(nullptr), mCamera(nullptr), mAudioSystem(nullptr),
+	mRenderer(nullptr), mCamera(nullptr), mAudioSystem(nullptr), mInputSystem(nullptr),
 	mMusicEvent(), mReverbSnap()
 {
 }
@@ -46,6 +47,10 @@ bool Game::Initialize()
 		return false;
 	};
 	
+	mInputSystem = new InputSystem(this);
+	mInputSystem->Initialize();
+	mInputSystem->SetRelativeMouseMode(false);
+
 	this->LoadData();
 
 	if (!mRenderer->BeginScene(mCamera)) {
@@ -75,30 +80,35 @@ void Game::ShutDown()
 
 void Game::ProcessInput()
 {
-	SDL_Event sdlEvent;
-	while (SDL_PollEvent(&sdlEvent)) {
-		switch (sdlEvent.type)
+	mInputSystem->PrepareBeforeUpdate();
+
+	SDL_Event e;
+	while (SDL_PollEvent(&e)) {
+		switch (e.type)
 		{
 		case SDL_QUIT:
 			mIsRunning = false;
 			break;
+		case SDL_MOUSEWHEEL:
+			mInputSystem->ProcessEvent(e);
+			break;
 		case SDL_KEYDOWN:
-			if (!sdlEvent.key.repeat) {
-				this->HandlKeyPress(sdlEvent.key.keysym.sym);
+			if (!e.key.repeat) {
+				this->HandlKeyPress(e.key.keysym.sym);
 			}
 			break;
 		}
 	}
 
-	// Process keyboard event
-	const Uint8* keyboardState = SDL_GetKeyboardState(NULL);
-	if (keyboardState[SDL_SCANCODE_ESCAPE]) {
+	mInputSystem->Update();
+	const InputState& state = mInputSystem->GetInputState();
+	if (state.KeyBoard.GetKeyState(SDL_SCANCODE_ESCAPE) == ButtonState::EReleased) {
  		mIsRunning = false;
 	}
-
+	
 	mUpdatingGameObjects = true;
 	for (GameObject* gameObject : mGameObjects) {
-		gameObject->ProcessInput(keyboardState);
+		gameObject->ProcessInput(state);
 	}
 	mUpdatingGameObjects = false;
 }
@@ -241,6 +251,11 @@ Renderer* Game::GetRenderer() const
 AudioSystem* Game::GetAudioSystem() const
 {
 	return mAudioSystem;
+}
+
+InputSystem* Game::GetInputSystem() const
+{
+	return mInputSystem;
 }
 
 int Game::GetWindowWidth() const

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <include/Game.h>
+#include <SDL2/SDL.h>
 
 int main(int argc, char* args[]) 
 {
@@ -13,4 +14,5 @@ int main(int argc, char* args[])
 	game.ShutDown();
 
 	std::cin.get();
+	return 0;
 }

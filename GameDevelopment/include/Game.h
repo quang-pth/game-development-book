@@ -2,6 +2,7 @@
 
 #include<vector>
 #include<unordered_map>
+
 #include"include/SoundEvent.h"
 
 class Game
@@ -16,6 +17,7 @@ public:
 	class Camera* GetCamera() const;
 	class Renderer* GetRenderer() const;
 	class AudioSystem* GetAudioSystem() const;
+	class InputSystem* GetInputSystem() const;
 	int GetWindowWidth() const;
 	int GetWindowHeight() const;
 private:
@@ -37,6 +39,7 @@ private:
 	class Camera* mCamera;
 	class Renderer* mRenderer;
 	class AudioSystem* mAudioSystem;
+	class InputSystem* mInputSystem;
 	SoundEvent mMusicEvent;
 	SoundEvent mReverbSnap;
 	bool mUpdatingGameObjects;

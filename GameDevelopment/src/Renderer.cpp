@@ -46,7 +46,7 @@ bool Renderer::Intialize(float screenWidth, float screenHeight)
 	);
 
 	// Init SDL
-	int sdlResult = SDL_Init(SDL_INIT_VIDEO);
+	int sdlResult = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER);
 	if (sdlResult != 0) {
 		SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
 		return false;
