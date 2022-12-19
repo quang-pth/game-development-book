@@ -1,12 +1,10 @@
 #include"include/Game.h"
 #include"include/GameObject.h"
-
 #include"include/SpriteComponent.h"
 #include"include/BackgroundSpriteComponent.h"
 #include"include/TransformComponent.h"
 #include"include/MeshComponent.h"
 #include"include/TileMapComponent.h"
-
 #include"include/Level.h"
 #include"include/AudioSystem.h"
 #include"include/Camera.h"
@@ -19,7 +17,6 @@
 #include"include/Shader.h"
 #include"include/Renderer.h"
 #include"include/InputSystem.h"
-
 #include<iostream>
 
 Game::Game() :

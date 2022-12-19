@@ -20,15 +20,11 @@ public:
 	float GetAngularSpeed() const;
 	void SetForwardSpeed(float speed);
 	void SetAngularSpeed(float speed);
-	void AddForce(const Vector3& force, ForceMode forceMode = ForceMode::Impulse);
-	void ResetForce();
+	void SetVelocity(const Vector3& velocity);
+	const Vector3& GetVelocity() const;
 protected:
 	float mForwardSpeed; // Velocity measured in units/second
 	float mAngularSpeed; // Rotation angle measured in radians/second
-	// Newtonian Physics
-	float mMass;
 	Vector3 mVelocity;
-	Vector3 mSumOfForces;
-	ForceMode mForceMode;
 };
 

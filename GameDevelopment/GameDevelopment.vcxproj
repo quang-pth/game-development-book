@@ -78,8 +78,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\ASUS\Desktop\Game Development\GameDevelopment\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\ASUS\Desktop\Game Development\GameDevelopment\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\ADMIN\Desktop\GameDevelopment\GameDevelopment\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\ADMIN\Desktop\GameDevelopment\GameDevelopment\lib;$(LibraryPath)</LibraryPath>
     <ExternalIncludePath>$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -119,12 +119,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\ASUS\Desktop\Game Development\GameDevelopment\GameDevelopment;C:\Users\ASUS\Desktop\Game Development\GameDevelopment\GameDevelopment\include;C:\Users\ASUS\Desktop\Game Development\GameDevelopment\GameDevelopment\src;C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studio\inc;C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)include;$(ProjectDir)src;C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studio\inc;C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\inc;C:\Users\ADMIN\Desktop\GameDevelopment\GameDevelopment\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studio\lib;C:\Users\ASUS\Desktop\Game Development\GameDevelopment\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir);$(ProjectDir)include;$(ProjectDir)src;C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studio\lib;C:\Users\ADMIN\Desktop\GameDevelopment\GameDevelopment\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>fmodL_vc.lib;fmod_vc.lib;fmod64_vc.lib;fmodL64_vc.lib;fmodstudio64_vc.lib;fmodstudioL64_vc.lib;fmodstudioL_vc.lib;fmodstudio_vc.lib;SOIL.lib;OpenGL32.lib;glew32d.lib;SDL2_image.lib;SDL2.lib;SDL2main.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

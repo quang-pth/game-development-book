@@ -1,21 +1,15 @@
 #include "include/InputComponent.h"
 #include "include/GameObject.h"
+#include "include/Game.h"
 #include "include/CustomMath.h"
+#include "include/InputSystem.h"
+#include "include/ControllerState.h"
+#include "include/TransformComponent.h"
 #include<SDL2/SDL.h>
-
-InputComponent::InputComponent() : 
-	MoveComponent(), 
-	mMaxForwardSpeed(0.0f), mMaxAngularSpeed(0.0f),
-	mForwardKey(), mBackwardKey(), 
-	mClockwiseKey(), mCounterClockwiseKey()
-{
-}
 
 InputComponent::InputComponent(GameObject* owner, int updateOrder) : 
 	MoveComponent(owner, updateOrder),
-	mMaxForwardSpeed(500.0f), mMaxAngularSpeed(Math::Pi),
-	mForwardKey(SDL_SCANCODE_W), mBackwardKey(SDL_SCANCODE_S),
-	mClockwiseKey(SDL_SCANCODE_A), mCounterClockwiseKey(SDL_SCANCODE_D)
+	mMaxForwardSpeed(500.0f), mMaxAngularSpeed(Math::Pi)
 {
 }
 
@@ -25,25 +19,21 @@ InputComponent::~InputComponent()
 
 void InputComponent::ProcessInput(const InputState& inputState)
 {
-	//// Set movement
-	//float forwardSpeed = 0.0f;
-	//if (keyState[mForwardKey]) {
-	//	forwardSpeed += mMaxForwardSpeed;
-	//}
-	//if (keyState[mBackwardKey]) {
-	//	forwardSpeed -= mMaxForwardSpeed;
-	//}
-	//MoveComponent::SetForwardSpeed(forwardSpeed);
-	//// Set rotation
-	//float angularSpeed = 0.0f;
-	//if (keyState[mClockwiseKey]) {
-	//	angularSpeed -= mMaxAngularSpeed;
-	//}
-	//if (keyState[mCounterClockwiseKey]) {
-	//	angularSpeed += mMaxAngularSpeed;
-	//}
+	const ControllerState& controller = mOwner->GetGame()->GetInputSystem()->GetInputState().Controller;
+	if (controller.GetIsConnected()) {
+		const Vector2& direction = controller.GetLeftStick();
+		const Vector3& rotatedDir = Vector3::Transform(Vector3(direction.y, direction.x), mOwner->GetTransform()->GetRotation());
+		MoveComponent::SetVelocity(rotatedDir);
 
-	//MoveComponent::SetAngularSpeed(angularSpeed);
+		float angularSpeed = 0.0f;
+		if (controller.GetLeftTrigger()) {
+			angularSpeed -= mMaxAngularSpeed;
+		}
+		if (controller.GetRightTrigger()) {
+			angularSpeed += mMaxAngularSpeed;
+		}
+		MoveComponent::SetAngularSpeed(angularSpeed);
+	}
 }
 
 float InputComponent::GetMaxForwardSpeed() const
@@ -54,11 +44,6 @@ float InputComponent::GetMaxForwardSpeed() const
 float InputComponent::GetMaxAngularSpeed() const
 {
 	return mMaxAngularSpeed;
-}
-
-bool InputComponent::IsKeyPressed(const uint8_t* keyState)
-{
-	return keyState[mForwardKey] || keyState[mBackwardKey];
 }
 
 void InputComponent::SetMaxForwardSpeed(float speed)

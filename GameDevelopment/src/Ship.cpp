@@ -81,7 +81,6 @@ void Ship::Respawn()
 	// Reset game object states
 	GameObject::GetTransform()->SetRotation(Quaternion::Identity);
 	GameObject::SetState(GameObject::State::EActive);
-	mInputComponent->ResetForce();
 }
 
 void Ship::InitLaserPool()

@@ -1,6 +1,9 @@
 #include "include/ControllerState.h"
 
-ControllerState::ControllerState() : mIsConnected(false)
+ControllerState::ControllerState() : 
+	mLeftStick(Vector2::Zero), mRightStick(Vector2::Zero),
+	mLeftTrigger(0.0f), mRightTrigger(0.0f),
+	mIsConnected(false)
 {
 }
 

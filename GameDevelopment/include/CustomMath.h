@@ -279,6 +279,14 @@ public:
 		x(scale), y(scale), z(scale) 
 	{}
 
+	explicit Vector3(const Vector2& vec) : 
+		x(vec.x), y(vec.y), z(0.0f) 
+	{}
+
+	explicit Vector3(float x, float y) :
+		x(x), y(y), z(0.0f)
+	{}
+
 	// Cast to a const float pointer
 	const float* GetAsFloatPtr() const
 	{

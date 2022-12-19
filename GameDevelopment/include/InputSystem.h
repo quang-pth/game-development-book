@@ -29,8 +29,8 @@ public:
 	void PrepareBeforeUpdate();
 	void Update();
 	void SetRelativeMouseMode(bool isRelative);
-	float Filter1D(std::uint32_t input);
-	Vector2 Filter2D(std::uint32_t x, std::uint32_t y);
+	float Filter1D(float input);
+	Vector2 Filter2D(float x, float y);
 	Vector2 Filter2D(const Vector2& input);
 	const InputState& GetInputState() const { return mState; }
 private:

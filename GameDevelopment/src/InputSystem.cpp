@@ -95,7 +95,7 @@ void InputSystem::SetRelativeMouseMode(bool isRelative)
 	mState.Mouse.mIsRelative = isRelative;
 }
 
-float InputSystem::Filter1D(std::uint32_t input)
+float InputSystem::Filter1D(float input)
 {
 	const std::uint32_t deadZone = 300.0f;
 	const std::uint32_t maxValue = 30'000.0f;
@@ -112,7 +112,7 @@ float InputSystem::Filter1D(std::uint32_t input)
 	return returnValue;
 }
 
-Vector2 InputSystem::Filter2D(std::uint32_t x, std::uint32_t y)
+Vector2 InputSystem::Filter2D(float x, float y)
 {
 	float deadZone = 8000.0f;
 	float maxValue = 30'000.0f;
