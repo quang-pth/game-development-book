@@ -73,6 +73,7 @@ void Game::ShutDown()
 	this->UnloadData();
 	mRenderer->ShutDown();
 	mAudioSystem->Shutdown();
+	mInputSystem->Shutdown();
 }
 
 void Game::ProcessInput()
@@ -86,13 +87,13 @@ void Game::ProcessInput()
 		case SDL_QUIT:
 			mIsRunning = false;
 			break;
-		case SDL_MOUSEWHEEL:
-			mInputSystem->ProcessEvent(e);
-			break;
 		case SDL_KEYDOWN:
 			if (!e.key.repeat) {
 				this->HandlKeyPress(e.key.keysym.sym);
 			}
+			break;
+		default:
+			mInputSystem->ProcessEvent(e);
 			break;
 		}
 	}

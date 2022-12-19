@@ -6,10 +6,12 @@
 #include "include/ControllerState.h"
 #include "include/TransformComponent.h"
 #include<SDL2/SDL.h>
+#include <iostream>
 
 InputComponent::InputComponent(GameObject* owner, int updateOrder) : 
 	MoveComponent(owner, updateOrder),
-	mMaxForwardSpeed(500.0f), mMaxAngularSpeed(Math::Pi)
+	mMaxForwardSpeed(500.0f), mMaxAngularSpeed(Math::Pi),
+	mControllerIdx(0)
 {
 }
 
@@ -19,12 +21,11 @@ InputComponent::~InputComponent()
 
 void InputComponent::ProcessInput(const InputState& inputState)
 {
-	const ControllerState& controller = mOwner->GetGame()->GetInputSystem()->GetInputState().Controller;
+	const ControllerState& controller = mOwner->GetGame()->GetInputSystem()->GetInputState().Controllers[mControllerIdx];
 	if (controller.GetIsConnected()) {
 		const Vector2& direction = controller.GetLeftStick();
-		const Vector3& rotatedDir = Vector3::Transform(Vector3(direction.y, direction.x), mOwner->GetTransform()->GetRotation());
-		MoveComponent::SetVelocity(rotatedDir);
-
+		const Vector3& velocity = Vector3::Transform(Vector3(direction.y, direction.x), mOwner->GetTransform()->GetRotation());
+		MoveComponent::SetVelocity(velocity);
 		float angularSpeed = 0.0f;
 		if (controller.GetLeftTrigger()) {
 			angularSpeed -= mMaxAngularSpeed;

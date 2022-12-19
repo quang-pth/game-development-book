@@ -6,6 +6,8 @@
 #include<SDL2/SDL.h>
 #include<cstdint>
 
+static const std::uint16_t MAX_CONTROLLERS = 4;
+
 enum ButtonState {
 	ENone,
 	EPressed,
@@ -16,7 +18,7 @@ enum ButtonState {
 struct InputState {
 	KeyboardState KeyBoard;
 	MouseState Mouse;
-	ControllerState Controller;
+	ControllerState Controllers[MAX_CONTROLLERS];
 };
 
 class InputSystem
@@ -34,7 +36,10 @@ public:
 	Vector2 Filter2D(const Vector2& input);
 	const InputState& GetInputState() const { return mState; }
 private:
+	void UpdateMouse();
+	void UpdateControllers();
+private:
 	InputState mState;
-	SDL_GameController* mController;
+	SDL_GameController* mControllers[MAX_CONTROLLERS];
 	class Game* mGame;
 };

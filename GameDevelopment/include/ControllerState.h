@@ -2,6 +2,7 @@
 
 #include<SDL2/SDL.h>
 #include"include/CustomMath.h"
+#include <cstdint>
 
 enum ButtonState;
 
@@ -18,11 +19,13 @@ public:
 	float GetRightTrigger() const { return mRightTrigger; }
 	const Vector2& GetLeftStick() const { return mLeftStick; }
 	const Vector2& GetRightStick() const { return mRightStick; }
+	std::uint32_t GetInstanceID() const { return mID; }
 private:
 	Uint32 mCurrentButtons[SDL_CONTROLLER_BUTTON_MAX];
 	Uint32 mPreviousButtons[SDL_CONTROLLER_BUTTON_MAX];
 	Vector2 mLeftStick, mRightStick;
 	float mLeftTrigger, mRightTrigger;
 	bool mIsConnected;
+	std::uint32_t mID;
 };
 

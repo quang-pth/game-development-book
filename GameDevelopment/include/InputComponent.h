@@ -16,5 +16,6 @@ public:
 private:
 	float mMaxForwardSpeed;
 	float mMaxAngularSpeed;
+	std::uint16_t mControllerIdx;
 };
 
