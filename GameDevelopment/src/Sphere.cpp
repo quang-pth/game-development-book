@@ -17,10 +17,13 @@ Sphere::Sphere(Game* game, const std::string& name) :
 
 	mAudioComponent = new AudioComponent(this);
 	mGrassEvent = mAudioComponent->PlayEvent("event:/FireLoop");
+
+	game->GetInputSystem()->AddInputObserver(this);
 }
 
 Sphere::~Sphere()
 {
+	GameObject::GetGame()->GetInputSystem()->RemoveInputObserver(this);
 }
 
 void Sphere::UpdateGameObject(float deltaTime)
@@ -29,4 +32,8 @@ void Sphere::UpdateGameObject(float deltaTime)
 	float time = SDL_GetTicks() / scale;
 	Vector3 position = GameObject::GetTransform()->GetPosition();
 	GameObject::GetTransform()->SetPosition(Vector3(position.x + std::sin(time), 0.0f, 0.0f));
+}
+
+void Sphere::OnNotify(ControllerState* controller, InputObserver::Event inputEvent)
+{
 }

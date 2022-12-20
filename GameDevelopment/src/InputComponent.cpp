@@ -2,35 +2,37 @@
 #include "include/GameObject.h"
 #include "include/Game.h"
 #include "include/CustomMath.h"
-#include "include/InputSystem.h"
 #include "include/ControllerState.h"
 #include "include/TransformComponent.h"
 #include<SDL2/SDL.h>
 #include <iostream>
 
 InputComponent::InputComponent(GameObject* owner, int updateOrder) : 
-	MoveComponent(owner, updateOrder),
+	MoveComponent(owner, updateOrder), mController(),
 	mMaxForwardSpeed(500.0f), mMaxAngularSpeed(Math::Pi),
 	mControllerIdx(0)
 {
+	mOwner->GetGame()->GetInputSystem()->AddInputObserver(this);
 }
 
 InputComponent::~InputComponent()
 {
+	mOwner->GetGame()->GetInputSystem()->RemoveInputObserver(this);
 }
 
 void InputComponent::ProcessInput(const InputState& inputState)
 {
-	const ControllerState& controller = mOwner->GetGame()->GetInputSystem()->GetInputState().Controllers[mControllerIdx];
-	if (controller.GetIsConnected()) {
-		const Vector2& direction = controller.GetLeftStick();
+	if (mController != nullptr && mController->GetIsConnected())
+	{
+		const Vector2& direction = mController->GetLeftStick();
 		const Vector3& velocity = Vector3::Transform(Vector3(direction.y, direction.x), mOwner->GetTransform()->GetRotation());
 		MoveComponent::SetVelocity(velocity);
+		
 		float angularSpeed = 0.0f;
-		if (controller.GetLeftTrigger()) {
+		if (mController->GetLeftTrigger()) {
 			angularSpeed -= mMaxAngularSpeed;
 		}
-		if (controller.GetRightTrigger()) {
+		if (mController->GetRightTrigger()) {
 			angularSpeed += mMaxAngularSpeed;
 		}
 		MoveComponent::SetAngularSpeed(angularSpeed);
@@ -55,4 +57,25 @@ void InputComponent::SetMaxForwardSpeed(float speed)
 void InputComponent::SetMaxAngularSpeed(float speed)
 {
 	mMaxAngularSpeed = speed;
+}
+
+void InputComponent::OnNotify(ControllerState* controller, InputObserver::Event inputEvent)
+{
+	switch (inputEvent)
+	{
+	case InputObserver::Event::EAdded:
+		if (mController == nullptr) {
+			mController = controller;
+			mController->SetIsUsed(true);
+		}
+		break;
+	case InputObserver::Event::ERemoved:
+		if (mController != nullptr && controller->GetInstanceID() == mController->GetInstanceID()) {
+			mController->SetIsUsed(false);
+			mController = nullptr;
+		}
+		break;
+	default:
+		break;
+	}
 }

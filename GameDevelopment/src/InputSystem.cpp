@@ -1,5 +1,5 @@
-#include "include/Game.h"
 #include "include/InputSystem.h"
+#include "include/Game.h"
 #include "include/KeyboardState.h"
 #include<iostream>
 
@@ -24,6 +24,7 @@ bool InputSystem::Initialize()
 void InputSystem::Shutdown()
 {
 	for (std::uint16_t i = 0; i < MAX_CONTROLLERS; i++) {
+		// TODO: Fix the access violation here, currently now i have no ideas what happened
 		SDL_GameControllerClose(mControllers[i]);
 	}
 }
@@ -46,15 +47,18 @@ void InputSystem::ProcessEvent(SDL_Event& e)
 			mControllers[controllerIdx] = SDL_GameControllerOpen(controllerIdx);
 			mState.Controllers[controllerIdx].mID = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(mControllers[controllerIdx]));
 			mState.Controllers[controllerIdx].mIsConnected = true;
+
+			Subject::Notify(&mState.Controllers[controllerIdx], InputObserver::Event::EAdded);
 		}
 		break;
 	case SDL_CONTROLLERDEVICEREMOVED:
 		instanceID = e.cdevice.which;
-		SDL_GameControllerClose(SDL_GameControllerFromInstanceID(instanceID));
 		for (std::uint16_t i = 0; i < MAX_CONTROLLERS; i++) {
 			if (mState.Controllers[i].mID == instanceID) {
-				mControllers[i] = nullptr;
 				mState.Controllers[i].mIsConnected = false;
+				
+				Subject::Notify(&mState.Controllers[i], InputObserver::Event::ERemoved);
+				break;
 			}
 		}
 		break;

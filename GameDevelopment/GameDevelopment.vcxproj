@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\InputObserver.cpp" />
     <ClCompile Include="src\ControllerState.cpp" />
     <ClCompile Include="src\MouseState.cpp" />
     <ClCompile Include="src\KeyboardState.cpp" />
@@ -187,6 +188,7 @@
     <ClCompile Include="src\TransformComponent.cpp" />
     <ClCompile Include="src\VertexArray.cpp" />
     <ClCompile Include="src\Texture.cpp" />
+    <ClCompile Include="src\Subject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\ControllerState.h" />
@@ -202,6 +204,7 @@
     <ClInclude Include="include\CircleComponent.h" />
     <ClInclude Include="include\Asteroid.h" />
     <ClInclude Include="include\Animation.h" />
+    <ClInclude Include="include\InputObserver.h" />
     <ClInclude Include="include\PhongShader.h" />
     <ClInclude Include="include\SoundEvent.h" />
     <ClInclude Include="include\InputSystem.h" />
@@ -230,6 +233,7 @@
     <ClInclude Include="include\MeshComponent.h" />
     <ClInclude Include="include\Sphere.h" />
     <ClInclude Include="include\Level.h" />
+    <ClInclude Include="include\Subject.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\basic-frag.glsl" />

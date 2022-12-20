@@ -1,10 +1,13 @@
 #pragma once
 
+#include"include/InputObserver.h"
 #include"include/KeyboardState.h"
 #include"include/MouseState.h"
 #include"include/ControllerState.h"
+#include"include/Subject.h"
 #include<SDL2/SDL.h>
 #include<cstdint>
+#include<vector>
 
 static const std::uint16_t MAX_CONTROLLERS = 4;
 
@@ -21,7 +24,7 @@ struct InputState {
 	ControllerState Controllers[MAX_CONTROLLERS];
 };
 
-class InputSystem
+class InputSystem : public Subject
 {
 public:
 	InputSystem(class Game* game);
