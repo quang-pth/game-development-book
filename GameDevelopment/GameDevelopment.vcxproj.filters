@@ -290,4 +290,7 @@
     <None Include="Shader\phong-vert.glsl" />
     <None Include="Shader\phong-frag.glsl" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Utils\action_map.txt" />
+  </ItemGroup>
 </Project>

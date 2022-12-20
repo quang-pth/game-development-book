@@ -10,12 +10,15 @@ class InputComponent : public MoveComponent, InputObserver
 public:
 	InputComponent(class GameObject* owner, int updateOrder = 4);
 	~InputComponent();
-	void ProcessInput(const InputState& inputState) override;
+public:
 	float GetMaxForwardSpeed() const;
 	float GetMaxAngularSpeed() const;
+	ControllerState* GetController() const { return mController; }
+public:
+	void ProcessInput(const InputState& inputState) override;
 	void SetMaxForwardSpeed(float speed);
 	void SetMaxAngularSpeed(float speed);
-	virtual void OnNotify(ControllerState* controller, InputObserver::Event inputEvent) override;
+	virtual void OnControllerInputHandler(ControllerState* controller, InputObserver::Event inputEvent) override;
 private:
 	ControllerState* mController;
 	float mMaxForwardSpeed;

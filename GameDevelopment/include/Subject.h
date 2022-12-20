@@ -13,7 +13,7 @@ public:
 	void AddInputObserver(InputObserver* observer);
 	void RemoveInputObserver(InputObserver* observer);
 protected:
-	void Notify(ControllerState* controller, InputObserver::Event inputEvent);
+	void NotifyControllerInput(ControllerState* controller, InputObserver::Event inputEvent);
 private:
 	InputObserver* mHead;
 };

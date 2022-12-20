@@ -246,6 +246,9 @@
     <None Include="Shader\sprite-vert.glsl" />
     <None Include="Shader\transform-vert.glsl" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Utils\action_map.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

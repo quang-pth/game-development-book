@@ -1,0 +1,2 @@
+Fire,Controller,A,Keyboard,P
+Jump,Controller,Y,Keyboard,Space

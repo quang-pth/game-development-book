@@ -59,12 +59,12 @@ void InputComponent::SetMaxAngularSpeed(float speed)
 	mMaxAngularSpeed = speed;
 }
 
-void InputComponent::OnNotify(ControllerState* controller, InputObserver::Event inputEvent)
+void InputComponent::OnControllerInputHandler(ControllerState* controller, InputObserver::Event inputEvent)
 {
 	switch (inputEvent)
 	{
 	case InputObserver::Event::EAdded:
-		if (mController == nullptr) {
+		if (mController == nullptr && !controller->GetIsUsed()) {
 			mController = controller;
 			mController->SetIsUsed(true);
 		}

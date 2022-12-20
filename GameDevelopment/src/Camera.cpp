@@ -4,6 +4,7 @@
 #include "include/TransformComponent.h"
 #include "include/AudioComponent.h"
 #include "include/AudioSystem.h"
+#include <iostream>
 
 Camera::Camera(Game* game, const std::string& name) :
 	GameObject(game, name), 
@@ -34,7 +35,7 @@ void Camera::UpdateGameObject(float deltaTime)
 		mFootStep.Restart();
 		mLastFootStep = 0.5f;
 	}
-
+	
 	this->ComputeViewMatrix();
 }
 

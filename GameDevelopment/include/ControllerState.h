@@ -20,6 +20,8 @@ public:
 	const Vector2& GetLeftStick() const { return mLeftStick; }
 	const Vector2& GetRightStick() const { return mRightStick; }
 	std::uint32_t GetInstanceID() const { return mID; }
+	bool GetIsUsed() const { return mIsUsed; }
+public:
 	void SetIsUsed(bool isUsed) { mIsConnected = isUsed; }
 private:
 	Uint32 mCurrentButtons[SDL_CONTROLLER_BUTTON_MAX];
@@ -29,4 +31,3 @@ private:
 	bool mIsConnected, mIsUsed;
 	std::uint32_t mID;
 };
-

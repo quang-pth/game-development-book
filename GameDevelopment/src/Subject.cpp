@@ -49,11 +49,11 @@ void Subject::RemoveInputObserver(InputObserver* observer)
 	observer->mPrev = nullptr;
 }
 
-void Subject::Notify(ControllerState* controller, InputObserver::Event inputEvent)
+void Subject::NotifyControllerInput(ControllerState* controller, InputObserver::Event inputEvent)
 {
 	InputObserver* iter = mHead;
 	while (iter != nullptr) {
-		iter->OnNotify(controller, inputEvent);
+		iter->OnControllerInputHandler(controller, inputEvent);
 		iter = iter->mNext;
 	}
 }

@@ -10,8 +10,8 @@ public:
 		EAdded,
 		ERemoved
 	};
-	virtual ~InputObserver() {};
-	virtual void OnNotify(ControllerState* controller, Event inputEvent) = 0;
+	virtual ~InputObserver() { };
+	virtual void OnControllerInputHandler(ControllerState* controller, Event inputEvent) = 0;
 private:
 	InputObserver* mPrev = nullptr;
 	InputObserver* mNext = nullptr;

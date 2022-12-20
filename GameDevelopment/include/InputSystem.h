@@ -8,6 +8,7 @@
 #include<SDL2/SDL.h>
 #include<cstdint>
 #include<vector>
+#include<unordered_map>
 
 static const std::uint16_t MAX_CONTROLLERS = 4;
 
@@ -38,11 +39,16 @@ public:
 	Vector2 Filter2D(float x, float y);
 	Vector2 Filter2D(const Vector2& input);
 	const InputState& GetInputState() const { return mState; }
+	ButtonState GetMappedButtonState(const std::string& actionName, ControllerState* controller) const;
+	ButtonState GetMappedKeyState(const std::string& actionName, KeyboardState* keyboard) const;
 private:
 	void UpdateMouse();
 	void UpdateControllers();
+	bool InitActionMaps(const std::string& filePath);
 private:
 	InputState mState;
 	SDL_GameController* mControllers[MAX_CONTROLLERS];
 	class Game* mGame;
+	std::unordered_map<std::string, SDL_GameControllerButton> mControllerActionMap;
+	std::unordered_map<std::string, SDL_Scancode> mKeyboardActionMap;
 };

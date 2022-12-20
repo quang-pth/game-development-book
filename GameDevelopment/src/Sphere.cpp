@@ -34,6 +34,6 @@ void Sphere::UpdateGameObject(float deltaTime)
 	GameObject::GetTransform()->SetPosition(Vector3(position.x + std::sin(time), 0.0f, 0.0f));
 }
 
-void Sphere::OnNotify(ControllerState* controller, InputObserver::Event inputEvent)
+void Sphere::OnControllerInputHandler(ControllerState* controller, InputObserver::Event inputEvent)
 {
 }

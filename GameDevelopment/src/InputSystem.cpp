@@ -1,10 +1,13 @@
 #include "include/InputSystem.h"
 #include "include/Game.h"
 #include "include/KeyboardState.h"
-#include<iostream>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
 InputSystem::InputSystem(Game* game) : 
-	mGame(game), mControllers()
+	mGame(game), mControllers(),
+	mControllerActionMap(), mKeyboardActionMap()
 {
 }
 
@@ -18,13 +21,15 @@ bool InputSystem::Initialize()
 		memset(mState.Controllers[i].mCurrentButtons, 0, SDL_CONTROLLER_BUTTON_MAX);
 	}
 
+	if (!this->InitActionMaps("Utils/action_map.txt")) return false;
+
 	return true;
 }
 
 void InputSystem::Shutdown()
 {
 	for (std::uint16_t i = 0; i < MAX_CONTROLLERS; i++) {
-		// TODO: Fix the access violation here, currently now i have no ideas what happened
+		// TODO: Fix the access violation here, currently i have no ideas how to solve it
 		SDL_GameControllerClose(mControllers[i]);
 	}
 }
@@ -47,17 +52,17 @@ void InputSystem::ProcessEvent(SDL_Event& e)
 			mControllers[controllerIdx] = SDL_GameControllerOpen(controllerIdx);
 			mState.Controllers[controllerIdx].mID = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(mControllers[controllerIdx]));
 			mState.Controllers[controllerIdx].mIsConnected = true;
-
-			Subject::Notify(&mState.Controllers[controllerIdx], InputObserver::Event::EAdded);
+			Subject::NotifyControllerInput(&mState.Controllers[controllerIdx], InputObserver::Event::EAdded);
 		}
 		break;
 	case SDL_CONTROLLERDEVICEREMOVED:
 		instanceID = e.cdevice.which;
-		for (std::uint16_t i = 0; i < MAX_CONTROLLERS; i++) {
-			if (mState.Controllers[i].mID == instanceID) {
-				mState.Controllers[i].mIsConnected = false;
-				
-				Subject::Notify(&mState.Controllers[i], InputObserver::Event::ERemoved);
+		for (controllerIdx = 0; controllerIdx < MAX_CONTROLLERS; controllerIdx++) {
+			if (mState.Controllers[controllerIdx].mID == instanceID) {
+				SDL_GameControllerClose(mControllers[controllerIdx]);
+				mControllers[controllerIdx] = nullptr;
+				mState.Controllers[controllerIdx].mIsConnected = false;
+				Subject::NotifyControllerInput(&mState.Controllers[controllerIdx], InputObserver::Event::ERemoved);
 				break;
 			}
 		}
@@ -134,6 +139,16 @@ Vector2 InputSystem::Filter2D(const Vector2& input)
 	return this->Filter2D(input.x, input.y);
 }
 
+ButtonState InputSystem::GetMappedButtonState(const std::string& actionName, ControllerState* controller) const
+{
+	return controller->GetButtonState(mControllerActionMap.at(actionName));
+}
+
+ButtonState InputSystem::GetMappedKeyState(const std::string& actionName, KeyboardState* keyboard) const
+{
+	return keyboard->GetKeyState(mKeyboardActionMap.at(actionName));
+}
+
 void InputSystem::UpdateMouse()
 {
 	int x = 0, y = 0;
@@ -158,8 +173,8 @@ void InputSystem::UpdateControllers()
 		SDL_GameController* controller = mControllers[controllerIdx];
 		// Controller buttons
 		for (std::uint8_t buttonIdx = 0; buttonIdx < SDL_CONTROLLER_BUTTON_MAX; buttonIdx++) {
-			mState.Controllers[controllerIdx].mCurrentButtons[buttonIdx] = SDL_GameControllerGetButton(controller,
-				SDL_GameControllerButton(buttonIdx));
+			mState.Controllers[controllerIdx].mCurrentButtons[buttonIdx] = 
+				SDL_GameControllerGetButton(controller,SDL_GameControllerButton(buttonIdx));
 		}
 		// Triggers
 		mState.Controllers[controllerIdx].mLeftTrigger = this->Filter1D(SDL_GameControllerGetAxis(controller,
@@ -175,4 +190,50 @@ void InputSystem::UpdateControllers()
 		float rightY = -SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_RIGHTY);
 		mState.Controllers[controllerIdx].mRightStick = this->Filter2D(rightX, rightY);
 	}
+}
+
+bool InputSystem::InitActionMaps(const std::string& filePath)
+{
+	std::ifstream fileStream(filePath);
+	std::string line;
+
+	if (fileStream.is_open()) {
+		std::stringstream sstream;
+
+		while (std::getline(fileStream, line))
+		{
+			std::stringstream lineStream(line);
+			std::string col;
+			std::vector<std::string> actionMap;
+
+			while (std::getline(lineStream, col, ','))
+			{
+				actionMap.emplace_back(col);
+			}
+
+			std::string actionName = actionMap[0];
+			auto iter = ++actionMap.begin();
+			while (iter != actionMap.end()) {
+				std::string deviceName = *iter;
+				std::string inputName = *(iter + 1);
+			
+				if (deviceName == "Controller") {
+					SDL_GameControllerButton button = SDL_GameControllerGetButtonFromString(inputName.c_str());
+					mControllerActionMap.insert({ actionName, button });
+				}
+				else if (deviceName == "Keyboard") {
+					SDL_Scancode key = SDL_GetScancodeFromName(inputName.c_str());
+					mKeyboardActionMap.insert({ actionName, key });
+				}
+
+				iter = (iter + 2);
+			}
+		}
+
+		return true;
+	}
+
+
+	SDL_Log("Cannot open action map file at path {0}", filePath.c_str());
+	return false;
 }
