@@ -158,7 +158,7 @@ void Renderer::Draw()
 
 void Renderer::SetLightUniforms(Shader* shader)
 {
-	Matrix4 cameraView = mCamera->GetViewMatrix();
+	Matrix4 cameraView = mViewMatrix;
 	cameraView.Invert();
 
 	shader->SetActive();
@@ -242,6 +242,11 @@ void Renderer::RemoveMesh(MeshComponent* mesh)
 	if (iter != meshComponents.end()) {
 		meshComponents.erase(iter);
 	}
+}
+
+void Renderer::SetViewMatrix(const Matrix4& matrix)
+{
+	mViewMatrix = matrix;
 }
 
 Texture* Renderer::GetTexture(const std::string& fileName)

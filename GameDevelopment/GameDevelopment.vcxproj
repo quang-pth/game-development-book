@@ -145,6 +145,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\FPSCameraComponent.cpp" />
+    <ClCompile Include="src\CameraComponent.cpp" />
     <ClCompile Include="src\ControllerControlState.cpp" />
     <ClCompile Include="src\KeyboardControlState.cpp" />
     <ClCompile Include="src\ControlState.cpp" />
@@ -194,6 +196,8 @@
     <ClCompile Include="src\Subject.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\FPSCameraComponent.h" />
+    <ClInclude Include="include\CameraComponent.h" />
     <ClInclude Include="include\ControllerControlState.h" />
     <ClInclude Include="include\ControlState.h" />
     <ClInclude Include="include\ControllerState.h" />

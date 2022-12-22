@@ -13,6 +13,6 @@ BasicShader::~BasicShader()
 
 void BasicShader::SetUniforms(Renderer* renderer)
 {
-	Shader::SetMatrix4Uniform("uViewMatrix", renderer->GetGame()->GetCamera()->GetViewMatrix());
+	Shader::SetMatrix4Uniform("uViewMatrix", renderer->GetViewMatrix());
 	Shader::SetMatrix4Uniform("uProjectionMatrix", renderer->GetProjectionMatrix());
 }

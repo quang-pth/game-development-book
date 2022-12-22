@@ -3,6 +3,9 @@
 #include "include/TransformComponent.h"
 #include "include/InputSystem.h"
 #include "include/GameObject.h"
+#include "include/Camera.h"
+#include "include/FPSCameraComponent.h"
+#include <iostream>
 
 void ControllerControlState::OnEnter(InputComponent* owner)
 {
@@ -36,6 +39,9 @@ void ControllerControlState::OnProcessInput(InputComponent* owner, const InputSt
 		const Vector2& rotation = controller->GetRightStick();
 		const float maxAngularSpeed = Math::Pi * 1.5; 
 		owner->SetAngularSpeed(rotation.x * maxAngularSpeed);
+
+		Camera* camera = static_cast<Camera*>(owner->mOwner);
+		camera->GetFPSCamera()->SetPitchSpeed(-rotation.y);
 	}
 }
 

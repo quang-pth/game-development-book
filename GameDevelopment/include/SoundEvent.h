@@ -12,6 +12,7 @@ namespace FMOD {
 
 class SoundEvent
 {
+	friend class AudioSystem;
 public:
 	SoundEvent() = default;
 	~SoundEvent();
@@ -30,7 +31,6 @@ public:
 	float GetParameter(const std::string& name) const;
 	bool Is3D() const;
 protected:
-	friend class AudioSystem;
 	SoundEvent(class AudioSystem* audioSystem, std::uint32_t id);
 private:
 	FMOD::Studio::EventInstance* GetEventInstance() const;

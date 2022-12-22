@@ -15,7 +15,6 @@ InputComponent::InputComponent(GameObject* owner, int updateOrder) :
 {
 	mControlStates.insert({ ControlState::State::EKeyboard, std::make_shared<KeyboardControlState>() });
 	mControlStates.insert({ ControlState::State::EController, std::make_shared<ControllerControlState>() });
-	this->ChangeState(ControlState::State::EController);
 
 	mOwner->GetGame()->GetInputSystem()->AddInputObserver(this);
 }
@@ -27,7 +26,9 @@ InputComponent::~InputComponent()
 
 void InputComponent::Update(float deltaTime)
 {
-	mCurrentControlState->OnUpdate(this, deltaTime);
+	if (mCurrentControlState) {
+		mCurrentControlState->OnUpdate(this, deltaTime);
+	}
 }
 
 void InputComponent::ProcessInput(const InputState& inputState)
@@ -85,12 +86,14 @@ void InputComponent::OnControllerInputHandler(ControllerState* controller, Input
 		if (mController == nullptr && !controller->GetIsUsed()) {
 			mController = controller;
 			mController->SetIsUsed(true);
+			this->ChangeState(ControlState::State::EController);
 		}
 		break;
 	case InputObserver::Event::ERemoved:
 		if (mController != nullptr && controller->GetInstanceID() == mController->GetInstanceID()) {
 			mController->SetIsUsed(false);
 			mController = nullptr;
+			this->ChangeState(ControlState::State::EKeyboard);
 		}
 		break;
 	default:

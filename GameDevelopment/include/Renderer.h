@@ -38,6 +38,7 @@ public:
 	void AddSprite(class SpriteComponent* sprite);
 	void RemoveSprite(class SpriteComponent* sprite);
 	void RemoveMesh(class MeshComponent* mesh);
+	void SetViewMatrix(const Matrix4& matrix);
 	class Texture* GetTexture(const std::string& fileName);
 	class Mesh* GetMesh(const std::string& fileName);
 	class Game* GetGame() const;

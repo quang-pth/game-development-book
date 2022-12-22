@@ -33,7 +33,7 @@ public:
 	bool GetBusPaused(const std::string& name) const;
 	void SetBusVolume(const std::string& name, float value);
 	void SetBusPause(const std::string& name, bool pause);
-	void SetListener(const Matrix4& viewMatrix, const Vector3& offset);
+	void SetListener(const Matrix4& viewMatrix, const Vector3& offset = Vector3::Zero);
 	void Shutdown();
 	void Update(float deltaTime);
 	void LoadBank(const std::string& name);

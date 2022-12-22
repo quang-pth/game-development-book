@@ -123,7 +123,7 @@ float InputSystem::Filter1D(float input)
 
 Vector2 InputSystem::Filter2D(float x, float y)
 {
-	float deadZone = 8000.0f;
+	float deadZone = 8'000.0f;
 	float maxValue = 30'000.0f;
 
 	Vector2 direction(x, y);
