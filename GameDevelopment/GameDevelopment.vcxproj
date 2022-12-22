@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -145,6 +145,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ControllerControlState.cpp" />
+    <ClCompile Include="src\KeyboardControlState.cpp" />
+    <ClCompile Include="src\ControlState.cpp" />
     <ClCompile Include="src\InputObserver.cpp" />
     <ClCompile Include="src\ControllerState.cpp" />
     <ClCompile Include="src\MouseState.cpp" />
@@ -191,6 +194,8 @@
     <ClCompile Include="src\Subject.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\ControllerControlState.h" />
+    <ClInclude Include="include\ControlState.h" />
     <ClInclude Include="include\ControllerState.h" />
     <ClInclude Include="include\AudioComponent.h" />
     <ClInclude Include="include\AudioSystem.h" />
@@ -210,6 +215,7 @@
     <ClInclude Include="include\InputSystem.h" />
     <ClInclude Include="include\KeyboardState.h" />
     <ClInclude Include="include\MouseState.h" />
+    <ClInclude Include="include\KeyboardControlState.h" />
     <ClInclude Include="src\EsstenialMath.h" />
     <ClInclude Include="include\BackgroundSpriteComponent.h" />
     <ClInclude Include="include\AnimatorComponent.h" />

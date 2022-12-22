@@ -28,10 +28,10 @@ bool InputSystem::Initialize()
 
 void InputSystem::Shutdown()
 {
-	for (std::uint16_t i = 0; i < MAX_CONTROLLERS; i++) {
-		// TODO: Fix the access violation here, currently i have no ideas how to solve it
-		SDL_GameControllerClose(mControllers[i]);
-	}
+	// TODO: Fix the access violation here, currently i have no ideas how to solve it
+	//for (std::uint16_t i = 0; i < MAX_CONTROLLERS; i++) {
+	//	SDL_GameControllerClose(mControllers[i]);
+	//}
 }
 
 void InputSystem::ProcessEvent(SDL_Event& e)
@@ -97,6 +97,13 @@ void InputSystem::SetRelativeMouseMode(bool isRelative)
 	mState.Mouse.mIsRelative = isRelative;
 }
 
+Vector2 InputSystem::GetMouseRelativePosition() const
+{
+	int x, y;
+	SDL_GetRelativeMouseState(&x, &y);
+	return Vector2(static_cast<float>(x), static_cast<float>(y));
+}
+
 float InputSystem::Filter1D(float input)
 {
 	const std::uint32_t deadZone = 300.0f;
@@ -139,15 +146,20 @@ Vector2 InputSystem::Filter2D(const Vector2& input)
 	return this->Filter2D(input.x, input.y);
 }
 
-ButtonState InputSystem::GetMappedButtonState(const std::string& actionName, ControllerState* controller) const
+ButtonState InputSystem::GetMappedButtonState(const std::string& actionName, const ControllerState* controller) const
 {
 	return controller->GetButtonState(mControllerActionMap.at(actionName));
 }
 
-ButtonState InputSystem::GetMappedKeyState(const std::string& actionName, KeyboardState* keyboard) const
+ButtonState InputSystem::GetMappedKeyState(const std::string& actionName, const KeyboardState* keyboard) const
 {
 	return keyboard->GetKeyState(mKeyboardActionMap.at(actionName));
 }
+
+bool InputSystem::GetMappedKeyValue(const std::string& actionName, const KeyboardState* keyboard) const
+{
+	return keyboard->GetKeyValue(mKeyboardActionMap.at(actionName));
+	}
 
 void InputSystem::UpdateMouse()
 {
@@ -163,6 +175,11 @@ void InputSystem::UpdateMouse()
 	}
 	mState.Mouse.mCurrentPosition.x = static_cast<float>(x);
 	mState.Mouse.mCurrentPosition.y = static_cast<float>(y);
+}
+
+void InputSystem::UpdateKeyboard()
+{
+	mState.KeyBoard.mCurrentState = SDL_GetKeyboardState(NULL);
 }
 
 void InputSystem::UpdateControllers()

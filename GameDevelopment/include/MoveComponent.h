@@ -18,13 +18,16 @@ public:
 	virtual void OnUpdateWorldTransform() override;
 	float GetForwardSpeed() const;
 	float GetAngularSpeed() const;
+	float GetStrafeSpeed() const;
+	const Vector3& GetVelocity() const;
+public:
 	void SetForwardSpeed(float speed);
 	void SetAngularSpeed(float speed);
+	void SetStrafeSpeed(float speed);
 	void SetVelocity(const Vector3& velocity);
-	const Vector3& GetVelocity() const;
 protected:
-	float mForwardSpeed; // Velocity measured in units/second
-	float mAngularSpeed; // Rotation angle measured in radians/second
+	float mForwardSpeed; 
+	float mStrafeSpeed;
+	float mAngularSpeed; 
 	Vector3 mVelocity;
 };
-

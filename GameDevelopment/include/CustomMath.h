@@ -171,6 +171,14 @@ public:
 		return Vector2(vec.x, vec.y) * (1 / scalar);
 	}
 
+	friend bool operator==(const Vector2& vec, const Vector2& other) {
+		return vec.x == other.x && vec.y == other.y;
+	}
+	
+	friend bool operator!=(const Vector2& vec, const Vector2& other) {
+		return !(vec == other);
+	}
+
 	// Scalar *=
 	Vector2& operator*=(float scalar)
 	{
@@ -333,6 +341,10 @@ public:
 
 	friend bool operator==(const Vector3& left, const Vector3& right) {
 		return left.x == right.x && left.y == right.y && left.z == right.z;
+	}
+
+	friend bool operator!=(const Vector3& left, const Vector3& right) {
+		return !(left.x == right.x && left.y == right.y && left.z == right.z);
 	}
 
 	// Scalar *=

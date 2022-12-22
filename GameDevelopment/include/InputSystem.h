@@ -35,14 +35,17 @@ public:
 	void PrepareBeforeUpdate();
 	void Update();
 	void SetRelativeMouseMode(bool isRelative);
+	Vector2 GetMouseRelativePosition() const;
 	float Filter1D(float input);
 	Vector2 Filter2D(float x, float y);
 	Vector2 Filter2D(const Vector2& input);
 	const InputState& GetInputState() const { return mState; }
-	ButtonState GetMappedButtonState(const std::string& actionName, ControllerState* controller) const;
-	ButtonState GetMappedKeyState(const std::string& actionName, KeyboardState* keyboard) const;
+	ButtonState GetMappedButtonState(const std::string& actionName, const ControllerState* controller) const;
+	ButtonState GetMappedKeyState(const std::string& actionName, const KeyboardState* keyboard) const;
+	bool GetMappedKeyValue(const std::string& actionName, const KeyboardState* keyboard) const;
 private:
 	void UpdateMouse();
+	void UpdateKeyboard();
 	void UpdateControllers();
 	bool InitActionMaps(const std::string& filePath);
 private:

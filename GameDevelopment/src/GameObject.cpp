@@ -118,6 +118,11 @@ Vector3 GameObject::GetForward() const
 	return Vector3::Transform(Vector3::UnitX, mTransform->GetRotation());
 }
 
+Vector3 GameObject::GetRight() const
+{
+	return Vector3::Transform(Vector3::UnitY, mTransform->GetRotation());
+}
+
 Game* GameObject::GetGame() const
 {
 	return mGame;

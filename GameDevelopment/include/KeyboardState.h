@@ -6,9 +6,9 @@ enum ButtonState;
 
 class KeyboardState
 {
+	friend class InputSystem;
 public:
 	KeyboardState() = default;
-	friend class InputSystem;
 	bool GetKeyValue(SDL_Scancode keyCode) const;
 	ButtonState GetKeyState(SDL_Scancode keyCode) const;
 private:

@@ -10,7 +10,7 @@ public:
 		EAdded,
 		ERemoved
 	};
-	virtual ~InputObserver() { };
+	virtual ~InputObserver() = default;
 	virtual void OnControllerInputHandler(ControllerState* controller, Event inputEvent) = 0;
 private:
 	InputObserver* mPrev = nullptr;

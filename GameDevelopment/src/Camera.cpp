@@ -30,7 +30,7 @@ void Camera::UpdateGameObject(float deltaTime)
 	GameObject::UpdateGameObject(deltaTime);
 
 	mLastFootStep -= deltaTime;
-	if (!Math::NearZero(mInputComponent->GetForwardSpeed()) && mLastFootStep < 0.0f) {
+	if (!Math::NearZero(mInputComponent->IsMoving()) && mLastFootStep < 0.0f) {
 		mFootStep.SetPaused(false);
 		mFootStep.Restart();
 		mLastFootStep = 0.5f;
