@@ -30,7 +30,7 @@ public:
 	~Renderer();
 	bool Intialize(float screenWidth, float screenHeight);
 	void ShutDown();
-	bool BeginScene(class Camera* camera);
+	bool BeginScene();
 	void Unload();
 	void Draw();
 	void SetLightUniforms(class Shader* shader);
@@ -51,7 +51,6 @@ private:
 	void InitPointLights();
 private:
 	class Game* mGame;
-	class Camera* mCamera;
 	class Shader* mSpriteShader;
 	std::unordered_map<std::string, class Shader*> mShaderMap;
 	std::unordered_map<std::string, std::vector<class MeshComponent*>> mMeshMap;

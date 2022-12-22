@@ -15,6 +15,7 @@ InputComponent::InputComponent(GameObject* owner, int updateOrder) :
 {
 	mControlStates.insert({ ControlState::State::EKeyboard, std::make_shared<KeyboardControlState>() });
 	mControlStates.insert({ ControlState::State::EController, std::make_shared<ControllerControlState>() });
+	this->ChangeState(ControlState::State::EKeyboard);
 
 	mOwner->GetGame()->GetInputSystem()->AddInputObserver(this);
 }

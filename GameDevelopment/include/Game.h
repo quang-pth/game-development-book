@@ -14,7 +14,7 @@ public:
 	void ShutDown();
 	void AddGameObject(class GameObject* gameObject);
 	void RemoveGameObject(class GameObject* gameObject);
-	class Camera* GetCamera() const;
+	class FPSGameObject* GetFPSGameObject() const;
 	class Renderer* GetRenderer() const;
 	class AudioSystem* GetAudioSystem() const;
 	class InputSystem* GetInputSystem() const;
@@ -36,7 +36,7 @@ private:
 	// Game Objects
 	std::vector<class GameObject*> mGameObjects;
 	std::vector<class GameObject*> mPendingGameObjects;
-	class Camera* mCamera;
+	class FPSGameObject* mFPSGameObject;
 	class Renderer* mRenderer;
 	class AudioSystem* mAudioSystem;
 	class InputSystem* mInputSystem;

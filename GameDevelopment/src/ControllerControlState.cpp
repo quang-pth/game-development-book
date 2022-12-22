@@ -3,7 +3,8 @@
 #include "include/TransformComponent.h"
 #include "include/InputSystem.h"
 #include "include/GameObject.h"
-#include "include/Camera.h"
+#include "include/FPSGameObject.h"
+#include "include/Game.h"
 #include "include/FPSCameraComponent.h"
 #include <iostream>
 
@@ -39,9 +40,7 @@ void ControllerControlState::OnProcessInput(InputComponent* owner, const InputSt
 		const Vector2& rotation = controller->GetRightStick();
 		const float maxAngularSpeed = Math::Pi * 1.5; 
 		owner->SetAngularSpeed(rotation.x * maxAngularSpeed);
-
-		Camera* camera = static_cast<Camera*>(owner->mOwner);
-		camera->GetFPSCamera()->SetPitchSpeed(-rotation.y);
+		owner->mOwner->GetGame()->GetFPSGameObject()->GetFPSCamera()->SetPitchSpeed(-rotation.y);
 	}
 }
 

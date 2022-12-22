@@ -1,7 +1,6 @@
 #include "include/BasicShader.h"
 #include "include/Renderer.h"
 #include "include/Game.h"
-#include "include/Camera.h"
 
 BasicShader::BasicShader() : Shader()
 {

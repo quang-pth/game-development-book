@@ -159,7 +159,7 @@ ButtonState InputSystem::GetMappedKeyState(const std::string& actionName, const 
 bool InputSystem::GetMappedKeyValue(const std::string& actionName, const KeyboardState* keyboard) const
 {
 	return keyboard->GetKeyValue(mKeyboardActionMap.at(actionName));
-	}
+}
 
 void InputSystem::UpdateMouse()
 {

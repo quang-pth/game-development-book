@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\FPSModel.cpp" />
     <ClCompile Include="src\FPSCameraComponent.cpp" />
     <ClCompile Include="src\CameraComponent.cpp" />
     <ClCompile Include="src\ControllerControlState.cpp" />
@@ -160,7 +161,7 @@
     <ClCompile Include="src\AudioSystem.cpp" />
     <ClCompile Include="src\BasicShader.cpp" />
     <ClCompile Include="src\PhongShader.cpp" />
-    <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\FPSGameObject.cpp" />
     <ClCompile Include="src\Decoration.cpp" />
     <ClCompile Include="src\Level.cpp" />
     <ClCompile Include="src\Icon.cpp" />
@@ -196,6 +197,7 @@
     <ClCompile Include="src\Subject.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\FPSModel.h" />
     <ClInclude Include="include\FPSCameraComponent.h" />
     <ClInclude Include="include\CameraComponent.h" />
     <ClInclude Include="include\ControllerControlState.h" />
@@ -204,7 +206,7 @@
     <ClInclude Include="include\AudioComponent.h" />
     <ClInclude Include="include\AudioSystem.h" />
     <ClInclude Include="include\BasicShader.h" />
-    <ClInclude Include="include\Camera.h" />
+    <ClInclude Include="include\FPSGameObject.h" />
     <ClInclude Include="include\Decoration.h" />
     <ClInclude Include="include\Icon.h" />
     <ClInclude Include="include\Cube.h" />

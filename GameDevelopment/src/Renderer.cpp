@@ -5,7 +5,7 @@
 #include "include/SpriteComponent.h"
 #include "include/MeshComponent.h"
 
-#include "include/Camera.h"
+#include "include/FPSGameObject.h"
 #include "include/Shader.h"
 #include "include/Texture.h"
 #include "include/VertexArray.h"
@@ -21,7 +21,7 @@ Renderer::Renderer(Game* game) :
 	mSprites(), mLoadedTextures(), mLoadedMeshes(),
 	mGlewExperimental(GL_FALSE),
 	mWindowWidth(0.0f), mWindowHeight(0.0f),
-	mWindow(), mContext(), mCamera(nullptr),
+	mWindow(), mContext(),
 	mAmbientLight(Vector3(.1f, .1f, .1f))
 {
 	this->InitDirectionalLight();
@@ -187,10 +187,8 @@ void Renderer::SetLightUniforms(Shader* shader)
 	// =========================================================
 }
 
-bool Renderer::BeginScene(Camera* camera)
+bool Renderer::BeginScene()
 {
-	mCamera = camera;
-
 	this->InitSpriteVertices();
 	if (!this->LoadShaders()) {
 		return false;

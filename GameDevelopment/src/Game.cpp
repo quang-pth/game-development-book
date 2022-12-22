@@ -7,10 +7,11 @@
 #include"include/TileMapComponent.h"
 #include"include/Level.h"
 #include"include/AudioSystem.h"
-#include"include/Camera.h"
+#include"include/FPSGameObject.h"
 #include"include/Sphere.h"
 #include"include/Cube.h"
 #include"include/Icon.h"
+#include"include/FPSModel.h"
 #include"include/VertexArray.h"
 #include"include/Texture.h"
 #include"include/Mesh.h"
@@ -24,7 +25,7 @@ Game::Game() :
 	mTicksCount(0.0f),
 	mUpdatingGameObjects(false),
 	mWindowWidth(800), mWindowHeight(600), 
-	mRenderer(nullptr), mCamera(nullptr), mAudioSystem(nullptr), mInputSystem(nullptr),
+	mRenderer(nullptr), mFPSGameObject(nullptr), mAudioSystem(nullptr), mInputSystem(nullptr),
 	mMusicEvent(), mReverbSnap()
 {
 }
@@ -50,7 +51,7 @@ bool Game::Initialize()
 
 	this->LoadData();
 
-	if (!mRenderer->BeginScene(mCamera)) {
+	if (!mRenderer->BeginScene()) {
 		return false;
 	}
 
@@ -147,12 +148,12 @@ void Game::HandlKeyPress(std::uint32_t key)
 	case '1':
 		// Set footstep parameter to default
 		value = 0.0f;
-		mCamera->SetFootstepSurface(value);
+		mFPSGameObject->SetFootstepSurface(value);
 		break;
 	case '2':
 		// Set footstep parameter to grass
 		value = 0.5f;
-		mCamera->SetFootstepSurface(value);
+		mFPSGameObject->SetFootstepSurface(value);
 		break;
 	default:
 		break;
@@ -206,7 +207,14 @@ void Game::GenerateOutput()
 
 void Game::LoadData()
 {
-	mCamera = new Camera(this);
+	mFPSGameObject = new FPSGameObject(this);
+	FPSModel* fpsModel = new FPSModel(this);
+	mFPSGameObject->SetModel(fpsModel);
+
+	GameObject* aimingReticule = new GameObject(this);
+	SpriteComponent* aimingSprite = new SpriteComponent(aimingReticule);
+	aimingSprite->SetTexture(mRenderer->GetTexture("Assets/Chapter9/Crosshair.png"));
+	aimingReticule->GetTransform()->SetScale(4.0f);
 
 	new Level(this);
 	new Sphere(this);
@@ -236,9 +244,9 @@ void Game::UnloadData()
 		mRenderer->Unload();
 }
 
-Camera* Game::GetCamera() const
+FPSGameObject* Game::GetFPSGameObject() const
 {
-	return mCamera;
+	return mFPSGameObject;
 }
 
 Renderer* Game::GetRenderer() const

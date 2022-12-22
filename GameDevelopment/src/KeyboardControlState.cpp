@@ -3,6 +3,8 @@
 #include "include/TransformComponent.h"
 #include "include/Game.h"
 #include "include/GameObject.h"
+#include "include/FPSGameObject.h"
+#include "include/FPSCameraComponent.h"
 #include "include/InputSystem.h"
 #include "include/CustomMath.h"
 #include <iostream>
@@ -57,11 +59,10 @@ void KeyboardControlState::OnProcessInput(InputComponent* owner, const InputStat
 	float maxMouseSpeed = 500.0f; // Max mouse speed per frame
 	const float maxAngularSpeed = Math::Pi * 8; // Max rotation speed per second
 	float angularSpeed = 0.0f;
-	if (mouseRelativePos.x != 0.0f) {
-		angularSpeed = mouseRelativePos.x / maxMouseSpeed;
-		angularSpeed *= maxAngularSpeed;
-	}
+	angularSpeed = mouseRelativePos.x / maxMouseSpeed;
+	angularSpeed *= maxAngularSpeed;
 	owner->SetAngularSpeed(angularSpeed);
+	owner->mOwner->GetGame()->GetFPSGameObject()->GetFPSCamera()->SetPitchSpeed(-mouseRelativePos.y);
 }
 
 void KeyboardControlState::OnExit(InputComponent* owner)

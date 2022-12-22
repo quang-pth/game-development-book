@@ -1,7 +1,6 @@
 #include "include/PhongShader.h"
 #include "include/Game.h"
 #include "include/Renderer.h"
-#include "include/Camera.h"
 
 PhongShader::PhongShader()
 {
