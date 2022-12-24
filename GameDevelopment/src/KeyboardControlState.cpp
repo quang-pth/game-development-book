@@ -38,35 +38,38 @@ void KeyboardControlState::OnUpdate(InputComponent* owner, float deltaTime)
 void KeyboardControlState::OnProcessInput(InputComponent* owner, const InputState& state)
 {
 	InputSystem* inputSystem = owner->mOwner->GetGame()->GetInputSystem();
+	FPSGameObject* fpsGameObject = static_cast<FPSGameObject*>(owner->mOwner);
 	float forwardSpeed = 0.0f;
-	if (inputSystem->GetMappedKeyValue("MoveForward", &state.KeyBoard)) {
-		forwardSpeed += owner->mForwardSpeed;
+	if (inputSystem->GetMappedKeyValue("MoveForward")) {
+		forwardSpeed += fpsGameObject->GetForwardSpeed();
 	}
-	if (inputSystem->GetMappedKeyValue("MoveBackward", &state.KeyBoard)) {
-		forwardSpeed -= owner->mForwardSpeed;
+	if (inputSystem->GetMappedKeyValue("MoveBackward")) {
+		forwardSpeed -= fpsGameObject->GetForwardSpeed();
 	}
 	owner->SetForwardSpeed(forwardSpeed);
 	float strafeSpeed = 0.0f;
-	if (inputSystem->GetMappedKeyValue("MoveRight", &state.KeyBoard)) {
-		strafeSpeed += owner->mStrafeSpeed;
+	if (inputSystem->GetMappedKeyValue("MoveRight")) {
+		strafeSpeed += fpsGameObject->GetStrafeSpeed();
 	}
-	if (inputSystem->GetMappedKeyValue("MoveLeft", &state.KeyBoard)) {
-		strafeSpeed -= owner->mStrafeSpeed;
+	if (inputSystem->GetMappedKeyValue("MoveLeft")) {
+		strafeSpeed -= fpsGameObject->GetStrafeSpeed();
 	}
 	owner->SetStrafeSpeed(strafeSpeed);
-	// MOUSE
+	// ================== MOUSE =======================
 	const Vector2& mouseRelativePos = inputSystem->GetMouseRelativePosition();
-	float maxMouseSpeed = 500.0f; // Max mouse speed per frame
-	const float maxAngularSpeed = Math::Pi * 8; // Max rotation speed per second
-	float angularSpeed = 0.0f;
-	angularSpeed = mouseRelativePos.x / maxMouseSpeed;
-	angularSpeed *= maxAngularSpeed;
+	const float maxAngularSpeed = Math::Pi * 0.1f; // Max rotation speed per second
+	// Rotate horizontally
+	float angularSpeed = mouseRelativePos.x * maxAngularSpeed;
 	owner->SetAngularSpeed(angularSpeed);
-	owner->mOwner->GetGame()->GetFPSGameObject()->GetFPSCamera()->SetPitchSpeed(-mouseRelativePos.y);
+	// Rotate vertically
+	angularSpeed = mouseRelativePos.y * maxAngularSpeed;
+	owner->mOwner->GetGame()->GetFPSGameObject()->GetFPSCamera()->SetPitchSpeed(angularSpeed);
 }
 
 void KeyboardControlState::OnExit(InputComponent* owner)
 {
+	owner->SetForwardSpeed(static_cast<FPSGameObject*>(owner->mOwner)->GetForwardSpeed());
+	owner->SetStrafeSpeed(static_cast<FPSGameObject*>(owner->mOwner)->GetStrafeSpeed());
 }
 
 ControlState::State KeyboardControlState::GetEnumState() const

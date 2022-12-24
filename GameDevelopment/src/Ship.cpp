@@ -21,7 +21,6 @@ Ship::Ship(Game* game) :
 	mSpriteComponent->SetTexture(game->GetRenderer()->GetTexture("Assets/Chapter3/Ship.png"));
 	
 	mInputComponent = new InputComponent(this);
-	mInputComponent->SetMaxForwardSpeed(300.0f);
 	mInputComponent->SetAngularSpeed(135.0f);
 
 	mCircleComponent = new CircleComponent(this);

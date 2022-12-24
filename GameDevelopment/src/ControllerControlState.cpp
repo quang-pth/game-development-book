@@ -10,7 +10,7 @@
 
 void ControllerControlState::OnEnter(InputComponent* owner)
 {
-	owner->SetForwardSpeed(200.0f);
+	owner->SetForwardSpeed(static_cast<FPSGameObject*>(owner->mOwner)->GetForwardSpeed());
 }
 
 void ControllerControlState::OnUpdate(InputComponent* owner, float deltaTime)
@@ -40,7 +40,7 @@ void ControllerControlState::OnProcessInput(InputComponent* owner, const InputSt
 		const Vector2& rotation = controller->GetRightStick();
 		const float maxAngularSpeed = Math::Pi * 1.5; 
 		owner->SetAngularSpeed(rotation.x * maxAngularSpeed);
-		owner->mOwner->GetGame()->GetFPSGameObject()->GetFPSCamera()->SetPitchSpeed(-rotation.y);
+		owner->mOwner->GetGame()->GetFPSGameObject()->GetFPSCamera()->SetPitchSpeed(-rotation.y * maxAngularSpeed);
 	}
 }
 

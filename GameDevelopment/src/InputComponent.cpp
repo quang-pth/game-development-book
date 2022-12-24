@@ -10,8 +10,7 @@
 #include <iostream>
 
 InputComponent::InputComponent(GameObject* owner, int updateOrder) : 
-	MoveComponent(owner, updateOrder), mController(),
-	mMaxForwardSpeed(500.0f), mMaxAngularSpeed(Math::Pi)
+	MoveComponent(owner, updateOrder), mController(nullptr)
 {
 	mControlStates.insert({ ControlState::State::EKeyboard, std::make_shared<KeyboardControlState>() });
 	mControlStates.insert({ ControlState::State::EController, std::make_shared<ControllerControlState>() });
@@ -39,16 +38,6 @@ void InputComponent::ProcessInput(const InputState& inputState)
 	}
 }
 
-float InputComponent::GetMaxForwardSpeed() const
-{
-	return mMaxForwardSpeed;
-}
-
-float InputComponent::GetMaxAngularSpeed() const
-{
-	return mMaxAngularSpeed;
-}
-
 bool InputComponent::IsMoving() const
 {
 	if (mCurrentControlState->GetEnumState() == ControlState::State::EController) {
@@ -57,16 +46,6 @@ bool InputComponent::IsMoving() const
 	
 	// Controlled by Keyboard
 	return mForwardSpeed != 0.0f;
-}
-
-void InputComponent::SetMaxForwardSpeed(float speed)
-{
-	mMaxForwardSpeed = speed;
-}
-
-void InputComponent::SetMaxAngularSpeed(float speed)
-{
-	mMaxAngularSpeed = speed;
 }
 
 void InputComponent::ChangeState(ControlState::State state)

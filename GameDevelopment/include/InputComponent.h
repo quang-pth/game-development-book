@@ -16,23 +16,17 @@ public:
 	InputComponent(class GameObject* owner, int updateOrder = 4);
 	~InputComponent();
 public:
-	float GetMaxForwardSpeed() const;
-	float GetMaxAngularSpeed() const;
 	ControllerState* GetController() const { return mController; }
 	bool IsMoving() const;
 public:
 	virtual void Update(float deltaTime) override;
 	void ProcessInput(const InputState& inputState) override;
-	void SetMaxForwardSpeed(float speed);
-	void SetMaxAngularSpeed(float speed);
 	void ChangeState(ControlState::State state);
 	virtual void OnControllerInputHandler(ControllerState* controller, InputObserver::Event inputEvent) override;
 private:
 	Vector3 GetMoveDirectionFromController() const;
 private:
 	ControllerState* mController;
-	float mMaxForwardSpeed;
-	float mMaxAngularSpeed;
 	std::shared_ptr<ControlState> mCurrentControlState;
 	std::unordered_map<ControlState::State, std::shared_ptr<ControlState>> mControlStates;
 };

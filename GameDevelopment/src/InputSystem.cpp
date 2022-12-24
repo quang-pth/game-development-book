@@ -151,14 +151,14 @@ ButtonState InputSystem::GetMappedButtonState(const std::string& actionName, con
 	return controller->GetButtonState(mControllerActionMap.at(actionName));
 }
 
-ButtonState InputSystem::GetMappedKeyState(const std::string& actionName, const KeyboardState* keyboard) const
+ButtonState InputSystem::GetMappedKeyState(const std::string& actionName) const
 {
-	return keyboard->GetKeyState(mKeyboardActionMap.at(actionName));
+	return mState.KeyBoard.GetKeyState(mKeyboardActionMap.at(actionName));
 }
 
-bool InputSystem::GetMappedKeyValue(const std::string& actionName, const KeyboardState* keyboard) const
+bool InputSystem::GetMappedKeyValue(const std::string& actionName) const
 {
-	return keyboard->GetKeyValue(mKeyboardActionMap.at(actionName));
+	return mState.KeyBoard.GetKeyValue(mKeyboardActionMap.at(actionName));
 }
 
 void InputSystem::UpdateMouse()

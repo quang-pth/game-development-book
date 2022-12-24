@@ -41,8 +41,8 @@ public:
 	Vector2 Filter2D(const Vector2& input);
 	const InputState& GetInputState() const { return mState; }
 	ButtonState GetMappedButtonState(const std::string& actionName, const ControllerState* controller) const;
-	ButtonState GetMappedKeyState(const std::string& actionName, const KeyboardState* keyboard) const;
-	bool GetMappedKeyValue(const std::string& actionName, const KeyboardState* keyboard) const;
+	ButtonState GetMappedKeyState(const std::string& actionName) const;
+	bool GetMappedKeyValue(const std::string& actionName) const;
 private:
 	void UpdateMouse();
 	void UpdateKeyboard();

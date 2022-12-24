@@ -9,9 +9,9 @@
 
 FPSGameObject::FPSGameObject(Game* game, const std::string& name) :
 	GameObject(game, name), 
-	mOffset(Vector3::Zero),
 	mTarget(Vector3::UnitX), mWorldUp(Vector3::UnitZ),
-	mLastFootStep(0.5f)
+	mOffset(Vector3::Zero), mForwardSpeed(200.0f), mStrafeSpeed(100.0f),
+	mLastFootStep(0.5f), mFPSModel(nullptr)
 {
 	mInputComponent = new InputComponent(this);
 	mAudioComponent = new AudioComponent(this);
