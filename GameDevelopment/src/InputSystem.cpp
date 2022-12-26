@@ -53,6 +53,7 @@ void InputSystem::ProcessEvent(SDL_Event& e)
 			mControllers[controllerIdx] = SDL_GameControllerOpen(controllerIdx);
 			mState.Controllers[controllerIdx].mID = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(mControllers[controllerIdx]));
 			mState.Controllers[controllerIdx].mIsConnected = true;
+			SDL_Log("Controller with ID %i has been added", mState.Controllers[controllerIdx].mID);
 			Subject::NotifyControllerInput(&mState.Controllers[controllerIdx], InputObserver::Event::EAdded);
 		}
 		break;
@@ -84,9 +85,9 @@ void InputSystem::PrepareBeforeUpdate()
 	mState.Mouse.mPreviousButton = mState.Mouse.mCurrentButton;
 	mState.Mouse.mScrollWheel = Vector2::Zero; // Reset mouse scrollwheel for new frame
 
-	this->SetRelativeMouseMode(false);
+	SDL_SetRelativeMouseMode(SDL_FALSE);
 	SDL_WarpMouseInWindow(mGame->GetRenderer()->GetWindow(), mGame->GetWindowWidth() / 2, mGame->GetWindowHeight() / 2);
-	this->SetRelativeMouseMode(true);
+	SDL_SetRelativeMouseMode(SDL_TRUE);
 }
 
 void InputSystem::Update()
@@ -99,9 +100,9 @@ void InputSystem::SetRelativeMouseMode(bool isRelative)
 {
 	SDL_bool mode = isRelative ? SDL_TRUE : SDL_FALSE;
 	SDL_SetRelativeMouseMode(mode);
-	// TODO: fix this line when set mouse warping 
-	// - when toggle it on, the GetMouseRelativePoistion() won't work as expected
-	//mState.Mouse.mIsRelative = isRelative;
+	// TODO: fix this line when using with mouse warping mode
+	// - the GetMouseRelativePoistion() won't work as expected
+	mState.Mouse.mIsRelative = isRelative;
 }
 
 Vector2 InputSystem::GetMouseRelativePosition() const
@@ -256,7 +257,6 @@ bool InputSystem::InitActionMaps(const std::string& filePath)
 
 		return true;
 	}
-
 
 	SDL_Log("Cannot open action map file at path {0}", filePath.c_str());
 	return false;

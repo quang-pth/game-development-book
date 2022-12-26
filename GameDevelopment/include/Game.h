@@ -14,6 +14,7 @@ public:
 	void ShutDown();
 	void AddGameObject(class GameObject* gameObject);
 	void RemoveGameObject(class GameObject* gameObject);
+	void SetIsRunning(bool isRunning);
 	class FPSGameObject* GetFPSGameObject() const;
 	class Renderer* GetRenderer() const;
 	class AudioSystem* GetAudioSystem() const;

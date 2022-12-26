@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\MenuManager.cpp" />
     <ClCompile Include="src\FPSModel.cpp" />
     <ClCompile Include="src\FPSCameraComponent.cpp" />
     <ClCompile Include="src\CameraComponent.cpp" />
@@ -222,6 +223,7 @@
     <ClInclude Include="include\KeyboardState.h" />
     <ClInclude Include="include\MouseState.h" />
     <ClInclude Include="include\KeyboardControlState.h" />
+    <ClInclude Include="include\MenuManager.h" />
     <ClInclude Include="src\EsstenialMath.h" />
     <ClInclude Include="include\BackgroundSpriteComponent.h" />
     <ClInclude Include="include\AnimatorComponent.h" />

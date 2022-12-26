@@ -1,10 +1,8 @@
 #include"include/Game.h"
 #include"include/GameObject.h"
 #include"include/SpriteComponent.h"
-#include"include/BackgroundSpriteComponent.h"
 #include"include/TransformComponent.h"
 #include"include/MeshComponent.h"
-#include"include/TileMapComponent.h"
 #include"include/Level.h"
 #include"include/AudioSystem.h"
 #include"include/FPSGameObject.h"
@@ -18,6 +16,7 @@
 #include"include/Shader.h"
 #include"include/Renderer.h"
 #include"include/InputSystem.h"
+#include"include/MenuManager.h"
 #include<iostream>
 
 Game::Game() :
@@ -81,10 +80,6 @@ void Game::ProcessInput()
 {
 	mInputSystem->PrepareBeforeUpdate();
 
-	//SDL_SetRelativeMouseMode(SDL_FALSE);
-	//SDL_WarpMouseInWindow(mRenderer->GetWindow(), mWindowWidth / 2, mWindowHeight / 2);
-	//SDL_SetRelativeMouseMode(SDL_TRUE);
-	
 	SDL_Event e;
 	while (SDL_PollEvent(&e)) {
 		switch (e.type)
@@ -104,14 +99,10 @@ void Game::ProcessInput()
 	}
 
 	mInputSystem->Update();
-	const InputState& state = mInputSystem->GetInputState();
-	if (state.KeyBoard.GetKeyState(SDL_SCANCODE_ESCAPE) == ButtonState::EReleased) {
- 		mIsRunning = false;
-	}
 	
 	mUpdatingGameObjects = true;
 	for (GameObject* gameObject : mGameObjects) {
-		gameObject->ProcessInput(state);
+		gameObject->ProcessInput(mInputSystem->GetInputState());
 	}
 	mUpdatingGameObjects = false;
 }
@@ -211,6 +202,8 @@ void Game::GenerateOutput()
 
 void Game::LoadData()
 {
+	new MenuManager(this);
+
 	mFPSGameObject = new FPSGameObject(this);
 	FPSModel* fpsModel = new FPSModel(this);
 	mFPSGameObject->SetModel(fpsModel);
@@ -299,4 +292,9 @@ void Game::RemoveGameObject(GameObject* gameObject)
 	if (iter != mGameObjects.end()) {
 		mGameObjects.erase(iter);
 	}	
+}
+
+void Game::SetIsRunning(bool isRunning)
+{
+	mIsRunning = isRunning;
 }

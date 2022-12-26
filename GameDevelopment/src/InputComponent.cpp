@@ -67,6 +67,7 @@ void InputComponent::OnControllerInputHandler(ControllerState* controller, Input
 			mController = controller;
 			mController->SetIsUsed(true);
 			this->ChangeState(ControlState::State::EController);
+			SDL_Log("Controller with ID %i has been using", controller->GetInstanceID());
 		}
 		break;
 	case InputObserver::Event::ERemoved:
@@ -74,6 +75,7 @@ void InputComponent::OnControllerInputHandler(ControllerState* controller, Input
 			mController->SetIsUsed(false);
 			mController = nullptr;
 			this->ChangeState(ControlState::State::EKeyboard);
+			SDL_Log("Controller with ID %i has been removed", controller->GetInstanceID());
 		}
 		break;
 	default:

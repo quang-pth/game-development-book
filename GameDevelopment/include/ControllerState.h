@@ -22,7 +22,7 @@ public:
 	std::uint32_t GetInstanceID() const { return mID; }
 	bool GetIsUsed() const { return mIsUsed; }
 public:
-	void SetIsUsed(bool isUsed) { mIsConnected = isUsed; }
+	void SetIsUsed(bool isUsed) { mIsUsed = isUsed; }
 private:
 	Uint32 mCurrentButtons[SDL_CONTROLLER_BUTTON_MAX];
 	Uint32 mPreviousButtons[SDL_CONTROLLER_BUTTON_MAX];
