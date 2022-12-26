@@ -168,6 +168,9 @@
     <ClCompile Include="src\MenuManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\FollowCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Game.h">
@@ -318,6 +321,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\MenuManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FollowCamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

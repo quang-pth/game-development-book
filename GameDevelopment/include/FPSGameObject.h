@@ -16,7 +16,6 @@ public:
 	~FPSGameObject();
 	virtual void UpdateGameObject(float deltaTime) override;
 	virtual void ProcessGameObjectInput(const InputState& inputState) override;
-	Matrix4 GetViewMatrix() const { return mFPSCameraComponent->GetViewMatrix(); }
 	InputComponent* GetInputComponent() const { return mInputComponent; }
 	FPSCameraComponent* GetFPSCamera() const { return mFPSCameraComponent; }
 	float GetForwardSpeed() const { return mForwardSpeed; }

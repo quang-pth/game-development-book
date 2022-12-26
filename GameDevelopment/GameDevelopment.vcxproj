@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\FollowCamera.cpp" />
     <ClCompile Include="src\MenuManager.cpp" />
     <ClCompile Include="src\FPSModel.cpp" />
     <ClCompile Include="src\FPSCameraComponent.cpp" />
@@ -198,6 +199,7 @@
     <ClCompile Include="src\Subject.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\FollowCamera.h" />
     <ClInclude Include="include\FPSModel.h" />
     <ClInclude Include="include\FPSCameraComponent.h" />
     <ClInclude Include="include\CameraComponent.h" />

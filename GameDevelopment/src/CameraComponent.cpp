@@ -9,6 +9,10 @@ CameraComponent::CameraComponent(GameObject* owner, int updateOrder, const std::
 {
 }
 
+void CameraComponent::Update(float deltaTime)
+{
+}
+
 CameraComponent::~CameraComponent()
 {
 }
