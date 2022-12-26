@@ -1,5 +1,6 @@
 #include "include/InputSystem.h"
 #include "include/Game.h"
+#include "include/Renderer.h"
 #include "include/KeyboardState.h"
 #include <iostream>
 #include <fstream>
@@ -82,6 +83,10 @@ void InputSystem::PrepareBeforeUpdate()
 
 	mState.Mouse.mPreviousButton = mState.Mouse.mCurrentButton;
 	mState.Mouse.mScrollWheel = Vector2::Zero; // Reset mouse scrollwheel for new frame
+
+	this->SetRelativeMouseMode(false);
+	SDL_WarpMouseInWindow(mGame->GetRenderer()->GetWindow(), mGame->GetWindowWidth() / 2, mGame->GetWindowHeight() / 2);
+	this->SetRelativeMouseMode(true);
 }
 
 void InputSystem::Update()
@@ -94,7 +99,9 @@ void InputSystem::SetRelativeMouseMode(bool isRelative)
 {
 	SDL_bool mode = isRelative ? SDL_TRUE : SDL_FALSE;
 	SDL_SetRelativeMouseMode(mode);
-	mState.Mouse.mIsRelative = isRelative;
+	// TODO: fix this line when set mouse warping 
+	// - when toggle it on, the GetMouseRelativePoistion() won't work as expected
+	//mState.Mouse.mIsRelative = isRelative;
 }
 
 Vector2 InputSystem::GetMouseRelativePosition() const

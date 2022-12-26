@@ -81,6 +81,10 @@ void Game::ProcessInput()
 {
 	mInputSystem->PrepareBeforeUpdate();
 
+	//SDL_SetRelativeMouseMode(SDL_FALSE);
+	//SDL_WarpMouseInWindow(mRenderer->GetWindow(), mWindowWidth / 2, mWindowHeight / 2);
+	//SDL_SetRelativeMouseMode(SDL_TRUE);
+	
 	SDL_Event e;
 	while (SDL_PollEvent(&e)) {
 		switch (e.type)

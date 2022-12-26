@@ -34,10 +34,9 @@ void FPSCameraComponent::ComputeViewMatrix()
 		const Vector3& forwardTarget = Vector3::Transform(mOwner->GetForward(), pitchQuat);
 		const Vector3& position = mOwner->GetTransform()->GetPosition();
 
-		const Matrix4& viewMatrix = Matrix4::CreateLookAt(position, position + forwardTarget * 100.0f, up);
-		CameraComponent::SetViewMatrix(viewMatrix);
+		mViewMatrix = Matrix4::CreateLookAt(position, position + forwardTarget * 100.0f, up);
+		CameraComponent::SetViewMatrix(mViewMatrix);
 
-		mViewMatrix = viewMatrix;
 		mRecomputeMatix = false;
 	}
 }

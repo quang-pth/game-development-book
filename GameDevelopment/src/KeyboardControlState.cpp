@@ -26,8 +26,11 @@ void KeyboardControlState::OnUpdate(InputComponent* owner, float deltaTime)
 		transformComponent->SetPosition(position);
 	}
 
-	if (!Math::NearZero(owner->mAngularSpeed)) {
-		float angle = owner->mAngularSpeed * deltaTime;
+	static float maxYawAngle = Math::Pi;
+	float angle = owner->mAngularSpeed * deltaTime;
+	angle = Math::Clamp(angle, -maxYawAngle, maxYawAngle);
+		
+	if (!Math::NearZero(angle)) {
 		Quaternion inc(Vector3::UnitZ, angle);
 		transformComponent->SetRotation(
 			Quaternion::Concatenate(transformComponent->GetRotation(), inc)
@@ -57,12 +60,13 @@ void KeyboardControlState::OnProcessInput(InputComponent* owner, const InputStat
 	owner->SetStrafeSpeed(strafeSpeed);
 	// ================== MOUSE =======================
 	const Vector2& mouseRelativePos = inputSystem->GetMouseRelativePosition();
-	const float maxAngularSpeed = Math::Pi * 0.1f; // Max rotation speed per second
+	const float maxYawSpeed = Math::Pi * 0.08f; // Max rotation speed per second
 	// Rotate horizontally
-	float angularSpeed = mouseRelativePos.x * maxAngularSpeed;
+	float angularSpeed = mouseRelativePos.x * maxYawSpeed;
 	owner->SetAngularSpeed(angularSpeed);
 	// Rotate vertically
-	angularSpeed = mouseRelativePos.y * maxAngularSpeed;
+	const float maxPitchSpeed = Math::Pi * 0.06f; // Max rotation speed per second
+	angularSpeed = mouseRelativePos.y * maxPitchSpeed;
 	owner->mOwner->GetGame()->GetFPSGameObject()->GetFPSCamera()->SetPitchSpeed(angularSpeed);
 }
 

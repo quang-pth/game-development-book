@@ -855,8 +855,8 @@ public:
 
 	static Matrix4 CreatePerspectiveFOV(float fovY, float width, float height, float near, float far)
 	{
-		float yScale = Math::Cot(fovY / 2.0f);
-		float xScale = yScale * height / width;
+		float xScale = Math::Cot(fovY / 2.0f);
+		float yScale = xScale * width / height;
 		float returnMatrix[4][4] =
 		{
 			{ xScale, 0.0f, 0.0f, 0.0f },

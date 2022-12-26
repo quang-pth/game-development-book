@@ -71,6 +71,7 @@ bool Renderer::Intialize(float screenWidth, float screenHeight)
 		SDL_Log("Failed to create window: %s", SDL_GetError());
 		return false;
 	}
+	SDL_ShowCursor(0);
 	// Create OpenGL Context
 	mContext = SDL_GL_CreateContext(mWindow);
 	// Init OpenGL extension functions
@@ -125,7 +126,6 @@ void Renderer::Draw()
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	// ============= MESH SHADER  =================
 	glEnable(GL_DEPTH_TEST);
 	for (std::pair<const std::string&, Shader*> shaderMapIter : mShaderMap) {

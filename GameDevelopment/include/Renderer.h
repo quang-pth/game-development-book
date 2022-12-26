@@ -44,6 +44,7 @@ public:
 	class Game* GetGame() const;
 	const Matrix4& GetViewMatrix() const;
 	const Matrix4& GetProjectionMatrix() const;
+	SDL_Window* GetWindow() const { return mWindow; }
 private:
 	bool LoadShaders();
 	void InitSpriteVertices();
