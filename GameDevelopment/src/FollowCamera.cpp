@@ -17,15 +17,8 @@ FollowCamera::~FollowCamera()
 void FollowCamera::Update(float deltaTime)
 {
 	CameraComponent::Update(deltaTime);
-
-	float dampening = 2.0f * Math::Sqrt(mSpringConstant);
-	const Vector3& idealPos = this->ComputeCameraPosition();
-	const Vector3& diff = mActualPos - idealPos;
-	const Vector3& acceleration = -mSpringConstant * diff - dampening * mVelocity;
-	mVelocity += acceleration * deltaTime;
-	mActualPos += mVelocity;
-
-	this->SetFollow();
+	this->UpdateActualCameraPosition(deltaTime);
+	this->FollowTarget();
 }
 
 Vector3 FollowCamera::ComputeCameraPosition() const
@@ -35,14 +28,24 @@ Vector3 FollowCamera::ComputeCameraPosition() const
 	return position;
 }
 
+void FollowCamera::UpdateActualCameraPosition(float deltaTime)
+{
+	float dampening = 2.0f * Math::Sqrt(mSpringConstant);
+	const Vector3& idealPos = this->ComputeCameraPosition();
+	const Vector3& diff = mActualPos - idealPos;
+	const Vector3& acceleration = -mSpringConstant * diff - dampening * mVelocity;
+	mVelocity += acceleration * deltaTime;
+	mActualPos += mVelocity;
+}
+
 void FollowCamera::SnapToIdeal()
 {
 	mVelocity = Vector3::Zero;
 	mActualPos = this->ComputeCameraPosition();
-	this->SetFollow();
+	this->FollowTarget();
 }
 
-void FollowCamera::SetFollow()
+void FollowCamera::FollowTarget()
 {
 	const Vector3& ownerPosition = mOwner->GetTransform()->GetPosition();
 	const Vector3& target = ownerPosition + mOwner->GetForward() * mTargetDist;

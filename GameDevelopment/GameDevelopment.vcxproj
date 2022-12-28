@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\OrbitCamera.cpp" />
     <ClCompile Include="src\FollowCamera.cpp" />
     <ClCompile Include="src\MenuManager.cpp" />
     <ClCompile Include="src\FPSModel.cpp" />
@@ -226,6 +227,7 @@
     <ClInclude Include="include\MouseState.h" />
     <ClInclude Include="include\KeyboardControlState.h" />
     <ClInclude Include="include\MenuManager.h" />
+    <ClInclude Include="include\OrbitCamera.h" />
     <ClInclude Include="src\EsstenialMath.h" />
     <ClInclude Include="include\BackgroundSpriteComponent.h" />
     <ClInclude Include="include\AnimatorComponent.h" />

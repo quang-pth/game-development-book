@@ -17,8 +17,9 @@ public:
 	float GetTargetDist() const { return mTargetDist; }
 private:
 	Vector3 ComputeCameraPosition() const;
+	void UpdateActualCameraPosition(float deltaTime);
 	void SnapToIdeal();
-	void SetFollow();
+	void FollowTarget();
 private:
 	Vector3 mActualPos, mVelocity;
 	float mHDist, mVDist, mTargetDist;
