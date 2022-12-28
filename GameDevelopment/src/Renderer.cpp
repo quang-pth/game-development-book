@@ -295,6 +295,29 @@ const Matrix4& Renderer::GetProjectionMatrix() const
 	return mProjectionMatrix;
 }
 
+Vector3 Renderer::Unproject(const Vector3& screenPoint) const
+{
+	Vector3 ndcCoords = screenPoint;
+	ndcCoords.x /= (mWindowWidth * 0.5f);
+	ndcCoords.y /= (mWindowWidth * 0.5f);
+
+	Matrix4 unprojectMatrix = mViewMatrix * mProjectionMatrix;
+	unprojectMatrix.Invert();
+
+	return Vector3::TransformWithPerspDiv(ndcCoords, unprojectMatrix);
+}
+
+Vector3 Renderer::GetScreenDirection(Vector3& outStart, Vector3& outDir) const
+{
+	Vector3 screenPoint(0.0f, 0.0f, 0.0f);
+	outStart = this->Unproject(screenPoint);
+
+	screenPoint.z = 0.9f;
+	const Vector3& end = this->Unproject(screenPoint);
+
+	outDir = (end - outStart).Normalize();
+}
+
 bool Renderer::LoadShaders()
 {
 	// =========== SPRITE SHADER ================

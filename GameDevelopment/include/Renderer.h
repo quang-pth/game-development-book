@@ -45,6 +45,8 @@ public:
 	const Matrix4& GetViewMatrix() const;
 	const Matrix4& GetProjectionMatrix() const;
 	SDL_Window* GetWindow() const { return mWindow; }
+	Vector3 Unproject(const Vector3& screenPoint) const;
+	Vector3 GetScreenDirection(Vector3& outStart, Vector3& outDir) const;
 private:
 	bool LoadShaders();
 	void InitSpriteVertices();
