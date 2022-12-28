@@ -145,6 +145,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\SplineCamera.cpp" />
+    <ClCompile Include="src\Spline.cpp" />
     <ClCompile Include="src\OrbitCamera.cpp" />
     <ClCompile Include="src\FollowCamera.cpp" />
     <ClCompile Include="src\MenuManager.cpp" />
@@ -228,6 +230,8 @@
     <ClInclude Include="include\KeyboardControlState.h" />
     <ClInclude Include="include\MenuManager.h" />
     <ClInclude Include="include\OrbitCamera.h" />
+    <ClInclude Include="include\Spline.h" />
+    <ClInclude Include="include\SplineCamera.h" />
     <ClInclude Include="src\EsstenialMath.h" />
     <ClInclude Include="include\BackgroundSpriteComponent.h" />
     <ClInclude Include="include\AnimatorComponent.h" />

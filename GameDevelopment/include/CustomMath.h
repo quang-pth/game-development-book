@@ -321,6 +321,12 @@ public:
 		return Vector3(a.x - b.x, a.y - b.y, a.z - b.z);
 	}
 
+	// Negate a vector
+	friend Vector3 operator-(const Vector3& a) 
+	{
+		return Vector3(-a.x, -a.y, -a.z);
+	}
+
 	// Component-wise multiplication
 	friend Vector3 operator*(const Vector3& left, const Vector3& right)
 	{
