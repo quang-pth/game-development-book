@@ -188,9 +188,11 @@ namespace EssentialMath
 	public:
 		Triangle() = default;
 		Triangle(const Vector3& v1, const Vector3& v2, const Vector3& v3) :
-			v1(v1), v2(v2), v3(v3) 
-		{}
-		~Triangle() {};
+			v1(v1), v2(v2), v3(v3), mVertexIndices()
+		{
+			mNormal = (v2 - v1).Cross(v3 - v2).Normalize();
+		}
+		~Triangle() = default;
 		
 		inline TriangleEdge GetEdges() const {
 			return {v3 - v2, v1 - v3, v2 - v1};
@@ -358,8 +360,31 @@ namespace EssentialMath
 			
 			outRadius = sqrtf((d1 + d2) * (d2 + d3) * (d1 + d3) / c) / 2;
 		}
+	
+		uint8_t GetVertexIndex(uint8_t idx) const { return mVertexIndices[idx]; }
+		Vector3 GetNormal() const { return mNormal; }
+	private:
+			uint8_t mVertexIndices[3];
+			Vector3 mNormal;
 	};
 	
+	struct Vertex {
+		Vector3 Position;
+		Vector3 Color;
+		Vector3 Normal;
+		Vector2 TextureCoords;
+	};
+
+	class TriangleMesh {
+	public:
+		TriangleMesh() = default;
+		~TriangleMesh() = default;
+		void ComputeVertexNormals();
+	private:
+		std::vector<Vertex> mVertices;
+		std::vector<Triangle> mTriangles;
+	};
+
 	class Polygon {
 	public:
 		inline static bool IsConvex(const Vector3 vertices[], int numOfVertices) {

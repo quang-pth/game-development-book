@@ -86,6 +86,11 @@ namespace EssentialMath
 		friend Vector3 operator+(const Vector3& a, const Vector3& b) {
 			return Vector3(a.x + b.x, a.y + b.y, a.z + b.z);
 		}
+		
+		friend Vector3 operator+=(Vector3& a, const Vector3& b) {
+			a = a + b;
+			return a;
+		}
 
 		Vector3 operator-(const Vector3& other) const {
 			return (*this) + other * (-1.0f);
