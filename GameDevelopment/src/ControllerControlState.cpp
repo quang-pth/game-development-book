@@ -8,9 +8,13 @@
 #include "include/FPSCameraComponent.h"
 #include <iostream>
 
+ControllerControlState::ControllerControlState() : mSpeed(200.0f)
+{
+}
+
 void ControllerControlState::OnEnter(InputComponent* owner)
 {
-	owner->SetForwardSpeed(static_cast<FPSGameObject*>(owner->mOwner)->GetForwardSpeed());
+	owner->SetForwardSpeed(mSpeed);
 }
 
 void ControllerControlState::OnUpdate(InputComponent* owner, float deltaTime)
@@ -36,9 +40,8 @@ void ControllerControlState::OnProcessInput(InputComponent* owner, const InputSt
 	if (controller != nullptr && controller->GetIsConnected())
 	{
 		owner->SetVelocity(owner->GetMoveDirectionFromController());
-
 		const Vector2& rotation = controller->GetRightStick();
-		const float maxAngularSpeed = Math::Pi * 1.5; 
+		const float maxAngularSpeed = Math::Pi * 1.5;
 		owner->SetAngularSpeed(rotation.x * maxAngularSpeed);
 		owner->mOwner->GetGame()->GetFPSGameObject()->GetFPSCamera()->SetPitchSpeed(-rotation.y * maxAngularSpeed);
 	}

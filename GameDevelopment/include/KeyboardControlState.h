@@ -5,7 +5,7 @@
 class KeyboardControlState : public ControlState
 {
 public:
-	KeyboardControlState() = default;
+	KeyboardControlState();
 	~KeyboardControlState() = default;
 
 	virtual void OnEnter(InputComponent* owner) override;
@@ -13,5 +13,7 @@ public:
 	virtual void OnProcessInput(InputComponent* owner, const InputState& state) override;
 	virtual void OnExit(InputComponent* owner) override;
 	virtual State GetEnumState() const override;
+private:
+	float mForwardSpeed, mStrafeSpeed;
 };
 

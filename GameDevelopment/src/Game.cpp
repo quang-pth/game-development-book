@@ -6,6 +6,9 @@
 #include"include/Level.h"
 #include"include/AudioSystem.h"
 #include"include/FPSGameObject.h"
+#include"include/FollowGameObject.h"
+#include"include/OrbitGameObject.h"
+#include"include/SplineGameObject.h"
 #include"include/Sphere.h"
 #include"include/Cube.h"
 #include"include/Icon.h"
@@ -140,16 +143,34 @@ void Game::HandlKeyPress(std::uint32_t key)
 			mReverbSnap.Stop();
 		}
 		break;
-	case '1':
+	case 'i':
 		// Set footstep parameter to default
 		value = 0.0f;
 		mFPSGameObject->SetFootstepSurface(value);
 		break;
-	case '2':
+	case 'o':
 		// Set footstep parameter to grass
 		value = 0.5f;
 		mFPSGameObject->SetFootstepSurface(value);
 		break;
+	case '1':
+	case '2':
+	case '3':
+	case '4':
+		this->ChangeCamera(key);
+		break;
+	case SDL_BUTTON_LEFT: {
+		// Get start point (in center of screen on near plane)
+		Vector3 screenPoint(0.0f, 0.0f, 0.0f);
+		Vector3 start = mRenderer->Unproject(screenPoint);
+		// Get end point (in center of screen, between near and far)
+		screenPoint.z = 0.9f;
+		Vector3 end = mRenderer->Unproject(screenPoint);
+		// Set spheres to points
+		mStartSphere->GetTransform()->SetPosition(start);
+		mEndSphere->GetTransform()->SetPosition(end);
+		break;
+	}
 	default:
 		break;
 	}
@@ -195,6 +216,35 @@ void Game::UpdateGame()
 	mAudioSystem->Update(deltaTime);
 }
 
+void Game::ChangeCamera(int mode)
+{
+	mFPSGameObject->SetState(GameObject::State::EDeactive);
+	mFPSGameObject->GetModel()->SetState(GameObject::State::EDeactive);
+	mCrosshair->SetState(GameObject::State::EDeactive);
+	mFollowGameObject->SetState(GameObject::State::EDeactive);
+	mOrbitGameObject->SetState(GameObject::State::EDeactive);
+	mSplineGameObject->SetState(GameObject::State::EDeactive);
+	
+	switch (mode) {
+	case '1':
+	default:
+		mFPSGameObject->SetState(GameObject::State::EActive);
+		mFPSGameObject->GetModel()->SetState(GameObject::State::EActive);
+		mCrosshair->SetState(GameObject::State::EActive);
+		break;
+	case '2':
+		mFollowGameObject->SetState(GameObject::State::EActive);
+		break;
+	case '3':
+		mOrbitGameObject->SetState(GameObject::State::EActive);
+		break;
+	case '4':
+		mSplineGameObject->SetState(GameObject::State::EActive);
+		mSplineGameObject->RestartSpline();
+		break;
+	}
+}
+
 void Game::GenerateOutput()
 {
 	mRenderer->Draw();
@@ -208,10 +258,29 @@ void Game::LoadData()
 	FPSModel* fpsModel = new FPSModel(this);
 	mFPSGameObject->SetModel(fpsModel);
 
-	GameObject* aimingReticule = new GameObject(this);
-	SpriteComponent* aimingSprite = new SpriteComponent(aimingReticule);
+	mCrosshair = new GameObject(this);
+	SpriteComponent* aimingSprite = new SpriteComponent(mCrosshair);
 	aimingSprite->SetTexture(mRenderer->GetTexture("Assets/Chapter9/Crosshair.png"));
-	aimingReticule->GetTransform()->SetScale(4.0f);
+	mCrosshair->GetTransform()->SetScale(4.0f);
+
+	mFollowGameObject = new FollowGameObject(this);
+	mOrbitGameObject = new OrbitGameObject(this);
+	mSplineGameObject = new SplineGameObject(this);
+
+	this->ChangeCamera('1');
+
+	// Spheres for demonstrating unprojection
+	mStartSphere = new GameObject(this);
+	mStartSphere->GetTransform()->SetPosition(Vector3(10000.0f, 0.0f, 0.0f));
+	mStartSphere->GetTransform()->SetScale(0.25f);
+	MeshComponent* mesh = new MeshComponent(mStartSphere);
+	mesh->SetMesh(mRenderer->GetMesh("Assets/Chapter9/Sphere.gpmesh"));
+	mEndSphere = new GameObject(this);
+	mEndSphere->GetTransform()->SetPosition(Vector3(10000.0f, 0.0f, 0.0f));
+	mEndSphere->GetTransform()->SetScale(0.25f);
+	mesh = new MeshComponent(mEndSphere);
+	mesh->SetMesh(mRenderer->GetMesh("Assets/Chapter9/Sphere.gpmesh"));
+	mesh->SetTextureIndex(1);
 
 	new Level(this);
 	new Sphere(this);

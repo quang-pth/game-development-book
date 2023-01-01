@@ -1,9 +1,9 @@
 {
 	"version":1,
 	"vertexformat":"PosNormTex",
-	"shader":"BasicMesh",
+	"shader":"PhongShader",
 	"textures":[
-		"Assets/RacingCar.png"
+		"Assets/Chapter9/RacingCar.png"
 	],
 	"specularPower":100.0,
 	"vertices":[

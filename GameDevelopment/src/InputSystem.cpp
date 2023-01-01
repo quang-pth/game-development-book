@@ -64,6 +64,7 @@ void InputSystem::ProcessEvent(SDL_Event& e)
 				SDL_GameControllerClose(mControllers[controllerIdx]);
 				mControllers[controllerIdx] = nullptr;
 				mState.Controllers[controllerIdx].mIsConnected = false;
+				SDL_Log("Controller with ID %i has been removed", instanceID);
 				Subject::NotifyControllerInput(&mState.Controllers[controllerIdx], InputObserver::Event::ERemoved);
 				break;
 			}
@@ -105,11 +106,16 @@ void InputSystem::SetRelativeMouseMode(bool isRelative)
 	mState.Mouse.mIsRelative = isRelative;
 }
 
-Vector2 InputSystem::GetMouseRelativePosition() const
+RelativeMouseInfo InputSystem::GetRelativeMouseInfo() const
 {
+	RelativeMouseInfo info;
 	int x, y;
-	SDL_GetRelativeMouseState(&x, &y);
-	return Vector2(static_cast<float>(x), static_cast<float>(y));
+
+	info.Buttons= SDL_GetRelativeMouseState(&x, &y);
+	info.Position.x = static_cast<float>(x);
+	info.Position.y = static_cast<float>(y);
+	
+	return info;
 }
 
 float InputSystem::Filter1D(float input)

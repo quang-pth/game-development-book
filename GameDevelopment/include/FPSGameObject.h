@@ -15,21 +15,17 @@ public:
 	FPSGameObject(class Game* game, const std::string& name = "Camera");
 	~FPSGameObject();
 	virtual void UpdateGameObject(float deltaTime) override;
-	virtual void ProcessGameObjectInput(const InputState& inputState) override;
 	InputComponent* GetInputComponent() const { return mInputComponent; }
 	FPSCameraComponent* GetFPSCamera() const { return mFPSCameraComponent; }
-	float GetForwardSpeed() const { return mForwardSpeed; }
-	void SetForwardSpeed(float speed) { mForwardSpeed = speed; }
-	float GetStrafeSpeed() const { return mStrafeSpeed; }
-	void SetStrafeSpeed(float speed) { mStrafeSpeed = speed; }
 	void SetFootstepSurface(float value);
+	FPSModel* GetModel() const { return mFPSModel; }
 	void SetModel(FPSModel* model) { mFPSModel = model; };
+	void SetVisible(bool visible);
 private:
 	Vector3 mTarget, mWorldUp;
 	Vector3 mOffset;
 	SoundEvent mFootStep;
 	float mLastFootStep;
-	float mForwardSpeed, mStrafeSpeed;
 	InputComponent* mInputComponent;
 	AudioComponent* mAudioComponent;
 	FPSCameraComponent* mFPSCameraComponent;

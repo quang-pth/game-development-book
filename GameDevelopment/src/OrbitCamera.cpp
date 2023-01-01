@@ -33,5 +33,6 @@ void OrbitCamera::Update(float deltaTime)
 	// Set orbit view
 	const Vector3& targetPosition = mOwner->GetTransform()->GetPosition();
 	const Vector3& cameraPosition = targetPosition + mOffset;
-	CameraComponent::SetViewMatrix(Matrix4::CreateLookAt(cameraPosition, targetPosition, mUp));
+	mViewMatrix = Matrix4::CreateLookAt(cameraPosition, targetPosition, mUp);
+	CameraComponent::SetViewMatrix(mViewMatrix);
 }

@@ -26,7 +26,7 @@ GameObject::~GameObject()
 
 void GameObject::Update(float deltaTime) 
 {
-	if (mState == GameObject::State::EActive) {
+	if (this->IsActived()) {
 		mTransform->ComputeWorldTransform();
 		UpdateComponents(deltaTime);
 		UpdateGameObject(deltaTime);
@@ -43,7 +43,7 @@ void GameObject::UpdateComponents(float deltaTime)
 
 void GameObject::ProcessInput(const InputState& inputState)
 {
-	if (mState == GameObject::State::EActive) {
+	if (this->IsActived()) {
 		for (Component* component : mComponents) {
 			component->ProcessInput(inputState);
 		}

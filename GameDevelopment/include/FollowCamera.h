@@ -9,19 +9,21 @@ public:
 	FollowCamera(class GameObject* owner, int updateOrder = 101, const std::string& name = "FollowCamera");
 	~FollowCamera();
 	virtual void Update(float deltaTime) override;
-	void SetHDist(float dist) { mHDist = dist; }
-	void SetVDist(float dist) { mVDist = dist; }
+	virtual const Matrix4& GetViewMatrix() const override { return mViewMatrix; };
+	void SnapToIdeal();
+	void SetHorizontalDist(float dist) { mHorizontalDist = dist; }
+	void SetVerticalDist(float dist) { mVerticalDist = dist; }
 	void SetTargetDist(float dist) { mTargetDist = dist; }
-	float GetHDist() const { return mHDist; }
-	float GetVDist() const { return mVDist; }
+	float GetHorizontalDist() const { return mHorizontalDist; }
+	float GetVerticalDist() const { return mVerticalDist; }
 	float GetTargetDist() const { return mTargetDist; }
 private:
 	Vector3 ComputeCameraPosition() const;
 	void UpdateActualCameraPosition(float deltaTime);
-	void SnapToIdeal();
 	void FollowTarget();
 private:
+	Matrix4 mViewMatrix;
 	Vector3 mActualPos, mVelocity;
-	float mHDist, mVDist, mTargetDist;
+	float mHorizontalDist, mVerticalDist, mTargetDist;
 	float mSpringConstant;
 };

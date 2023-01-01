@@ -18,6 +18,7 @@ public:
 	virtual void ProcessInput(const InputState& inputState);
 	virtual void OnUpdateWorldTransform();
 	int GetUpdateOrder() const { return mUpdateOrder; }
+	class GameObject* GetOwner() const { return mOwner; }
 protected:
 	class GameObject* mOwner;
 	int mUpdateOrder;

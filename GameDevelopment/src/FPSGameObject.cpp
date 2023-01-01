@@ -10,7 +10,7 @@
 FPSGameObject::FPSGameObject(Game* game, const std::string& name) :
 	GameObject(game, name), 
 	mTarget(Vector3::UnitX), mWorldUp(Vector3::UnitZ),
-	mOffset(Vector3::Zero), mForwardSpeed(200.0f), mStrafeSpeed(100.0f),
+	mOffset(Vector3::Zero),
 	mLastFootStep(0.5f), mFPSModel(nullptr)
 {
 	mInputComponent = new InputComponent(this);
@@ -52,13 +52,13 @@ void FPSGameObject::UpdateGameObject(float deltaTime)
 	}
 }
 
-void FPSGameObject::ProcessGameObjectInput(const InputState& inputState)
-{
-	GameObject::ProcessGameObjectInput(inputState);
-}
-
 void FPSGameObject::SetFootstepSurface(float value)
 {
 	mFootStep.SetPaused(true);
 	mFootStep.SetParameter("Surface", value);
+}
+
+void FPSGameObject::SetVisible(bool visible)
+{
+	mFPSModel->SetVisible(visible);
 }

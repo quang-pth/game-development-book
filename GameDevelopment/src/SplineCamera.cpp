@@ -32,5 +32,13 @@ void SplineCamera::Update(float deltaTime)
 
 	const Vector3& cameraPosition = mPath.ComputePosition(mIdx, mT);
 	const Vector3& target = mPath.ComputePosition(mIdx, mT + 0.001f);
-	CameraComponent::SetViewMatrix(Matrix4::CreateLookAt(cameraPosition, target, Vector3::UnitZ));
+	mViewMatrix = Matrix4::CreateLookAt(cameraPosition, target, Vector3::UnitZ);
+	CameraComponent::SetViewMatrix(mViewMatrix);
+}
+
+void SplineCamera::Restart()
+{
+	mIdx = 1;
+	mT = 0.0f;
+	mPaused = false;
 }

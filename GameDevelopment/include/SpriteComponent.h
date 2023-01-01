@@ -16,10 +16,13 @@ public:
 	int GetDrawOrder() const { return mDrawOrder; }
 	inline int GetTextureWidth() const { return mTextureWidth; }
 	inline int GetTextureHeight() const { return mTextureHeight; }
+	inline void SetVisible(bool visible) { mVisible = visible; }
+	inline const bool& GetVisible() const { return mVisible; }
 protected:
 	class Texture* mTexture;
 	int mDrawOrder;
 	int mTextureWidth;
 	int mTextureHeight;
+	bool mVisible;
 };
 

@@ -145,6 +145,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\SplineGameObject.cpp" />
+    <ClCompile Include="src\OrbitGameObject.cpp" />
+    <ClCompile Include="src\FollowGameObject.cpp" />
     <ClCompile Include="src\SplineCamera.cpp" />
     <ClCompile Include="src\Spline.cpp" />
     <ClCompile Include="src\OrbitCamera.cpp" />
@@ -185,7 +188,7 @@
     <ClCompile Include="src\Asteroid.cpp" />
     <ClCompile Include="src\MoveComponent.cpp" />
     <ClCompile Include="src\Animation.cpp" />
-    <ClCompile Include="EsstenialMath.cpp" />
+    <ClCompile Include="src\EsstenialMath.cpp" />
     <ClCompile Include="src\Ship.cpp" />
     <ClCompile Include="src\BackgroundSpriteComponent.cpp" />
     <ClCompile Include="src\AnimatorComponent.cpp" />
@@ -202,6 +205,7 @@
     <ClCompile Include="src\Subject.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\FollowGameObject.h" />
     <ClInclude Include="include\FollowCamera.h" />
     <ClInclude Include="include\FPSModel.h" />
     <ClInclude Include="include\FPSCameraComponent.h" />
@@ -232,7 +236,7 @@
     <ClInclude Include="include\OrbitCamera.h" />
     <ClInclude Include="include\Spline.h" />
     <ClInclude Include="include\SplineCamera.h" />
-    <ClInclude Include="src\EsstenialMath.h" />
+    <ClInclude Include="include\EsstenialMath.h" />
     <ClInclude Include="include\BackgroundSpriteComponent.h" />
     <ClInclude Include="include\AnimatorComponent.h" />
     <ClInclude Include="include\Component.h" />
@@ -256,6 +260,8 @@
     <ClInclude Include="include\Sphere.h" />
     <ClInclude Include="include\Level.h" />
     <ClInclude Include="include\Subject.h" />
+    <ClInclude Include="include\OrbitGameObject.h" />
+    <ClInclude Include="include\SplineGameObject.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\basic-frag.glsl" />

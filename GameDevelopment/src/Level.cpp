@@ -22,17 +22,10 @@ void Level::Init()
 {
 	Vector3 positions[] = {
 		Vector3(0.0f, 0.0f, -100.0f), // Ground
-		Vector3(250.0f, 0.0f, 50.0f), // Forward Wall
-		Vector3(-250.0f, 0.0f, 50.0f), // Back Wall
-		Vector3(0.0f, -250.0f, 50.0f), // Left Wall
-		Vector3(0.0f, 250.0f, 50.0f), // Right Wall
-	};
-	Vector3 scales[] = {
-		Vector3(5.0f), 
-		Vector3(5.0f), 
-		Vector3(5.0f),
-		Vector3(5.0f), 
-		Vector3(5.0f), 
+		Vector3(1000.0f, 0.0f, 50.0f), // Forward Wall
+		Vector3(-1000.0f, 0.0f, 50.0f), // Back Wall
+		Vector3(0.0f, -1000.0f, 50.0f), // Left Wall
+		Vector3(0.0f, 1000.0f, 50.0f), // Right Wall
 	};
 	Quaternion rotations[] = {
 		Quaternion::Identity, // Ground
@@ -47,7 +40,7 @@ void Level::Init()
 			GameObject::GetGame()->GetRenderer()->GetMesh("Assets/Chapter6/Plane.gpmesh")
 		);
 		decoration->GetTransform()->SetPosition(positions[i]);
-		decoration->GetTransform()->SetScale(scales[i]);
+		decoration->GetTransform()->SetScale(20.0f);
 		decoration->GetTransform()->SetRotation(rotations[i]);
 		
 		mDecorations.emplace_back(decoration);

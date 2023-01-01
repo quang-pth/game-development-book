@@ -10,7 +10,7 @@
 
 MeshComponent::MeshComponent(GameObject* owner) : 
 	Component(owner),
-	mMesh(nullptr), mTextureIdx(0)
+	mMesh(nullptr), mTextureIdx(0), mVisible(true)
 {
 }
 

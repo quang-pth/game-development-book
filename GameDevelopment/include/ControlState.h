@@ -21,4 +21,3 @@ public:
 	virtual void OnExit(InputComponent* inputComponent) = 0;
 	virtual State GetEnumState() const = 0;
 };
-

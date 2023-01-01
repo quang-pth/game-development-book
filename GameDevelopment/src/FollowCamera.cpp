@@ -4,8 +4,8 @@
 
 FollowCamera::FollowCamera(GameObject* owner, int updateOrder, const std::string& name) :
 	CameraComponent(owner, updateOrder, name),
-	mHDist(200.0f), mVDist(50.0f), mTargetDist(60.0f),
-	mSpringConstant(1.0f)
+	mHorizontalDist(300.0f), mVerticalDist(250.0f), mTargetDist(100.0f),
+	mSpringConstant(64.0f)
 {
 	this->SnapToIdeal();
 }
@@ -23,8 +23,8 @@ void FollowCamera::Update(float deltaTime)
 
 Vector3 FollowCamera::ComputeCameraPosition() const
 {
-	Vector3 position = mOwner->GetTransform()->GetPosition() - mOwner->GetForward() * mHDist;
-	position += Vector3::UnitZ * mVDist;
+	Vector3 position = mOwner->GetTransform()->GetPosition() - mOwner->GetForward() * mHorizontalDist;
+	position += Vector3::UnitZ * mVerticalDist;
 	return position;
 }
 
@@ -49,5 +49,6 @@ void FollowCamera::FollowTarget()
 {
 	const Vector3& ownerPosition = mOwner->GetTransform()->GetPosition();
 	const Vector3& target = ownerPosition + mOwner->GetForward() * mTargetDist;
-	CameraComponent::SetViewMatrix(Matrix4::CreateLookAt(mActualPos, target, Vector3::UnitZ));
+	mViewMatrix = Matrix4::CreateLookAt(mActualPos, target, Vector3::UnitZ);
+	CameraComponent::SetViewMatrix(mViewMatrix);
 }

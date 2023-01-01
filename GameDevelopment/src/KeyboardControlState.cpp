@@ -9,6 +9,10 @@
 #include "include/CustomMath.h"
 #include <iostream>
 
+KeyboardControlState::KeyboardControlState() : mForwardSpeed(200.0f), mStrafeSpeed(100.0f)
+{
+}
+
 void KeyboardControlState::OnEnter(InputComponent* owner)
 {
 	owner->SetForwardSpeed(0.0f);
@@ -41,25 +45,24 @@ void KeyboardControlState::OnUpdate(InputComponent* owner, float deltaTime)
 void KeyboardControlState::OnProcessInput(InputComponent* owner, const InputState& state)
 {
 	InputSystem* inputSystem = owner->mOwner->GetGame()->GetInputSystem();
-	FPSGameObject* fpsGameObject = static_cast<FPSGameObject*>(owner->mOwner);
 	float forwardSpeed = 0.0f;
 	if (inputSystem->GetMappedKeyValue("MoveForward")) {
-		forwardSpeed += fpsGameObject->GetForwardSpeed();
+		forwardSpeed += mForwardSpeed;
 	}
 	if (inputSystem->GetMappedKeyValue("MoveBackward")) {
-		forwardSpeed -= fpsGameObject->GetForwardSpeed();
+		forwardSpeed -= mForwardSpeed;
 	}
 	owner->SetForwardSpeed(forwardSpeed);
 	float strafeSpeed = 0.0f;
 	if (inputSystem->GetMappedKeyValue("MoveRight")) {
-		strafeSpeed += fpsGameObject->GetStrafeSpeed();
+		strafeSpeed += mStrafeSpeed;
 	}
 	if (inputSystem->GetMappedKeyValue("MoveLeft")) {
-		strafeSpeed -= fpsGameObject->GetStrafeSpeed();
+		strafeSpeed -= mStrafeSpeed;
 	}
 	owner->SetStrafeSpeed(strafeSpeed);
 	// ================== MOUSE =======================
-	const Vector2& mouseRelativePos = inputSystem->GetMouseRelativePosition();
+	const Vector2& mouseRelativePos = inputSystem->GetRelativeMouseInfo().Position;
 	const float maxYawSpeed = Math::Pi * 0.08f; // Max rotation speed per second
 	// Rotate horizontally
 	float angularSpeed = mouseRelativePos.x * maxYawSpeed;
@@ -72,8 +75,8 @@ void KeyboardControlState::OnProcessInput(InputComponent* owner, const InputStat
 
 void KeyboardControlState::OnExit(InputComponent* owner)
 {
-	owner->SetForwardSpeed(static_cast<FPSGameObject*>(owner->mOwner)->GetForwardSpeed());
-	owner->SetStrafeSpeed(static_cast<FPSGameObject*>(owner->mOwner)->GetStrafeSpeed());
+	owner->SetForwardSpeed(mForwardSpeed);
+	owner->SetStrafeSpeed(mStrafeSpeed);
 }
 
 ControlState::State KeyboardControlState::GetEnumState() const

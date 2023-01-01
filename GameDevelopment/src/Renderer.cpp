@@ -134,7 +134,9 @@ void Renderer::Draw()
 		// Render meshes that use the current-bounded shader
 		for (MeshComponent*  mesh : mMeshMap[shaderMapIter.first]) 
 		{
-			mesh->Draw(shaderMapIter.second);
+			if (mesh->GetOwner()->IsActived()) {
+				mesh->Draw(shaderMapIter.second);
+			}
 		}
 	}
 	glDisable(GL_DEPTH_TEST);
@@ -148,7 +150,9 @@ void Renderer::Draw()
 	mSpriteVertices->SetActive();
 
 	for (SpriteComponent* sprite : mSprites) {
-		sprite->Draw(mSpriteShader);
+		if (sprite->GetOwner()->IsActived()) {
+			sprite->Draw(mSpriteShader);
+		}
 	}
 	glDisable(GL_BLEND);
 	// ============= END SPRITE SHADER  =================
@@ -307,7 +311,7 @@ Vector3 Renderer::Unproject(const Vector3& screenPoint) const
 	return Vector3::TransformWithPerspDiv(ndcCoords, unprojectMatrix);
 }
 
-Vector3 Renderer::GetScreenDirection(Vector3& outStart, Vector3& outDir) const
+void Renderer::GetScreenDirection(Vector3& outStart, Vector3& outDir) const
 {
 	Vector3 screenPoint(0.0f, 0.0f, 0.0f);
 	outStart = this->Unproject(screenPoint);

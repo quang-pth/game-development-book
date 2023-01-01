@@ -14,3 +14,8 @@ FPSModel::FPSModel(Game* game, const std::string& name) :
 FPSModel::~FPSModel()
 {
 }
+
+void FPSModel::SetVisible(bool visible)
+{
+	mMeshComponent->SetVisible(visible);
+}
