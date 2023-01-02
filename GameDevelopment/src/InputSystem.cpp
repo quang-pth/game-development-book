@@ -264,6 +264,6 @@ bool InputSystem::InitActionMaps(const std::string& filePath)
 		return true;
 	}
 
-	SDL_Log("Cannot open action map file at path {0}", filePath.c_str());
+	SDL_Log("Cannot open action map file at path %s", filePath.c_str());
 	return false;
 }

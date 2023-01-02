@@ -43,8 +43,8 @@ private:
 	class FollowGameObject* mFollowGameObject;
 	class OrbitGameObject* mOrbitGameObject;
 	class SplineGameObject* mSplineGameObject;
-	class GameObject* mStartSphere;
-	class GameObject* mEndSphere;
+	class GameObject* mStartPoint;
+	class GameObject* mEndPoint;
 	// System
 	class Renderer* mRenderer;
 	class AudioSystem* mAudioSystem;

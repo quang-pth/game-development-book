@@ -153,24 +153,21 @@ void Game::HandlKeyPress(std::uint32_t key)
 		value = 0.5f;
 		mFPSGameObject->SetFootstepSurface(value);
 		break;
+	case 'f': {
+		Vector3 screenPoint(0.0f, 0.0f, 0.0f);
+		Vector3 start = mRenderer->Unproject(screenPoint);
+		screenPoint.z = 0.95f;
+		Vector3 end = mRenderer->Unproject(screenPoint);
+		mStartPoint->GetTransform()->SetPosition(start);
+		mEndPoint->GetTransform()->SetPosition(end);
+		break;
+	}
 	case '1':
 	case '2':
 	case '3':
 	case '4':
 		this->ChangeCamera(key);
 		break;
-	case SDL_BUTTON_LEFT: {
-		// Get start point (in center of screen on near plane)
-		Vector3 screenPoint(0.0f, 0.0f, 0.0f);
-		Vector3 start = mRenderer->Unproject(screenPoint);
-		// Get end point (in center of screen, between near and far)
-		screenPoint.z = 0.9f;
-		Vector3 end = mRenderer->Unproject(screenPoint);
-		// Set spheres to points
-		mStartSphere->GetTransform()->SetPosition(start);
-		mEndSphere->GetTransform()->SetPosition(end);
-		break;
-	}
 	default:
 		break;
 	}
@@ -269,18 +266,10 @@ void Game::LoadData()
 
 	this->ChangeCamera('1');
 
-	// Spheres for demonstrating unprojection
-	mStartSphere = new GameObject(this);
-	mStartSphere->GetTransform()->SetPosition(Vector3(10000.0f, 0.0f, 0.0f));
-	mStartSphere->GetTransform()->SetScale(0.25f);
-	MeshComponent* mesh = new MeshComponent(mStartSphere);
-	mesh->SetMesh(mRenderer->GetMesh("Assets/Chapter9/Sphere.gpmesh"));
-	mEndSphere = new GameObject(this);
-	mEndSphere->GetTransform()->SetPosition(Vector3(10000.0f, 0.0f, 0.0f));
-	mEndSphere->GetTransform()->SetScale(0.25f);
-	mesh = new MeshComponent(mEndSphere);
-	mesh->SetMesh(mRenderer->GetMesh("Assets/Chapter9/Sphere.gpmesh"));
-	mesh->SetTextureIndex(1);
+	mStartPoint = new Cube(this);
+	mStartPoint->GetTransform()->SetScale(1.5f);
+	mEndPoint = new Cube(this);
+	mEndPoint->GetTransform()->SetScale(1.5f);
 
 	new Level(this);
 	new Sphere(this);
