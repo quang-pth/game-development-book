@@ -4,7 +4,7 @@
 
 OrbitCamera::OrbitCamera(GameObject* owner, int updateOrder, const std::string& name) :
 	CameraComponent(owner, updateOrder, name),
-	mUp(Vector3::UnitZ), mOffset(Vector3::Zero),
+	mUp(Vector3::UnitZ), mOffset(Vector3(-400.0f, 0.0f, 0.0f)),
 	mYawSpeed(0.0f), mPitchSpeed(0.0f)
 {
 }

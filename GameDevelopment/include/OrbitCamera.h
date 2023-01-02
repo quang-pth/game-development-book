@@ -12,7 +12,7 @@ public:
 	float GetYawSpeed() const { return mYawSpeed; }
 	float GetPitchSpeed() const { return mPitchSpeed; }
 	void SetYawSpeed(float speed) { mYawSpeed = speed; }
-	void SetPitchSpeed(float speed) { mPitchSpeed= speed; }
+	void SetPitchSpeed(float speed) { mPitchSpeed = speed; }
 private:
 	Matrix4 mViewMatrix;
 	Vector3 mUp, mOffset;

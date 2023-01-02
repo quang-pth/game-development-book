@@ -4,7 +4,7 @@
 
 SplineCamera::SplineCamera(GameObject* owner, int updateOrder, const std::string& name) :
 	CameraComponent(owner, updateOrder, name),
-	mPaused(false), mT(0.0f), mSpeed(0.0f),
+	mPaused(false), mT(0.0f), mSpeed(0.1f),
 	mIdx(1), mPath()
 {
 }

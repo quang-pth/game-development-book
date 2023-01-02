@@ -25,7 +25,7 @@ struct InputState {
 	ControllerState Controllers[MAX_CONTROLLERS];
 };
 
-struct RelativeMouseInfo {
+struct RelativeMouse {
 	Vector2 Position;
 	std::uint32_t Buttons;
 };
@@ -40,7 +40,7 @@ public:
 	void PrepareBeforeUpdate();
 	void Update();
 	void SetRelativeMouseMode(bool isRelative);
-	RelativeMouseInfo GetRelativeMouseInfo() const;
+	RelativeMouse GetRelativeMouse() const;
 	float Filter1D(float input);
 	Vector2 Filter2D(float x, float y);
 	Vector2 Filter2D(const Vector2& input);

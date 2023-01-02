@@ -36,5 +36,5 @@ void SplineGameObject::ProcessGameObjectInput(const InputState& inputState)
 
 void SplineGameObject::RestartSpline()
 {
-
+	mCamera->Restart();
 }

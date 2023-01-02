@@ -106,9 +106,9 @@ void InputSystem::SetRelativeMouseMode(bool isRelative)
 	mState.Mouse.mIsRelative = isRelative;
 }
 
-RelativeMouseInfo InputSystem::GetRelativeMouseInfo() const
+RelativeMouse InputSystem::GetRelativeMouse() const
 {
-	RelativeMouseInfo info;
+	RelativeMouse info;
 	int x, y;
 
 	info.Buttons= SDL_GetRelativeMouseState(&x, &y);
