@@ -20,3 +20,8 @@ Vector3 Spline::ComputePosition(size_t startIdx, float t)
 	
 	return position;
 }
+
+void Spline::ReversePath()
+{
+	std::reverse(mControlPoints.begin(), mControlPoints.end());
+}

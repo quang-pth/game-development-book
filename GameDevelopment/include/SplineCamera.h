@@ -22,5 +22,6 @@ private:
 	float mSpeed;
 	size_t mIdx;
 	Spline mPath;
+	std::int8_t mDirectionFactor;
 };
 

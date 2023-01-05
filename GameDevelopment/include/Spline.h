@@ -12,6 +12,7 @@ public:
 	const std::vector<Vector3>& GetControlPoints() const { return mControlPoints; }
 	void AddControlPoint(const Vector3& point) { mControlPoints.emplace_back(point); }
 	size_t GetNumPoints() const { return mControlPoints.size(); }
+	void ReversePath();
 private:
 	std::vector<Vector3> mControlPoints;
 };
