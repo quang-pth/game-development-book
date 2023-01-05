@@ -1,11 +1,15 @@
 #include "include/FollowCamera.h"
+#include "include/Game.h"
+#include "include/InputSystem.h"
 #include "include/GameObject.h"
 #include "include/TransformComponent.h"
+#include <iostream>
 
 FollowCamera::FollowCamera(GameObject* owner, int updateOrder, const std::string& name) :
 	CameraComponent(owner, updateOrder, name),
-	mHorizontalDist(300.0f), mVerticalDist(250.0f), mTargetDist(100.0f),
-	mSpringConstant(64.0f)
+	mOffset(-400.0f, 0.0f, 350.0f), mTargetDist(100.0f),
+	mSpringConstant(8.0f), mYawSpeed(0.0f), mPitchSpeed(0.0f), 
+	mUp(Vector3::UnitZ)
 {
 	this->SnapToIdeal();
 }
@@ -18,13 +22,47 @@ void FollowCamera::Update(float deltaTime)
 {
 	CameraComponent::Update(deltaTime);
 	this->UpdateActualCameraPosition(deltaTime);
-	this->FollowTarget();
+	this->FollowTarget(deltaTime);
+}
+
+void FollowCamera::ProcessInput(const InputState& inputState)
+{
+	mYawSpeed = 0.0f;
+	mPitchSpeed = 0.0f;
+
+	RelativeMouse mouseInfo = mOwner->GetGame()->GetInputSystem()->GetRelativeMouse();
+	if (mouseInfo.Buttons & SDL_BUTTON(SDL_BUTTON_RIGHT))
+	{
+		static int maxMouseSpeed = 500;
+		static float maxOrbitSpeed = Math::Pi * 8;
+
+		if (mouseInfo.Position.x != 0)
+		{
+			// Convert to ~[-1.0, 1.0]
+			mYawSpeed = static_cast<float>(mouseInfo.Position.x) / maxMouseSpeed;
+			// Multiply by rotation/sec
+			mYawSpeed *= maxOrbitSpeed;
+		}
+
+		if (mouseInfo.Position.y != 0)
+		{
+			mPitchSpeed = static_cast<float>(mouseInfo.Position.y) / maxMouseSpeed;
+			mPitchSpeed *= maxOrbitSpeed;
+		}
+
+		mUp = mOwner->GetUp();
+	}
+	else {
+		mUp = Vector3::UnitZ;
+		mOffset = Vector3(-400.0f, 0.0f, 350.0f);
+	}
 }
 
 Vector3 FollowCamera::ComputeCameraPosition() const
 {
-	Vector3 position = mOwner->GetTransform()->GetPosition() - mOwner->GetForward() * mHorizontalDist;
-	position += Vector3::UnitZ * mVerticalDist;
+	Vector3 position = mOwner->GetTransform()->GetPosition() + mOwner->GetForward() * mOffset.x;
+	position += mUp * mOffset.z;
+	position += mOwner->GetRight() * mOffset.y;
 	return position;
 }
 
@@ -45,10 +83,20 @@ void FollowCamera::SnapToIdeal()
 	this->FollowTarget();
 }
 
-void FollowCamera::FollowTarget()
+void FollowCamera::FollowTarget(float deltaTime)
 {
-	const Vector3& ownerPosition = mOwner->GetTransform()->GetPosition();
-	const Vector3& target = ownerPosition + mOwner->GetForward() * mTargetDist;
-	mViewMatrix = Matrix4::CreateLookAt(mActualPos, target, Vector3::UnitZ);
+	// Yaw rotation
+	Quaternion yaw(Vector3::UnitZ, mYawSpeed * deltaTime);
+	mUp = Vector3::Transform(mUp, yaw);
+	mOffset = Vector3::Transform(mOffset, yaw);
+	// Pitch rotation
+	const Vector3& forward = mOwner->GetTransform()->GetPosition() - this->ComputeCameraPosition();
+	const Vector3& right = mUp.Cross(forward.Normalize());
+	Quaternion pitch(right, mPitchSpeed * deltaTime);
+	mUp = Vector3::Transform(mUp, pitch);
+	mOffset = Vector3::Transform(mOffset, pitch);
+	// Compute view matrix
+	const Vector3& target = mOwner->GetTransform()->GetPosition() + mOwner->GetForward() * mTargetDist;
+	mViewMatrix = Matrix4::CreateLookAt(mActualPos, target, mUp);
 	CameraComponent::SetViewMatrix(mViewMatrix);
 }

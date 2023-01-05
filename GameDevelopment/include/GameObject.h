@@ -36,6 +36,7 @@ public:
 	std::vector<class Component*> GetComponents() const;
 	Vector3 GetForward() const;
 	Vector3 GetRight() const;
+	Vector3 GetUp() const;
 	class Game* GetGame() const;
 private:
 	void AddDefaultComponents();

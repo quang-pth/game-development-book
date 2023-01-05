@@ -62,6 +62,8 @@ void KeyboardControlState::OnProcessInput(InputComponent* owner, const InputStat
 	}
 	owner->SetStrafeSpeed(strafeSpeed);
 	// ================== MOUSE =======================
+	if (inputSystem->GetInputState().Mouse.GetButtonState(SDL_BUTTON_RIGHT) == ButtonState::EHeld) 
+		return;
 	const Vector2& mouseRelativePos = inputSystem->GetRelativeMouse().Position;
 	const float maxYawSpeed = Math::Pi * 0.08f; // Max rotation speed per second
 	// Rotate horizontally

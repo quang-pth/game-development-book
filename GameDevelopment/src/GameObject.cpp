@@ -123,6 +123,11 @@ Vector3 GameObject::GetRight() const
 	return Vector3::Transform(Vector3::UnitY, mTransform->GetRotation());
 }
 
+Vector3 GameObject::GetUp() const
+{
+	return Vector3::Transform(Vector3::UnitZ, mTransform->GetRotation());
+}
+
 Game* GameObject::GetGame() const
 {
 	return mGame;
