@@ -2,7 +2,8 @@
 #include"include/Component.h"
 
 Component::Component(GameObject* owner, int updateOrder, const std::string& name) : 
-	mOwner(owner), mUpdateOrder(updateOrder), mName(name)
+	mOwner(owner), mUpdateOrder(updateOrder), mName(name),
+	mIsActive(true)
 {
 	mOwner->AddComponent(this);
 }

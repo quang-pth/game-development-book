@@ -5,12 +5,25 @@
 #include "include/AudioSystem.h"
 
 CameraComponent::CameraComponent(GameObject* owner, int updateOrder, const std::string& name) :
-	Component(owner, updateOrder, name)
+	Component(owner, updateOrder, name),
+	mYawAngle(0.0f), mPitchAngle(0.0f),
+	mYawSpeed(0.0f), mPitchSpeed(0.0f),
+	mRecomputeMatix(true), mViewMatrix(Matrix4::Identity)
 {
 }
 
 void CameraComponent::Update(float deltaTime)
 {
+}
+
+void CameraComponent::OnEnter()
+{
+	Component::SetIsActive(true);
+}
+
+void CameraComponent::OnExit()
+{
+	Component::SetIsActive(false);
 }
 
 CameraComponent::~CameraComponent()

@@ -18,9 +18,12 @@ public:
 	virtual void ProcessInput(const InputState& inputState);
 	virtual void OnUpdateWorldTransform();
 	int GetUpdateOrder() const { return mUpdateOrder; }
+	void SetIsActive(bool active) { mIsActive = active; }
+	bool GetIsActive() const { return mIsActive; }
 	class GameObject* GetOwner() const { return mOwner; }
 protected:
 	class GameObject* mOwner;
 	int mUpdateOrder;
+	bool mIsActive;
 };
 

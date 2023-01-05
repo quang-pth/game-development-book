@@ -72,7 +72,7 @@ void KeyboardControlState::OnProcessInput(InputComponent* owner, const InputStat
 	// Rotate vertically
 	const float maxPitchSpeed = Math::Pi * 0.06f; // Max rotation speed per second
 	angularSpeed = mouseRelativePos.y * maxPitchSpeed;
-	owner->mOwner->GetGame()->GetFPSGameObject()->GetFPSCamera()->SetPitchSpeed(angularSpeed);
+	owner->mOwner->GetGame()->GetFPSGameObject()->GetCamera()->SetPitchSpeed(angularSpeed);
 }
 
 void KeyboardControlState::OnExit(InputComponent* owner)
@@ -84,4 +84,9 @@ void KeyboardControlState::OnExit(InputComponent* owner)
 ControlState::State KeyboardControlState::GetEnumState() const
 {
 	return ControlState::State::EKeyboard;
+}
+
+bool KeyboardControlState::IsMoving() const
+{
+	return mForwardSpeed != 0.0f;
 }

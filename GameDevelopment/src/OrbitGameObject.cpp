@@ -23,38 +23,6 @@ OrbitGameObject::~OrbitGameObject()
 {
 }
 
-void OrbitGameObject::ProcessGameObjectInput(const InputState& inputState)
-{
-	GameObject::ProcessGameObjectInput(inputState);
-	
-	RelativeMouse mouseInfo = GameObject::GetGame()->GetInputSystem()->GetRelativeMouse();
-	float yawSpeed = 0.0f;
-	float pitchSpeed = 0.0f;
-	
-	if (mouseInfo.Buttons & SDL_BUTTON(SDL_BUTTON_RIGHT))
-	{
-		static int maxMouseSpeed = 500;
-		static float maxOrbitSpeed = Math::Pi * 8;
-
-		if (mouseInfo.Position.x != 0)
-		{
-			// Convert to ~[-1.0, 1.0]
-			yawSpeed = static_cast<float>(mouseInfo.Position.x) / maxMouseSpeed;
-			// Multiply by rotation/sec
-			yawSpeed *= maxOrbitSpeed;
-		}
-		
-		if (mouseInfo.Position.y != 0)
-		{
-			pitchSpeed = static_cast<float>(mouseInfo.Position.y) / maxMouseSpeed;
-			pitchSpeed *= maxOrbitSpeed;
-		}
-	}
-	
-	mCamera->SetYawSpeed(-yawSpeed);
-	mCamera->SetPitchSpeed(pitchSpeed);
-}
-
 void OrbitGameObject::SetVisible(bool visible)
 {
 	mMeshComponent->SetVisible(visible);

@@ -7,6 +7,7 @@ SplineCamera::SplineCamera(GameObject* owner, int updateOrder, const std::string
 	mPaused(false), mT(0.0f), mSpeed(0.3f),
 	mIdx(1), mPath(), mDirectionFactor(1)
 {
+	mState = CameraComponent::State::ESpline;
 }
 
 SplineCamera::~SplineCamera()
@@ -37,6 +38,14 @@ void SplineCamera::Update(float deltaTime)
 	const Vector3& target = mPath.ComputePosition(mIdx, mT + 0.001f * mDirectionFactor);
 	mViewMatrix = Matrix4::CreateLookAt(cameraPosition, target, Vector3::UnitZ);
 	CameraComponent::SetViewMatrix(mViewMatrix);
+}
+
+void SplineCamera::OnEnter()
+{
+}
+
+void SplineCamera::OnExit()
+{
 }
 
 void SplineCamera::Restart()

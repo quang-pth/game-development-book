@@ -37,7 +37,9 @@ void GameObject::Update(float deltaTime)
 void GameObject::UpdateComponents(float deltaTime)
 {
 	for (Component* component : mComponents) {
-		component->Update(deltaTime);
+		if (component->GetIsActive()) {
+			component->Update(deltaTime);
+		}
 	}
 }
 

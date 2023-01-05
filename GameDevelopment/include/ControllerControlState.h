@@ -1,6 +1,10 @@
 #pragma once
 
 #include"include/ControlState.h"
+#include"include/CustomMath.h"
+
+class GameObject;
+class ControllerState;
 
 class ControllerControlState : public ControlState
 {
@@ -13,7 +17,11 @@ public:
 	virtual void OnProcessInput(InputComponent* owner, const InputState& state) override;
 	virtual void OnExit(InputComponent * owner) override;
 	virtual State GetEnumState() const override;
+	virtual bool IsMoving() const override;
 private:
+	Vector3 GetControllerMoveDirection(ControllerState* controller, GameObject* owner) const;
+private:
+	Vector3 mVelocity;
 	float mSpeed;
 };
 

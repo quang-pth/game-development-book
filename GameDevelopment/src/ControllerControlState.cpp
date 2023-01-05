@@ -39,11 +39,12 @@ void ControllerControlState::OnProcessInput(InputComponent* owner, const InputSt
 	ControllerState* controller = owner->mController;
 	if (controller != nullptr && controller->GetIsConnected())
 	{
-		owner->SetVelocity(owner->GetMoveDirectionFromController());
+		mVelocity = this->GetControllerMoveDirection(controller, owner->mOwner);
+		owner->SetVelocity(mVelocity);
 		const Vector2& rotation = controller->GetRightStick();
 		const float maxAngularSpeed = Math::Pi * 1.5;
 		owner->SetAngularSpeed(rotation.x * maxAngularSpeed);
-		owner->mOwner->GetGame()->GetFPSGameObject()->GetFPSCamera()->SetPitchSpeed(-rotation.y * maxAngularSpeed);
+		owner->mOwner->GetGame()->GetFPSGameObject()->GetCamera()->SetPitchSpeed(-rotation.y * maxAngularSpeed);
 	}
 }
 
@@ -55,4 +56,15 @@ void ControllerControlState::OnExit(InputComponent* owner)
 ControlState::State ControllerControlState::GetEnumState() const
 {
 	return ControlState::State::EController;
+}
+
+bool ControllerControlState::IsMoving() const
+{
+	return mVelocity != Vector3::Zero;
+}
+
+Vector3 ControllerControlState::GetControllerMoveDirection(ControllerState* controller, GameObject* owner) const
+{
+	const Vector2& value = controller->GetLeftStick();
+	return Vector3::Transform(Vector3(value.y, value.x), owner->GetTransform()->GetRotation());
 }

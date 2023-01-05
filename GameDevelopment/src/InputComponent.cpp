@@ -12,8 +12,8 @@
 InputComponent::InputComponent(GameObject* owner, int updateOrder) : 
 	MoveComponent(owner, updateOrder), mController(nullptr)
 {
-	mControlStates.insert({ ControlState::State::EKeyboard, std::make_shared<KeyboardControlState>() });
-	mControlStates.insert({ ControlState::State::EController, std::make_shared<ControllerControlState>() });
+	mStates.insert({ ControlState::State::EKeyboard, std::make_shared<KeyboardControlState>() });
+	mStates.insert({ ControlState::State::EController, std::make_shared<ControllerControlState>() });
 	this->ChangeState(ControlState::State::EKeyboard);
 
 	mOwner->GetGame()->GetInputSystem()->AddInputObserver(this);
@@ -26,36 +26,27 @@ InputComponent::~InputComponent()
 
 void InputComponent::Update(float deltaTime)
 {
-	if (mCurrentControlState) {
-		mCurrentControlState->OnUpdate(this, deltaTime);
-	}
+	mCurrentState->OnUpdate(this, deltaTime);
 }
 
 void InputComponent::ProcessInput(const InputState& inputState)
 {
-	if (mCurrentControlState) {
-		mCurrentControlState->OnProcessInput(this, inputState);
-	}
+	mCurrentState->OnProcessInput(this, inputState);
 }
 
 bool InputComponent::IsMoving() const
 {
-	if (mCurrentControlState->GetEnumState() == ControlState::State::EController) {
-		return mVelocity != Vector3::Zero;
-	}
-	
-	// Controlled by Keyboard
-	return mForwardSpeed != 0.0f;
+	return mCurrentState->IsMoving();
 }
 
 void InputComponent::ChangeState(ControlState::State state)
 {
-	if (mCurrentControlState) {
-		mCurrentControlState->OnExit(this);
+	if (mCurrentState) {
+		mCurrentState->OnExit(this);
 	}
 
-	mCurrentControlState = mControlStates.at(state);
-	mCurrentControlState->OnEnter(this);
+	mCurrentState = mStates.at(state);
+	mCurrentState->OnEnter(this);
 }
 
 void InputComponent::OnControllerInputHandler(ControllerState* controller, InputObserver::Event inputEvent)
@@ -71,18 +62,12 @@ void InputComponent::OnControllerInputHandler(ControllerState* controller, Input
 		break;
 	case InputObserver::Event::ERemoved:
 		if (mController != nullptr && controller->GetInstanceID() == mController->GetInstanceID()) {
-			mController->SetIsUsed(false);
 			mController = nullptr;
+			mController->SetIsUsed(false);
 			this->ChangeState(ControlState::State::EKeyboard);
 		}
 		break;
 	default:
 		break;
 	}
-}
-
-Vector3 InputComponent::GetMoveDirectionFromController() const
-{
-	const Vector2& value = mController->GetLeftStick();
-	return Vector3::Transform(Vector3(value.y, value.x), mOwner->GetTransform()->GetRotation());
 }

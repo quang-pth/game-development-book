@@ -8,9 +8,9 @@
 FollowCamera::FollowCamera(GameObject* owner, int updateOrder, const std::string& name) :
 	CameraComponent(owner, updateOrder, name),
 	mOffset(-400.0f, 0.0f, 350.0f), mTargetDist(100.0f),
-	mSpringConstant(8.0f), mYawSpeed(0.0f), mPitchSpeed(0.0f), 
-	mUp(Vector3::UnitZ)
+	mSpringConstant(8.0f), mUp(Vector3::UnitZ)
 {
+	mState = CameraComponent::State::EFollow;
 	this->SnapToIdeal();
 }
 
@@ -23,6 +23,14 @@ void FollowCamera::Update(float deltaTime)
 	CameraComponent::Update(deltaTime);
 	this->UpdateActualCameraPosition(deltaTime);
 	this->FollowTarget(deltaTime);
+}
+
+void FollowCamera::OnEnter()
+{
+}
+
+void FollowCamera::OnExit()
+{
 }
 
 void FollowCamera::ProcessInput(const InputState& inputState)

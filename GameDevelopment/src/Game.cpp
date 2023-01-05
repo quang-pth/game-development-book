@@ -166,7 +166,7 @@ void Game::HandlKeyPress(std::uint32_t key)
 	case '2':
 	case '3':
 	case '4':
-		this->ChangeCamera(key);
+		//this->ChangeCamera(key);
 		break;
 	default:
 		break;
@@ -260,11 +260,11 @@ void Game::LoadData()
 	aimingSprite->SetTexture(mRenderer->GetTexture("Assets/Chapter9/Crosshair.png"));
 	mCrosshair->GetTransform()->SetScale(4.0f);
 
-	mFollowGameObject = new FollowGameObject(this);
+	/*mFollowGameObject = new FollowGameObject(this);
 	mOrbitGameObject = new OrbitGameObject(this);
 	mSplineGameObject = new SplineGameObject(this);
 
-	this->ChangeCamera('1');
+	this->ChangeCamera('1');*/
 
 	mStartPoint = new Cube(this);
 	mStartPoint->GetTransform()->SetScale(1.5f);
