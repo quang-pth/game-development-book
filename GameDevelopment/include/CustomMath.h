@@ -353,6 +353,13 @@ public:
 		return !(left.x == right.x && left.y == right.y && left.z == right.z);
 	}
 
+	void operator=(const Vector3& other)
+	{
+		this->x = other.x;
+		this->y = other.y;
+		this->z = other.z;
+	}
+	
 	// Scalar *=
 	Vector3& operator*=(float scalar)
 	{

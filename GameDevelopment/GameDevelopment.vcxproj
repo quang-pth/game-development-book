@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Collision.cpp" />
     <ClCompile Include="src\SplineGameObject.cpp" />
     <ClCompile Include="src\OrbitGameObject.cpp" />
     <ClCompile Include="src\FollowGameObject.cpp" />
@@ -205,6 +206,7 @@
     <ClCompile Include="src\Subject.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Collision.h" />
     <ClInclude Include="include\FollowGameObject.h" />
     <ClInclude Include="include\FollowCamera.h" />
     <ClInclude Include="include\FPSModel.h" />
