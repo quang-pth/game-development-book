@@ -18,5 +18,6 @@ public:
 	virtual bool IsMoving() const override;
 private:
 	float mForwardSpeed, mStrafeSpeed;
+	bool mIsMoving;
 };
 

@@ -165,6 +165,11 @@ ButtonState InputSystem::GetMappedButtonState(const std::string& actionName, con
 {
 	std::string name = actionName;
 	this->LowerCaseString(name);
+
+	if (mControllerActionMap.find(name) == mControllerActionMap.end()) {
+		return ButtonState::ENone;
+	}
+
 	return controller->GetButtonState(mControllerActionMap.at(name));
 }
 
@@ -172,6 +177,11 @@ bool InputSystem::GetMappedButtonValue(const std::string& actionName, const Cont
 {
 	std::string name = actionName;
 	this->LowerCaseString(name);
+
+	if (mControllerActionMap.find(name) == mControllerActionMap.end()) {
+		return false;
+	}
+
 	return controller->GetButtonValue(mControllerActionMap.at(name));
 }
 
@@ -179,6 +189,11 @@ ButtonState InputSystem::GetMappedKeyState(const std::string& actionName)
 {
 	std::string name = actionName;
 	this->LowerCaseString(name);
+
+	if (mKeyboardActionMap.find(name) == mKeyboardActionMap.end()) {
+		return ButtonState::ENone;
+	}
+
 	return mState.KeyBoard.GetKeyState(mKeyboardActionMap.at(name));
 }
 
@@ -186,6 +201,11 @@ bool InputSystem::GetMappedKeyValue(const std::string& actionName)
 {
 	std::string name = actionName;
 	this->LowerCaseString(name);
+	
+	if (mKeyboardActionMap.find(name) == mKeyboardActionMap.end()) {
+		return false;
+	}
+
 	return mState.KeyBoard.GetKeyValue(mKeyboardActionMap.at(name));
 }
 

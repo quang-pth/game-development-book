@@ -9,7 +9,9 @@
 #include "include/CustomMath.h"
 #include <iostream>
 
-KeyboardControlState::KeyboardControlState() : mForwardSpeed(200.0f), mStrafeSpeed(100.0f)
+KeyboardControlState::KeyboardControlState() : 
+	mForwardSpeed(200.0f), mStrafeSpeed(100.0f),
+	mIsMoving(false)
 {
 }
 
@@ -61,6 +63,7 @@ void KeyboardControlState::OnProcessInput(InputComponent* owner, const InputStat
 		strafeSpeed -= mStrafeSpeed;
 	}
 	owner->SetStrafeSpeed(strafeSpeed);
+	mIsMoving = (forwardSpeed != 0.0f) || (strafeSpeed != 0.0f);
 	// ================== MOUSE =======================
 	if (inputSystem->GetInputState().Mouse.GetButtonState(SDL_BUTTON_RIGHT) == ButtonState::EHeld) 
 		return;
@@ -98,5 +101,5 @@ ControlState::State KeyboardControlState::GetEnumState() const
 
 bool KeyboardControlState::IsMoving() const
 {
-	return mForwardSpeed != 0.0f;
+	return mIsMoving;
 }
