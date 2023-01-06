@@ -53,6 +53,16 @@ void ControllerControlState::OnExit(InputComponent* owner)
 	owner->SetForwardSpeed(0.0f);
 }
 
+ButtonState ControllerControlState::GetMappedState(InputComponent* owner, const std::string& actionName)
+{
+	return owner->mOwner->GetGame()->GetInputSystem()->GetMappedButtonState(actionName, owner->mController);
+}
+
+bool ControllerControlState::GetMappedValue(InputComponent* owner, const std::string& actionName)
+{
+	return owner->mOwner->GetGame()->GetInputSystem()->GetMappedButtonValue(actionName, owner->mController);
+}
+
 ControlState::State ControllerControlState::GetEnumState() const
 {
 	return ControlState::State::EController;

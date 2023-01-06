@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <algorithm>
 
 InputSystem::InputSystem(Game* game) : 
 	mGame(game), mControllers(),
@@ -160,19 +161,32 @@ Vector2 InputSystem::Filter2D(const Vector2& input)
 	return this->Filter2D(input.x, input.y);
 }
 
-ButtonState InputSystem::GetMappedButtonState(const std::string& actionName, const ControllerState* controller) const
+ButtonState InputSystem::GetMappedButtonState(const std::string& actionName, const ControllerState* controller)
 {
-	return controller->GetButtonState(mControllerActionMap.at(actionName));
+	std::string name = actionName;
+	this->LowerCaseString(name);
+	return controller->GetButtonState(mControllerActionMap.at(name));
 }
 
-ButtonState InputSystem::GetMappedKeyState(const std::string& actionName) const
+bool InputSystem::GetMappedButtonValue(const std::string& actionName, const ControllerState* controller)
 {
-	return mState.KeyBoard.GetKeyState(mKeyboardActionMap.at(actionName));
+	std::string name = actionName;
+	this->LowerCaseString(name);
+	return controller->GetButtonValue(mControllerActionMap.at(name));
 }
 
-bool InputSystem::GetMappedKeyValue(const std::string& actionName) const
+ButtonState InputSystem::GetMappedKeyState(const std::string& actionName)
 {
-	return mState.KeyBoard.GetKeyValue(mKeyboardActionMap.at(actionName));
+	std::string name = actionName;
+	this->LowerCaseString(name);
+	return mState.KeyBoard.GetKeyState(mKeyboardActionMap.at(name));
+}
+
+bool InputSystem::GetMappedKeyValue(const std::string& actionName)
+{
+	std::string name = actionName;
+	this->LowerCaseString(name);
+	return mState.KeyBoard.GetKeyValue(mKeyboardActionMap.at(name));
 }
 
 void InputSystem::UpdateMouse()
@@ -223,6 +237,11 @@ void InputSystem::UpdateControllers()
 	}
 }
 
+void InputSystem::LowerCaseString(std::string& str)
+{
+	std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+}
+
 bool InputSystem::InitActionMaps(const std::string& filePath)
 {
 	std::ifstream fileStream(filePath);
@@ -243,16 +262,20 @@ bool InputSystem::InitActionMaps(const std::string& filePath)
 			}
 
 			std::string actionName = actionMap[0];
+			this->LowerCaseString(actionName);
+
 			auto iter = ++actionMap.begin();
 			while (iter != actionMap.end()) {
 				std::string deviceName = *iter;
+				this->LowerCaseString(deviceName);
 				std::string inputName = *(iter + 1);
+				this->LowerCaseString(inputName);
 			
-				if (deviceName == "Controller") {
+				if (deviceName == "controller") {
 					SDL_GameControllerButton button = SDL_GameControllerGetButtonFromString(inputName.c_str());
 					mControllerActionMap.insert({ actionName, button });
 				}
-				else if (deviceName == "Keyboard") {
+				else if (deviceName == "keyboard") {
 					SDL_Scancode key = SDL_GetScancodeFromName(inputName.c_str());
 					mKeyboardActionMap.insert({ actionName, key });
 				}

@@ -4,7 +4,7 @@
 #include "include/SoundEvent.h"
 #include "include/InputSystem.h"
 #include "include/CameraComponent.h"
-#include<unordered_map>
+#include<vector>
 #include<memory>
 
 class InputComponent;
@@ -34,7 +34,8 @@ private:
 	InputComponent* mInputComponent;
 	AudioComponent* mAudioComponent;
 	std::shared_ptr<CameraComponent> mCurrentCamera;
-	std::unordered_map<CameraComponent::State, std::shared_ptr<CameraComponent>> mCameras;
+	std::vector<std::shared_ptr<CameraComponent>> mCameras;
 	FPSModel* mFPSModel;
+	GameObject* mStartPoint, *mEndPoint;
 };
 

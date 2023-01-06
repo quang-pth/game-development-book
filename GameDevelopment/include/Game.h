@@ -25,7 +25,6 @@ private:
 	void ProcessInput();
 	void HandlKeyPress(std::uint32_t key);
 	void UpdateGame();
-	void ChangeCamera(int mode);
 	void GenerateOutput();
 	void LoadData();
 	void UnloadData();
@@ -40,9 +39,6 @@ private:
 	std::vector<class GameObject*> mPendingGameObjects;
 	class GameObject* mCrosshair;
 	class FPSGameObject* mFPSGameObject;
-	class FollowGameObject* mFollowGameObject;
-	class OrbitGameObject* mOrbitGameObject;
-	class SplineGameObject* mSplineGameObject;
 	class GameObject* mStartPoint;
 	class GameObject* mEndPoint;
 	// System

@@ -1,6 +1,8 @@
 Fire,Controller,A,Keyboard,P
 Jump,Controller,Y,Keyboard,Space
 Quit,Controller,X,Keyboard,Escape
+FollowCamera,Controller,dpup
+FPSCamera,Controller,dpdown
 MoveForward,Keyboard,W
 MoveBackward,Keyboard,S
 MoveLeft,Keyboard,A

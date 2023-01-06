@@ -39,6 +39,16 @@ bool InputComponent::IsMoving() const
 	return mCurrentState->IsMoving();
 }
 
+ButtonState InputComponent::GetMappedActionState(const std::string& actionName)
+{
+	return mCurrentState->GetMappedState(this, actionName);
+}
+
+bool InputComponent::GetMappedActionValue(const std::string& actionName)
+{
+	return mCurrentState->GetMappedValue(this, actionName);
+}
+
 void InputComponent::ChangeState(ControlState::State state)
 {
 	if (mCurrentState) {

@@ -13,7 +13,7 @@ MenuManager::~MenuManager()
 
 void MenuManager::ProcessGameObjectInput(const InputState& inputState)
 {
-	const InputSystem* inputSystem = GameObject::GetGame()->GetInputSystem();
+	InputSystem* inputSystem = GameObject::GetGame()->GetInputSystem();
 	// ========================= START CONTROLLER INPUT ========================
 	for (const ControllerState& controllerState : inputState.Controllers) {
 		if (!controllerState.GetIsConnected() || !controllerState.GetIsUsed()) continue;

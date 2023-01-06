@@ -81,6 +81,16 @@ void KeyboardControlState::OnExit(InputComponent* owner)
 	owner->SetStrafeSpeed(mStrafeSpeed);
 }
 
+ButtonState KeyboardControlState::GetMappedState(InputComponent* owner, const std::string& actionName)
+{
+	return owner->mOwner->GetGame()->GetInputSystem()->GetMappedKeyState(actionName);
+}
+
+bool KeyboardControlState::GetMappedValue(InputComponent* owner, const std::string& actionName)
+{
+	return owner->mOwner->GetGame()->GetInputSystem()->GetMappedKeyValue(actionName);
+}
+
 ControlState::State KeyboardControlState::GetEnumState() const
 {
 	return ControlState::State::EKeyboard;

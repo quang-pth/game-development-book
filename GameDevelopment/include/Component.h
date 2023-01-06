@@ -21,6 +21,7 @@ public:
 	void SetIsActive(bool active) { mIsActive = active; }
 	bool GetIsActive() const { return mIsActive; }
 	class GameObject* GetOwner() const { return mOwner; }
+	void SetOwner(class GameObject* owner) { mOwner = owner; }
 protected:
 	class GameObject* mOwner;
 	int mUpdateOrder;

@@ -45,13 +45,15 @@ public:
 	Vector2 Filter2D(float x, float y);
 	Vector2 Filter2D(const Vector2& input);
 	const InputState& GetInputState() const { return mState; }
-	ButtonState GetMappedButtonState(const std::string& actionName, const ControllerState* controller) const;
-	ButtonState GetMappedKeyState(const std::string& actionName) const;
-	bool GetMappedKeyValue(const std::string& actionName) const;
+	ButtonState GetMappedButtonState(const std::string& actionName, const ControllerState* controller);
+	bool GetMappedButtonValue(const std::string& actionName, const ControllerState* controller);
+	ButtonState GetMappedKeyState(const std::string& actionName);
+	bool GetMappedKeyValue(const std::string& actionName);
 private:
 	void UpdateMouse();
 	void UpdateKeyboard();
 	void UpdateControllers();
+	void LowerCaseString(std::string& str);
 	bool InitActionMaps(const std::string& filePath);
 private:
 	InputState mState;

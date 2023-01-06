@@ -153,15 +153,6 @@ void Game::HandlKeyPress(std::uint32_t key)
 		value = 0.5f;
 		mFPSGameObject->SetFootstepSurface(value);
 		break;
-	case 'f': {
-		Vector3 screenPoint(0.0f, 0.0f, 0.0f);
-		Vector3 start = mRenderer->Unproject(screenPoint);
-		screenPoint.z = 0.95f;
-		Vector3 end = mRenderer->Unproject(screenPoint);
-		mStartPoint->GetTransform()->SetPosition(start);
-		mEndPoint->GetTransform()->SetPosition(end);
-		break;
-	}
 	case '1':
 	case '2':
 	case '3':
@@ -213,35 +204,6 @@ void Game::UpdateGame()
 	mAudioSystem->Update(deltaTime);
 }
 
-void Game::ChangeCamera(int mode)
-{
-	mFPSGameObject->SetState(GameObject::State::EDeactive);
-	mFPSGameObject->GetModel()->SetState(GameObject::State::EDeactive);
-	mCrosshair->SetState(GameObject::State::EDeactive);
-	mFollowGameObject->SetState(GameObject::State::EDeactive);
-	mOrbitGameObject->SetState(GameObject::State::EDeactive);
-	mSplineGameObject->SetState(GameObject::State::EDeactive);
-	
-	switch (mode) {
-	case '1':
-	default:
-		mFPSGameObject->SetState(GameObject::State::EActive);
-		mFPSGameObject->GetModel()->SetState(GameObject::State::EActive);
-		mCrosshair->SetState(GameObject::State::EActive);
-		break;
-	case '2':
-		mFollowGameObject->SetState(GameObject::State::EActive);
-		break;
-	case '3':
-		mOrbitGameObject->SetState(GameObject::State::EActive);
-		break;
-	case '4':
-		mSplineGameObject->SetState(GameObject::State::EActive);
-		mSplineGameObject->RestartSpline();
-		break;
-	}
-}
-
 void Game::GenerateOutput()
 {
 	mRenderer->Draw();
@@ -259,17 +221,6 @@ void Game::LoadData()
 	SpriteComponent* aimingSprite = new SpriteComponent(mCrosshair);
 	aimingSprite->SetTexture(mRenderer->GetTexture("Assets/Chapter9/Crosshair.png"));
 	mCrosshair->GetTransform()->SetScale(4.0f);
-
-	/*mFollowGameObject = new FollowGameObject(this);
-	mOrbitGameObject = new OrbitGameObject(this);
-	mSplineGameObject = new SplineGameObject(this);
-
-	this->ChangeCamera('1');*/
-
-	mStartPoint = new Cube(this);
-	mStartPoint->GetTransform()->SetScale(1.5f);
-	mEndPoint = new Cube(this);
-	mEndPoint->GetTransform()->SetScale(1.5f);
 
 	new Level(this);
 	new Sphere(this);

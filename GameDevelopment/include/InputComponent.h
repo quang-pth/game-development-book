@@ -17,13 +17,15 @@ public:
 	~InputComponent();
 	virtual void Update(float deltaTime) override;
 	virtual void OnControllerInputHandler(ControllerState* controller, InputObserver::Event inputEvent) override;
+	virtual void ProcessInput(const InputState& inputState) override;
 	ControllerState* GetController() const { return mController; }
 	bool IsMoving() const;
-	void ProcessInput(const InputState& inputState) override;
+	ButtonState GetMappedActionState(const std::string& actionName);
+	bool GetMappedActionValue(const std::string& actionName);
+private:
 	void ChangeState(ControlState::State state);
 private:
 	ControllerState* mController;
 	std::shared_ptr<ControlState> mCurrentState;
 	std::unordered_map<ControlState::State, std::shared_ptr<ControlState>> mStates;
 };
-
