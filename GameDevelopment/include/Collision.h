@@ -4,27 +4,46 @@
 #include <algorithm>
 #include <vector>
 
+struct Vertex {
+	Vector3 Position;
+	Vector3 Color;
+	Vector3 Normal;
+	Vector2 TextureCoords;
+};
+
 struct LineSegment {
 	Vector3 mStart;
 	Vector3 mEnd;
 	Vector3 PointOnSegment(float t) const;
 	float MinDistanceSquared(const Vector3& point) const;
+	static float MinDistanceSquared(const LineSegment& s1, const LineSegment& s2);
 	float MinDistance(const Vector3& point) const;
 };
 
 struct Capsule {
 	LineSegment mSegment;
 	float mRadius;
+	inline bool Contains(const Vector3& point) const {
+		float distanceSq = mSegment.MinDistanceSquared(point);
+		float radiusSq = mRadius * mRadius;
+		return distanceSq <= radiusSq;
+	}
 };
 
 struct Sphere {
 	float mRadius;
 	Vector3 mCenter;
-	bool IsIntersect(const Sphere& sphere) const {
-		float centerDistSq = (mCenter - sphere.mCenter).LengthSq();
-		float radiusDistSq = std::pow(mRadius + sphere.mRadius, 2);
-		return centerDistSq <= radiusDistSq;
+	inline bool Contains(const Vector3& point) const {
+		float distanceSq = (point - mCenter).LengthSq();
+		float radiusSq = mRadius * mRadius;
+		return distanceSq <= radiusSq;
 	}
+};
+
+struct TriangleEdge {
+	Vector3 e1;
+	Vector3 e2;
+	Vector3 e3;
 };
 
 struct OBB {
@@ -36,19 +55,21 @@ struct OBB {
 	*/
 };
 
-class AABB3
+class AABB
 {
 public:
-	AABB3() {
+	Vector3 mMin;
+	Vector3 mMax;
+	AABB() {
 		this->Empty();
 	};
-	AABB3(const std::vector<Vector3>& points) {
+	AABB(const std::vector<Vector3>& points) {
 		this->Empty();
 		for (const Vector3& point : points) {
 			this->UpdateMinMax(point);
 		}
 	}
-	~AABB3() {};
+	~AABB() {};
 	inline void Empty() {
 		mMin.x = mMin.y = mMin.z = std::numeric_limits<float>::infinity();
 		mMax.x = mMax.y = mMax.z = -std::numeric_limits<float>::infinity();
@@ -182,68 +203,29 @@ public:
 	inline Vector3 GetRadiusVector() {
 		return this->GetSizeVector() * 0.5f;
 	}
-private:
-	Vector3 mMin;
-	Vector3 mMax;
+	inline bool Contains(const Vector3& point) const {
+		bool inBoundX = point.x >= mMin.x && point.x <= mMax.x;
+		bool inBoundY = point.y >= mMin.y && point.y <= mMax.y;
+		bool inBoundZ = point.z >= mMin.z && point.z <= mMax.z;
+		return inBoundX && inBoundY && inBoundZ;
+	}
+	inline bool Intersect(const AABB& other) const {
+		bool outsideX = other.mMin.x < mMax.x || other.mMax.x < mMin.x;
+		bool outsideY = other.mMin.y < mMax.y || other.mMax.y < mMin.y;
+		bool outsideZ = other.mMin.z < mMax.z || other.mMax.z < mMin.z;
+		return !(outsideX && outsideY && outsideZ);
+	}
+	inline float MinDistanceSquared(const Vector3& point) const {
+		float dx = Math::Max(mMin.x - point.x, 0.0f);
+		dx = Math::Max(dx, point.x - mMax.x);
+		float dy = Math::Max(mMin.y - point.y, 0.0f);
+		dy = Math::Max(dy, point.y - mMax.y);
+		float dz = Math::Max(mMin.z - point.z, 0.0f);
+		dz = Math::Max(dz, point.z - mMax.z);
+		return dx * dx + dy * dy + dz * dz;
+	}
 };
 
-class Triangle;
-class Plane
-{
-public:
-	Plane(const Vector3& normal, float distance);
-	Plane(const Triangle& triangle);
-	Plane(const Vector3& v1, const Vector3& v2, const Vector3& v3);
-	static Vector3 ComputeBestFitNormal(const std::vector<Vector3>& points)
-	{
-		Vector3 normal = Vector3::Zero;
-
-		auto iter = points.begin();
-		while (iter != points.end()) {
-			Vector3 currentPoint = *iter;
-
-			Vector3 nextPoint;
-			if ((iter + 1) == points.end()) {
-				nextPoint = *(points.begin());
-			}
-			else {
-				nextPoint = *(iter + 1);
-			}
-
-			normal.x += (currentPoint.z + nextPoint.z) * (currentPoint.y - nextPoint.y);
-			normal.y += (currentPoint.x + nextPoint.x) * (currentPoint.z - nextPoint.z);
-			normal.z += (currentPoint.y + nextPoint.y) * (currentPoint.x - nextPoint.x);
-
-			iter++;
-		}
-
-		return normal.Normalize();
-	}
-	static float ComputeBestFitPlane(const std::vector<Vector3>& points, const Vector3& normal)
-	{
-		Vector3 avgPoint = Vector3::Zero;
-
-		for (auto iter = points.begin(); iter != points.end(); iter++) {
-			avgPoint = avgPoint + (*iter);
-		}
-
-		return avgPoint.Dot(normal) / points.size();
-	}
-public:
-	// Return a signed distance from a point to the plane
-	inline float DistanceToPoint(const Vector3& point) {
-		return point.Dot(mNormal) - mDistance;
-	}
-private:
-	Vector3 mNormal;
-	float mDistance;
-};
-
-struct TriangleEdge {
-	Vector3 e1;
-	Vector3 e2;
-	Vector3 e3;
-};
 class Triangle {
 public:
 	Vector3 v1, v2, v3;
@@ -362,6 +344,24 @@ public:
 
 		return outpoint;
 	}
+	
+	// Compute Barycentric point in 3D - better for SIMD instructions
+	// v1, v2, v3 are three vertices that form a valid triangle
+	inline static Vector3 ComputeBaryCentricPoint(
+		const Vector3& v1, const Vector3& v2, const Vector3& v3,
+		const Vector3& point)
+	{
+		return Triangle::ComputeBaryCentricPoint(Triangle(v1, v2, v3), point);
+	}
+
+	inline bool Contains(const Vector3& point) const {
+		const Vector3& barycentricCoords = Triangle::ComputeBaryCentricPoint(*this, point);
+		bool outside = (barycentricCoords.x < 0 || barycentricCoords.x > 1)
+			|| (barycentricCoords.y < 0 || barycentricCoords.y > 1)
+			|| (barycentricCoords.z < 0 || barycentricCoords.z > 1);
+		
+		return !outside;
+	}
 
 	inline void GetGravityPoint(
 		Vector3& outPointInCartersian,
@@ -423,11 +423,57 @@ private:
 	Vector3 mNormal;
 };
 
-struct Vertex {
-	Vector3 Position;
-	Vector3 Color;
-	Vector3 Normal;
-	Vector2 TextureCoords;
+class Plane
+{
+public:
+	Vector3 mNormal;
+	float mDistance;
+	Plane(const Vector3& normal, float distance);
+	Plane(const Triangle& triangle);
+	Plane(const Vector3& v1, const Vector3& v2, const Vector3& v3);
+	static Vector3 ComputeBestFitNormal(const std::vector<Vector3>& points)
+	{
+		Vector3 normal = Vector3::Zero;
+
+		auto iter = points.begin();
+		while (iter != points.end()) {
+			Vector3 currentPoint = *iter;
+
+			Vector3 nextPoint;
+			if ((iter + 1) == points.end()) {
+				nextPoint = *(points.begin());
+			}
+			else {
+				nextPoint = *(iter + 1);
+			}
+
+			normal.x += (currentPoint.z + nextPoint.z) * (currentPoint.y - nextPoint.y);
+			normal.y += (currentPoint.x + nextPoint.x) * (currentPoint.z - nextPoint.z);
+			normal.z += (currentPoint.y + nextPoint.y) * (currentPoint.x - nextPoint.x);
+
+			iter++;
+		}
+
+		return normal.Normalize();
+	}
+	static float ComputeBestFitPlane(const std::vector<Vector3>& points, const Vector3& normal)
+	{
+		Vector3 avgPoint = Vector3::Zero;
+
+		for (auto iter = points.begin(); iter != points.end(); iter++) {
+			avgPoint = avgPoint + (*iter);
+		}
+
+		return avgPoint.Dot(normal) / points.size();
+	}
+public:
+	inline bool Contains(const Vector3& point) const {
+		return (point.Dot(mNormal) + mDistance) == 0.0f;
+	}
+	// Return a signed distance from a point to the plane
+	inline float DistanceToPoint(const Vector3& point) {
+		return point.Dot(mNormal) - mDistance;
+	}
 };
 
 class TriangleMesh {
@@ -483,6 +529,161 @@ public:
 
 		return true;
 	}
+	inline bool Contains(const Vector3& point) const {
+		float sumAngle = 0.0f;
+
+		Vector3 v1, v2;
+		for (std::uint32_t i = 0; i < mVertices.size() - 1; i++) {
+			v1 = mVertices[i] - point;
+			v1.Normalized();
+
+			v2 = mVertices[i + 1] - point;
+			v2.Normalized();
+
+			sumAngle += Math::Acos(v1.Dot(v2));
+		}
+
+		v1 = mVertices.front() - point;
+		v1.Normalized();
+		v2 = mVertices.back() - point;
+		v2.Normalized();
+		sumAngle += Math::Acos(v1.Dot(v2));
+
+		return Math::NearZero(sumAngle - Math::TwoPi);
+	}
 private:
 	std::vector<Vector3> mVertices;
+};
+
+class Collisions {
+public:
+	inline static bool Intersect(const AABB& box, const Sphere& sphere) {
+		float distanceSq = box.MinDistanceSquared(sphere.mCenter);
+		float radiusSq = sphere.mRadius * sphere.mRadius;
+		return distanceSq <= radiusSq;
+	}
+	inline static bool Intersect(const Sphere& a, const Sphere& b) {
+		float centerDistSq = (a.mCenter- b.mCenter).LengthSq();
+		float radiusDistSq = std::pow(a.mRadius + b.mRadius, 2);
+		return centerDistSq <= radiusDistSq;
+	}
+	inline static bool Intersect(const Capsule& a, const Capsule& b) {
+		float distanceSq = LineSegment::MinDistanceSquared(a.mSegment, b.mSegment);
+		float radiusSq = std::pow(a.mRadius + b.mRadius, 2);
+		return distanceSq <= radiusSq;
+	}
+	inline static bool Intersect(const LineSegment& l, const Plane& p, float& outT) {
+		// Check if the line is on the plane
+		if (p.Contains(l.mStart) && p.Contains(l.mEnd)) {
+			outT = 0.0f;
+			return true;
+		}
+		// Check if the line is parallel to the plane
+		else if (Math::NearZero((l.mStart - l.mEnd).Dot(p.mNormal))) {
+			outT = -1.0f;
+			return false;
+		}
+		
+		float nominator = -l.mStart.Dot(p.mNormal) - p.mDistance;
+		float denominator = (l.mStart - l.mEnd).Dot(p.mNormal);
+		outT = nominator / denominator;
+
+		return outT >= 0.0f && outT <= 1.0f;
+	}
+	inline static bool Intersect(const LineSegment& l, const Sphere& s, float& outT) {
+		Vector3 x = l.mStart - s.mCenter;
+		Vector3 y = l.mEnd - l.mStart;
+		float a = y.Dot(y);
+		float b = 2 * x.Dot(y);
+		float c = x.Dot(x) - s.mRadius * s.mRadius;
+		float discriminant = b * b - 4 * a * c;
+		// Segment doesnt intersect with the sphere
+		if (discriminant < 0) {
+			outT = -1.0f;
+			return false;
+		}
+		else {
+			discriminant = Math::Sqrt(discriminant);
+			float minT = (-b - discriminant) / (2.0f * a);
+			float maxT = (-b + discriminant) / (2.0f * a);
+			// Segment is outside the sphere and intersect with the sphere
+			if (minT >= 0.0f && minT <= 1.0f) {
+				outT = minT;
+				return true;
+			}
+			// Segment is inside the sphere and interst with the sphere
+			else if (maxT >= 0.0f && maxT <= 1.0f) {
+				outT = maxT;
+				return true;
+			}
+			else {
+				outT = -1.0f;
+				return false;
+			}
+		}
+	}
+	inline static bool TestSidePlane(float start, float end, float negd, std::vector<float>& tValues) {
+		float denom = end - start;
+		if (Math::NearZero(denom)) {
+			return false;
+		}
+
+		float numer = -start + negd;
+		float t = numer / denom;
+		if (t >= 0.0f && t <= 1.0f) {
+			tValues.emplace_back(t);
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	inline static bool Intersect(const LineSegment& l, const AABB& box, float& outT) {
+		std::vector<float> tValues;
+		// Test segment intersect on x planes
+		Collisions::TestSidePlane(l.mStart.x, l.mEnd.x, box.mMin.x, tValues);
+		Collisions::TestSidePlane(l.mStart.x, l.mEnd.x, box.mMax.x, tValues);
+		// Test segment intersect on y planes
+		Collisions::TestSidePlane(l.mStart.y, l.mEnd.y, box.mMin.y, tValues);
+		Collisions::TestSidePlane(l.mStart.y, l.mEnd.y, box.mMax.y, tValues);
+		// Test segment intersect on z planes
+		Collisions::TestSidePlane(l.mStart.z, l.mEnd.z, box.mMin.z, tValues);
+		Collisions::TestSidePlane(l.mStart.z, l.mEnd.z, box.mMax.z, tValues);
+		// Test for the box that contains any points of intersection
+		std::sort(tValues.begin(), tValues.end());
+		for (float t : tValues) {
+			Vector3 point = l.PointOnSegment(t);
+			if (box.Contains(point)) {
+				outT = t;
+				return true;
+			}
+		}
+
+		outT = -1.0f;
+		return false;
+	}
+	inline static bool SweptSphere(const Sphere& p0, const Sphere& p1, const Sphere& q0, const Sphere& q1, float& outT) {
+		Vector3 x = p0.mCenter - q0.mCenter;
+		Vector3 y = (p1.mCenter - p0.mCenter) - (q1.mCenter - q0.mCenter);
+		float a = y.Dot(y);
+		float b = 2 * x.Dot(y);
+		float c = x.Dot(x) - std::pow(p0.mRadius + q0.mRadius, 2);
+		float discriminant = b * b - 4 * a * c;
+		if (Math::NearZero(discriminant)) {
+			outT = -1.0f;
+			return false;
+		}
+
+		discriminant = Math::Sqrt(discriminant);
+		// Takes the smaller solution to get the first point of intersection
+		float minT = (-b - discriminant) / (2.0f * a);
+		
+		if (minT >= 0.0f && minT <= 1.0f) {
+			outT = minT;
+			return true;
+		}
+
+		outT = -1.0f;
+		return false;
+	}
 };

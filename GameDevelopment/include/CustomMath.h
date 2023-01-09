@@ -405,6 +405,13 @@ public:
 		float length = Length();
 		return Vector3(this->x / length, this->y / length, this->z / length);
 	}
+	
+	void Normalized()
+	{
+		float length = Length();
+		x /= length;
+		y /= length;
+	}
 
 	float Dot(const Vector3& other) const
 	{
