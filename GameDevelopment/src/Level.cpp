@@ -36,9 +36,6 @@ void Level::Init()
 	};
 	for (std::uint8_t i = 0; i < sizeof(positions) / sizeof(Vector3); i++) {
 		Decoration* decoration = new Decoration(GameObject::GetGame());
-		decoration->GetMeshComponent()->SetMesh(
-			GameObject::GetGame()->GetRenderer()->GetMesh("Assets/Chapter6/Plane.gpmesh")
-		);
 		decoration->GetTransform()->SetPosition(positions[i]);
 		decoration->GetTransform()->SetScale(20.0f);
 		decoration->GetTransform()->SetRotation(rotations[i]);

@@ -1,10 +1,14 @@
 #include "include/FPSGameObject.h"
 #include "include/Game.h"
+#include "include/Collision.h"
 #include "include/Renderer.h"
+#include "include/Level.h"
+#include "include/Decoration.h"
 #include "include/Mesh.h"
 #include "include/InputComponent.h"
 #include "include/TransformComponent.h"
 #include "include/MeshComponent.h"
+#include "include/BoxComponent.h"
 #include "include/AudioComponent.h"
 #include "include/AudioSystem.h"
 #include "include/FPSModel.h"
@@ -122,4 +126,42 @@ void FPSGameObject::ChangeCamera(CameraComponent::State state)
 	});
 	mCurrentCamera = *iter;
 	mCurrentCamera->OnEnter();
+}
+
+void FPSGameObject::FixCollisions()
+{
+	GameObject::GetTransform()->ComputeWorldTransform();
+	Vector3 position = mFPSModel->GetTransform()->GetPosition();
+	const AABB& fpsBox = mFPSModel->GetBoxComponent()->GetWorldBox();
+	const std::vector<Decoration*>& planes = GameObject::GetGame()->GetLevel()->GetPlanes();
+
+	for (auto plane : planes) {
+		const AABB& planeBox = plane->GetBoxComponent()->GetWorldBox();
+		if (Collision::Intersect(fpsBox, planeBox)) {
+			float dx1 = planeBox.mMin.x - fpsBox.mMax.x;
+			float dx2 = planeBox.mMax.x - fpsBox.mMin.x;
+			float dy1 = planeBox.mMin.y - fpsBox.mMax.y;
+			float dy2 = planeBox.mMax.y - fpsBox.mMin.y;
+			float dz1 = planeBox.mMin.z - fpsBox.mMax.z;
+			float dz2 = planeBox.mMax.z - fpsBox.mMin.z;
+
+			float dx = Math::Abs(dx1) < Math::Abs(dx2) ? dx1 : dx2;
+			float dy = Math::Abs(dy1) < Math::Abs(dy2) ? dy1 : dy2;
+			float dz = Math::Abs(dz1) < Math::Abs(dz2) ? dz1 : dz2;
+			
+			if (Math::Abs(dx) <= Math::Abs(dy) && Math::Abs(dx) <= Math::Abs(dz)) 
+			{
+				position.x += dx;
+			}
+			else if (Math::Abs(dy) <= Math::Abs(dx) && Math::Abs(dy) <= Math::Abs(dz)) {
+				position.y += dy;
+			}
+			else {
+				position.z += dz;
+			}
+		}
+
+		mFPSModel->GetTransform()->SetPosition(position);
+		mFPSModel->GetBoxComponent()->OnUpdateWorldTransform();
+	}
 }

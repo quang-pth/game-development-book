@@ -2,6 +2,7 @@
 #include "include/Game.h"
 #include "include/Renderer.h"
 #include "include/MeshComponent.h"
+#include "include/BoxComponent.h"
 #include "include/Mesh.h"
 
 FPSModel::FPSModel(Game* game, const std::string& name) :
@@ -9,6 +10,9 @@ FPSModel::FPSModel(Game* game, const std::string& name) :
 {
 	mMeshComponent = new MeshComponent(this);
 	mMeshComponent->SetMesh(game->GetRenderer()->GetMesh("Assets/Chapter9/Rifle.gpmesh"));
+	
+	mBoxComponent = new BoxComponent(this);
+	mBoxComponent->SetObjectBox(mMeshComponent->GetMesh()->GetBox());
 }
 
 FPSModel::~FPSModel()

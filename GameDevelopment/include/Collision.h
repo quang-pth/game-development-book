@@ -209,12 +209,6 @@ public:
 		bool inBoundZ = point.z >= mMin.z && point.z <= mMax.z;
 		return inBoundX && inBoundY && inBoundZ;
 	}
-	inline bool Intersect(const AABB& other) const {
-		bool outsideX = other.mMin.x < mMax.x || other.mMax.x < mMin.x;
-		bool outsideY = other.mMin.y < mMax.y || other.mMax.y < mMin.y;
-		bool outsideZ = other.mMin.z < mMax.z || other.mMax.z < mMin.z;
-		return !(outsideX && outsideY && outsideZ);
-	}
 	inline float MinDistanceSquared(const Vector3& point) const {
 		float dx = Math::Max(mMin.x - point.x, 0.0f);
 		dx = Math::Max(dx, point.x - mMax.x);
@@ -555,8 +549,14 @@ private:
 	std::vector<Vector3> mVertices;
 };
 
-class Collisions {
+class Collision {
 public:
+	inline static bool Intersect(const AABB& a, const AABB& b) {
+		bool outsideX = a.mMin.x < b.mMax.x || a.mMax.x < b.mMin.x;
+		bool outsideY = a.mMin.y < b.mMax.y || a.mMax.y < b.mMin.y;
+		bool outsideZ = a.mMin.z < b.mMax.z || a.mMax.z < b.mMin.z;
+		return !(outsideX && outsideY && outsideZ);
+	}
 	inline static bool Intersect(const AABB& box, const Sphere& sphere) {
 		float distanceSq = box.MinDistanceSquared(sphere.mCenter);
 		float radiusSq = sphere.mRadius * sphere.mRadius;
@@ -622,7 +622,8 @@ public:
 			}
 		}
 	}
-	inline static bool TestSidePlane(float start, float end, float negd, std::vector<float>& tValues) {
+	inline static bool TestSidePlane(float start, float end, float negd, 
+		const Vector3& normal, std::vector<std::pair<float, Vector3>>& tValues) {
 		float denom = end - start;
 		if (Math::NearZero(denom)) {
 			return false;
@@ -631,30 +632,36 @@ public:
 		float numer = -start + negd;
 		float t = numer / denom;
 		if (t >= 0.0f && t <= 1.0f) {
-			tValues.emplace_back(t);
+			tValues.emplace_back(std::pair<float, Vector3>(t, normal));
 			return true;
 		}
 		else {
 			return false;
 		}
 	}
-	inline static bool Intersect(const LineSegment& l, const AABB& box, float& outT) {
-		std::vector<float> tValues;
+	inline static bool Intersect(const LineSegment& l, const AABB& box, float& outT, Vector3& outNormal) {
+		std::vector<std::pair<float, Vector3>> tValues;
 		// Test segment intersect on x planes
-		Collisions::TestSidePlane(l.mStart.x, l.mEnd.x, box.mMin.x, tValues);
-		Collisions::TestSidePlane(l.mStart.x, l.mEnd.x, box.mMax.x, tValues);
+		Collision::TestSidePlane(l.mStart.x, l.mEnd.x, box.mMin.x, Vector3::NegUnitX, tValues);
+		Collision::TestSidePlane(l.mStart.x, l.mEnd.x, box.mMax.x, Vector3::UnitX, tValues);
 		// Test segment intersect on y planes
-		Collisions::TestSidePlane(l.mStart.y, l.mEnd.y, box.mMin.y, tValues);
-		Collisions::TestSidePlane(l.mStart.y, l.mEnd.y, box.mMax.y, tValues);
+		Collision::TestSidePlane(l.mStart.y, l.mEnd.y, box.mMin.y, Vector3::NegUnitY, tValues);
+		Collision::TestSidePlane(l.mStart.y, l.mEnd.y, box.mMax.y, Vector3::UnitY, tValues);
 		// Test segment intersect on z planes
-		Collisions::TestSidePlane(l.mStart.z, l.mEnd.z, box.mMin.z, tValues);
-		Collisions::TestSidePlane(l.mStart.z, l.mEnd.z, box.mMax.z, tValues);
+		Collision::TestSidePlane(l.mStart.z, l.mEnd.z, box.mMin.z, Vector3::NegUnitZ, tValues);
+		Collision::TestSidePlane(l.mStart.z, l.mEnd.z, box.mMax.z, Vector3::UnitY, tValues);
 		// Test for the box that contains any points of intersection
-		std::sort(tValues.begin(), tValues.end());
-		for (float t : tValues) {
-			Vector3 point = l.PointOnSegment(t);
+		std::sort(tValues.begin(), tValues.end(), 
+			[](std::pair<float, Vector3>& t1, std::pair<float, Vector3>& t2) 
+			{
+				return t1.first < t2.first;
+			}
+		);
+		for (std::pair<float, Vector3> pair : tValues) {
+			Vector3 point = l.PointOnSegment(pair.first);
 			if (box.Contains(point)) {
-				outT = t;
+				outT = pair.first;
+				outNormal = pair.second;
 				return true;
 			}
 		}

@@ -9,7 +9,6 @@
 #include"include/FollowGameObject.h"
 #include"include/OrbitGameObject.h"
 #include"include/SplineGameObject.h"
-#include"include/Sphere.h"
 #include"include/Cube.h"
 #include"include/Icon.h"
 #include"include/FPSModel.h"
@@ -19,6 +18,7 @@
 #include"include/Shader.h"
 #include"include/Renderer.h"
 #include"include/InputSystem.h"
+#include"include/PhysicWorld.h"
 #include"include/MenuManager.h"
 #include<iostream>
 
@@ -46,7 +46,9 @@ bool Game::Initialize()
 		mRenderer = nullptr;
 		return false;
 	};
-	
+
+	mPhysicWorld = new PhysicWorld(this);
+
 	mInputSystem = new InputSystem(this);
 	mInputSystem->Initialize();
 	mInputSystem->SetRelativeMouseMode(false);
@@ -222,8 +224,7 @@ void Game::LoadData()
 	aimingSprite->SetTexture(mRenderer->GetTexture("Assets/Chapter9/Crosshair.png"));
 	mCrosshair->GetTransform()->SetScale(4.0f);
 
-	new Level(this);
-	new Sphere(this);
+	mLevel = new Level(this);
 	new Cube(this);
 	
 	Icon* healthbar = new Icon(this);
@@ -268,6 +269,16 @@ AudioSystem* Game::GetAudioSystem() const
 InputSystem* Game::GetInputSystem() const
 {
 	return mInputSystem;
+}
+
+PhysicWorld* Game::GetPhysicWorld() const
+{
+	return mPhysicWorld;
+}
+
+Level* Game::GetLevel() const
+{
+	return mLevel;
 }
 
 int Game::GetWindowWidth() const

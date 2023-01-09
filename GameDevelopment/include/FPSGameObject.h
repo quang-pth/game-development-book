@@ -26,6 +26,7 @@ public:
 	void SetVisible(bool visible);
 private:
 	void ChangeCamera(CameraComponent::State state);
+	void FixCollisions();
 private:
 	Vector3 mTarget, mWorldUp;
 	Vector3 mOffset;

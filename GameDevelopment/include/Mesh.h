@@ -1,5 +1,6 @@
 #pragma once
 
+#include"include/Collision.h"
 #include<string>
 #include<vector>
 
@@ -16,7 +17,9 @@ public:
 	std::string GetShaderName() const { return mShaderName; }
 	float GetRadius() const { return mRadius; }
 	float GetSpecularPower() const { return mSpecPower; }
+	const AABB& GetBox() const { return mBox; }
 private:
+	AABB mBox;
 	class std::vector<class Texture*> mTextures;
 	class VertexArray* mVertexArray;
 	std::string mShaderName;

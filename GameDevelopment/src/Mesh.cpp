@@ -14,12 +14,10 @@
 #include <sstream>
 
 Mesh::Mesh() :
-	mTextures(), 
-	mVertexArray(nullptr),
-	mShader(new Shader()),
-	mShaderName("BasicShader"), 
-	mRadius(0.0f), 
-	mSpecPower(100.0f)
+	mTextures(), mVertexArray(nullptr),
+	mShader(new Shader()),mShaderName("BasicShader"), 
+	mRadius(0.0f), mSpecPower(100.0f), 
+	mBox()
 {
 }
 
@@ -133,6 +131,8 @@ bool Mesh::Load(const std::string& fileName, Renderer* renderer)
 
 		Vector3 pos(vert[0].GetDouble(), vert[1].GetDouble(), vert[2].GetDouble());
 		mRadius = Math::Max(mRadius, pos.LengthSq());
+		// Set the box collider bound
+		mBox.UpdateMinMax(pos);
 
 		// Add the floats
 		for (rapidjson::SizeType i = 0; i < vert.Size(); i++)

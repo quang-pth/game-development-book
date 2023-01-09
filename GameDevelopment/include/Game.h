@@ -19,6 +19,8 @@ public:
 	class Renderer* GetRenderer() const;
 	class AudioSystem* GetAudioSystem() const;
 	class InputSystem* GetInputSystem() const;
+	class PhysicWorld* GetPhysicWorld() const;
+	class Level* GetLevel() const;
 	int GetWindowWidth() const;
 	int GetWindowHeight() const;
 private:
@@ -41,10 +43,12 @@ private:
 	class FPSGameObject* mFPSGameObject;
 	class GameObject* mStartPoint;
 	class GameObject* mEndPoint;
+	class Level* mLevel;
 	// System
 	class Renderer* mRenderer;
 	class AudioSystem* mAudioSystem;
 	class InputSystem* mInputSystem;
+	class PhysicWorld* mPhysicWorld;
 	SoundEvent mMusicEvent;
 	SoundEvent mReverbSnap;
 	// Thread control

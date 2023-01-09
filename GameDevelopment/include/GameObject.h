@@ -28,6 +28,7 @@ public:
 	// Add component in sorted order based-on its update order
 	void AddComponent(class Component* component);	
 	void RemoveComponent(class Component* component);
+	void RotateToNewForward(const Vector3& forward);
 	bool IsActived() { return mState == State::EActive; }
 	State GetState() const;
 	void SetState(State state);

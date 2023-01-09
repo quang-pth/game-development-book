@@ -82,6 +82,23 @@ void GameObject::RemoveComponent(Component* component)
 	}
 }
 
+void GameObject::RotateToNewForward(const Vector3& forward)
+{
+	float angle = forward.Dot(Vector3::UnitX);
+	if (angle > 0.99999f) {
+		mTransform->SetRotation(Quaternion::Identity);
+	}
+	else if (angle < -0.99999f) {
+		mTransform->SetRotation(Quaternion(Vector3::UnitZ, Math::Pi));
+	}
+	else {
+		Vector3 axis = forward.Cross(Vector3::UnitZ);
+		axis.Normalized();
+		mTransform->SetRotation(Quaternion(axis, angle));
+	}
+
+}
+
 GameObject::State GameObject::GetState() const
 {
 	return mState;
