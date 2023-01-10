@@ -11,6 +11,7 @@
 #include <cmath>
 #include <memory.h>
 #include <limits>
+#include <iostream>
 
 namespace Math
 {
@@ -309,6 +310,10 @@ public:
 		z = inZ;
 	}
 
+	void Log() {
+		std::cout << x << ", " << y << ", " << z << "\n";
+	}
+
 	// Vector addition (a + b)
 	friend Vector3 operator+(const Vector3& a, const Vector3& b)
 	{
@@ -419,6 +424,7 @@ public:
 		float length = Length();
 		x /= length;
 		y /= length;
+		z /= length;
 	}
 
 	float Dot(const Vector3& other) const

@@ -16,7 +16,9 @@ void BallMoveComponent::Update(float deltaTime)
 	const float segmentLength = 30.0f;
 	Vector3 start = mOwner->GetTransform()->GetPosition();
 	Vector3 end = start + mOwner->GetForward() * segmentLength;
-	LineSegment l = { start, end };
+	LineSegment l;
+	l.mStart = start;
+	l.mEnd = end;
 	CollisionInfo collisionInfo;
 	
 	PhysicWorld* physicWorld = mOwner->GetGame()->GetPhysicWorld();

@@ -8,8 +8,8 @@ class Subject
 public:
 	Subject();
 	virtual ~Subject();
-	void AddInputObserver(Observer* observer);
-	void RemoveInputObserver(Observer* observer);
+	void AddObserver(Observer* observer);
+	void RemoveObserver(Observer* observer);
 	virtual Observer* GetHead() const { return nullptr; };
 	virtual void SetHead(Observer* head) {};
 };

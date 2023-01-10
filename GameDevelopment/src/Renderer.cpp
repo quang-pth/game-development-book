@@ -134,7 +134,7 @@ void Renderer::Draw()
 		// Render meshes that use the current-bounded shader
 		for (MeshComponent*  mesh : mMeshMap[shaderMapIter.first]) 
 		{
-			if (mesh->GetOwner()->IsActived()) {
+			if (mesh->GetVisible()) {
 				mesh->Draw(shaderMapIter.second);
 			}
 		}
@@ -150,7 +150,7 @@ void Renderer::Draw()
 	mSpriteVertices->SetActive();
 
 	for (SpriteComponent* sprite : mSprites) {
-		if (sprite->GetOwner()->IsActived()) {
+		if (sprite->GetVisible()) {
 			sprite->Draw(mSpriteShader);
 		}
 	}
@@ -303,7 +303,7 @@ Vector3 Renderer::Unproject(const Vector3& screenPoint) const
 {
 	Vector3 ndcCoords = screenPoint;
 	ndcCoords.x /= (mWindowWidth * 0.5f);
-	ndcCoords.y /= (mWindowWidth * 0.5f);
+	ndcCoords.y /= (mWindowHeight * 0.5f);
 
 	Matrix4 unprojectMatrix = mViewMatrix * mProjectionMatrix;
 	unprojectMatrix.Invert();

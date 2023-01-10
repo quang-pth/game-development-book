@@ -10,6 +10,7 @@
 #include"include/OrbitGameObject.h"
 #include"include/SplineGameObject.h"
 #include"include/Cube.h"
+#include"include/Ball.h"
 #include"include/Icon.h"
 #include"include/FPSModel.h"
 #include"include/VertexArray.h"
@@ -226,7 +227,8 @@ void Game::LoadData()
 
 	mLevel = new Level(this);
 	new Cube(this);
-	
+	new Ball(this);
+
 	Icon* healthbar = new Icon(this);
 	healthbar->SetTexture(mRenderer->GetTexture("Assets/Chapter6/HealthBar.png"));
 	healthbar->GetTransform()->SetScale(8.0f, 1.0f, 1.0f);

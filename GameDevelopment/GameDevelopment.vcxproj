@@ -145,6 +145,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\GameObjectObserver.cpp" />
+    <ClCompile Include="src\GameObjectSubject.cpp" />
     <ClCompile Include="src\Observer.cpp" />
     <ClCompile Include="src\InputSubject.cpp" />
     <ClCompile Include="src\Ball.cpp" />
@@ -211,6 +213,8 @@
     <ClCompile Include="src\Subject.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\GameObjectObserver.h" />
+    <ClInclude Include="include\GameObjectSubject.h" />
     <ClInclude Include="include\Ball.h" />
     <ClInclude Include="include\BallMoveComponent.h" />
     <ClInclude Include="include\BoxComponent.h" />

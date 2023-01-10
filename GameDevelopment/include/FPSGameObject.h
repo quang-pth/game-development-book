@@ -1,11 +1,13 @@
 #pragma once
 
-#include<include/GameObject.h>
-#include "include/SoundEvent.h"
-#include "include/InputSystem.h"
-#include "include/CameraComponent.h"
+#include"include/GameObject.h"
+#include"include/Ball.h"
+#include"include/SoundEvent.h"
+#include"include/InputSystem.h"
+#include"include/CameraComponent.h"
 #include<vector>
 #include<memory>
+#include<array>
 
 class InputComponent;
 class AudioComponent;
@@ -25,13 +27,10 @@ public:
 	InputComponent* GetInputComponent() const { return mInputComponent; }
 	const std::shared_ptr<CameraComponent>& GetCamera() const { return mCurrentCamera; }
 	FPSModel* GetModel() const { return mFPSModel; }
-	const Vector3& GetFireDirection() const { return mFireDirection; }
 private:
 	void ChangeCamera(CameraComponent::State state);
 	void FixCollisions();
 private:
-	Vector3 mTarget, mWorldUp;
-	Vector3 mOffset;
 	SoundEvent mFootStep;
 	float mLastFootStep;
 	InputComponent* mInputComponent;
@@ -39,6 +38,9 @@ private:
 	std::shared_ptr<CameraComponent> mCurrentCamera;
 	std::vector<std::shared_ptr<CameraComponent>> mCameras;
 	FPSModel* mFPSModel;
-	Vector3 mFireDirection;
+	// Balls
+	float mCooldown = 0.5f;
+	std::uint32_t mPrevBallIdx;
+	std::array<Ball*, 30> mBalls;
 };
 

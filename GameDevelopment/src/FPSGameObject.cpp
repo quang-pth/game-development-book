@@ -18,12 +18,12 @@
 #include "include/SplineCamera.h"
 #include <iostream>
 
+const float MAX_COOLDOWN = 0.2f;
+
 FPSGameObject::FPSGameObject(Game* game, const std::string& name) :
 	GameObject(game, name), 
-	mTarget(Vector3::UnitX), mWorldUp(Vector3::UnitZ),
-	mOffset(Vector3::Zero),
 	mLastFootStep(0.5f), mFPSModel(nullptr), 
-	mCurrentCamera(nullptr), mCameras()
+	mCurrentCamera(nullptr), mCameras(), mCooldown(MAX_COOLDOWN)
 {
 	mInputComponent = new InputComponent(this);
 	mAudioComponent = new AudioComponent(this);
@@ -33,6 +33,11 @@ FPSGameObject::FPSGameObject(Game* game, const std::string& name) :
 	followCamera->SetIsActive(false);
 	mCameras.emplace_back(followCamera);
 	this->ChangeCamera(CameraComponent::State::EFPS);
+
+	// Init fire balls
+	for (std::uint16_t i = 0; i < mBalls.size(); i++) {
+		mBalls[i] = new Ball(game);
+	}
 
 	mFootStep = mAudioComponent->PlayEvent("event:/Footstep");
 	mFootStep.SetPaused(true);
@@ -68,6 +73,8 @@ void FPSGameObject::UpdateGameObject(float deltaTime)
 		mFootStep.Restart();
 		mLastFootStep = 0.5f;
 	}
+
+	mCooldown -= deltaTime;
 }
 
 void FPSGameObject::ProcessGameObjectInput(const InputState& inputState)
@@ -93,12 +100,32 @@ void FPSGameObject::SetVisible(bool visible)
 
 void FPSGameObject::Fire()
 {
+	if (mCooldown > 0.0f) return;
+	else {
+		mCooldown = MAX_COOLDOWN;
+	}
+
 	Vector3 screenPoint(0.0f, 0.0f, 0.0f);
 	Vector3 start = GameObject::GetGame()->GetRenderer()->Unproject(screenPoint);
 	screenPoint.z = 0.95f;
 	Vector3 end = GameObject::GetGame()->GetRenderer()->Unproject(screenPoint);
-	mFireDirection = end - start;
-	mFireDirection.Normalized();
+	Vector3 fireDirection = end - start;
+	fireDirection.Normalized();
+	// Fire ball
+	for (std::uint32_t i = mPrevBallIdx; i < mBalls.size(); i++) {
+		Ball* ball = mBalls[i];
+
+		if (ball->GetState() == GameObject::State::EActive) continue;
+
+		ball->Fire(start, fireDirection);
+
+		break;
+	}
+	
+	mPrevBallIdx++;
+	if (mPrevBallIdx >= mBalls.size()) {
+		mPrevBallIdx = 0;
+	}
 }
 
 void FPSGameObject::ChangeCamera(CameraComponent::State state)

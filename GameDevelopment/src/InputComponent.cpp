@@ -16,12 +16,12 @@ InputComponent::InputComponent(GameObject* owner, int updateOrder) :
 	mStates.insert({ ControlState::State::EController, std::make_shared<ControllerControlState>() });
 	this->ChangeState(ControlState::State::EKeyboard);
 
-	mOwner->GetGame()->GetInputSystem()->AddInputObserver(this);
+	mOwner->GetGame()->GetInputSystem()->AddObserver(this);
 }
 
 InputComponent::~InputComponent()
 {
-	mOwner->GetGame()->GetInputSystem()->RemoveInputObserver(this);
+	mOwner->GetGame()->GetInputSystem()->RemoveObserver(this);
 }
 
 void InputComponent::Update(float deltaTime)

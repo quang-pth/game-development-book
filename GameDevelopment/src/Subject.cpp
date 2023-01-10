@@ -20,7 +20,7 @@ Subject::~Subject()
 	}
 }
 
-void Subject::AddInputObserver(Observer* observer)
+void Subject::AddObserver(Observer* observer)
 {
 	Observer* head = this->GetHead();
 
@@ -34,7 +34,7 @@ void Subject::AddInputObserver(Observer* observer)
 	}
 }
 
-void Subject::RemoveInputObserver(Observer* observer)
+void Subject::RemoveObserver(Observer* observer)
 {
 	Observer* head = this->GetHead();
 

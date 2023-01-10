@@ -1,5 +1,6 @@
 #include "include/Ball.h"
 #include "include/Game.h"
+#include "include/FPSGameObject.h"
 #include "include/Renderer.h"
 #include "include/TransformComponent.h"
 #include "include/BallMoveComponent.h"
@@ -7,17 +8,19 @@
 #include "include/MeshComponent.h"
 #include "include/BoxComponent.h"
 #include "include/Mesh.h"
+#include <iostream>
 
-const float MAX_DISTANCE = 3000.0f;
-const float MAX_FORWARD_SPEED = 300.0f;
+const float MAX_DISTANCE = 2000.0f;
+const float MAX_FORWARD_SPEED = 500.0f;
 
 Ball::Ball(Game* game, const std::string& name) : 
 	GameObject(game, name), mDistance(MAX_DISTANCE)
 {
-	GameObject::GetTransform()->SetScale(3.0f);
+	GameObject::GetTransform()->SetPosition(Vector3(0.0f, 0.0f, 0.0f));
+	GameObject::GetTransform()->SetScale(0.5f);
 
 	mMeshComponent = new MeshComponent(this);
-	mMeshComponent->SetMesh(game->GetRenderer()->GetMesh("Assets/Chapter9/Sphere.gpmesh"));
+	mMeshComponent->SetMesh(game->GetRenderer()->GetMesh("Assets/Chapter6/Sphere.gpmesh"));
 
 	mBoxComponent = new BoxComponent(this);
 	mBoxComponent->SetObjectBox(mMeshComponent->GetMesh()->GetBox());
@@ -41,10 +44,22 @@ void Ball::UpdateGameObject(float deltaTime)
 void Ball::Activate()
 {
 	GameObject::Activate();
+	mMeshComponent->SetVisible(true);
+	mDistance = MAX_DISTANCE;
 }
 
 void Ball::Deactivate()
 {
 	GameObject::Deactivate();
-	mDistance = MAX_DISTANCE;
+	mMeshComponent->SetVisible(false);
+	mBallMoveComponent->SetForwardVelocity(Vector3::Zero);
+	mBallMoveComponent->SetStrafeVelocity(Vector3::Zero);
+}
+
+void Ball::Fire(const Vector3& startPos, const Vector3& fireDirection)
+{
+	GameObject::GetTransform()->SetPosition(startPos);
+	mBallMoveComponent->SetForwardVelocity(fireDirection);
+	mBallMoveComponent->SetStrafeVelocity(Vector3::Zero);
+	this->Activate();
 }
