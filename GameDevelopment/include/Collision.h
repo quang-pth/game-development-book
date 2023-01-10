@@ -6,9 +6,10 @@
 
 struct Vertex {
 	Vector3 Position;
-	Vector3 Color;
-	Vector3 Normal;
 	Vector2 TextureCoords;
+	Vector3 Normal;
+	Vector3 Tangent;
+	float Det;
 };
 
 struct LineSegment {
@@ -475,6 +476,8 @@ public:
 	TriangleMesh() = default;
 	~TriangleMesh() = default;
 	void ComputeVertexNormals();
+	// Compute basis vectors of a triangle mesh such as normal, tangent and binormal
+	void ComputeBasisVectors();
 private:
 	std::vector<Vertex> mVertices;
 	std::vector<Triangle> mTriangles;
@@ -552,9 +555,9 @@ private:
 class Collision {
 public:
 	inline static bool Intersect(const AABB& a, const AABB& b) {
-		bool outsideX = a.mMin.x < b.mMax.x || a.mMax.x < b.mMin.x;
-		bool outsideY = a.mMin.y < b.mMax.y || a.mMax.y < b.mMin.y;
-		bool outsideZ = a.mMin.z < b.mMax.z || a.mMax.z < b.mMin.z;
+		bool outsideX = a.mMin.x > b.mMax.x || a.mMax.x < b.mMin.x;
+		bool outsideY = a.mMin.y > b.mMax.y || a.mMax.y < b.mMin.y;
+		bool outsideZ = a.mMin.z > b.mMax.z || a.mMax.z < b.mMin.z;
 		return !(outsideX && outsideY && outsideZ);
 	}
 	inline static bool Intersect(const AABB& box, const Sphere& sphere) {

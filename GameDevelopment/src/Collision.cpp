@@ -1,4 +1,5 @@
 #include "include/Collision.h"
+#include<array>
 
 void TriangleMesh::ComputeVertexNormals()
 {
@@ -17,6 +18,67 @@ void TriangleMesh::ComputeVertexNormals()
 	for (Vertex& vertex : mVertices) {
 		vertex.Normal = vertex.Normal.Normalize();
 	}
+}
+
+void TriangleMesh::ComputeBasisVectors()
+{
+	std::uint32_t vertexCount = mVertices.size();
+	Vector3* tempTangent = new Vector3[vertexCount];
+	Vector3* tempBinormal = new Vector3[vertexCount];
+
+	for (std::uint32_t i = 0; i < vertexCount; i++) {
+		tempTangent[i].SetZero();
+		tempBinormal[i].SetZero();
+	}
+
+	// Avg basis vectors for each face into its neighboring vertices
+	for (std::uint32_t i = 0; i < vertexCount; i++) {
+		const Triangle& tri = mTriangles[i];
+		const Vertex& v0 = mVertices[tri.GetVertexIndex(0)];
+		const Vertex& v1 = mVertices[tri.GetVertexIndex(1)];
+		const Vertex& v2 = mVertices[tri.GetVertexIndex(2)];
+
+		// Compute intermediate values
+		Vector3 q1 = v1.Position - v0.Position;
+		Vector3 q2 = v2.Position - v0.Position;
+		float s1 = v1.TextureCoords.x - v0.TextureCoords.x;
+		float s2 = v2.TextureCoords.x - v0.TextureCoords.x;
+		float t1 = v1.TextureCoords.y - v0.TextureCoords.y;
+		float t2 = v2.TextureCoords.y - v0.TextureCoords.y;
+
+		// Compute basis vectors for the triangle
+		Vector3 tangent = t2 * q1 - t1 * q2;
+		tangent.Normalized();
+		Vector3 binormal = -s2 * q1 + s1 * q2;
+		binormal.Normalized();
+
+		for (std::uint8_t i = 0; i < 3; i++) {
+			tempTangent[tri.GetVertexIndex(i)] += tangent;
+			tempBinormal[tri.GetVertexIndex(i)] += binormal;
+		}
+	}
+
+	// Ensure the tangent and binormal are perpendicular to the normal
+	for (std::uint32_t i = 0; i < vertexCount; i++) {
+		Vertex& v = mVertices[i];
+		Vector3 t = tempTangent[i];
+
+		// Use Gram-Schmit solution
+		t -= v.Normal * t.Dot(v.Normal);
+		t.Normalized();
+		v.Tangent = t;
+
+		// Figure if we're mirrored
+		if (v.Normal.Cross(t).Dot(tempBinormal[i]) < 0.0f) {
+			v.Det = -1.0f; // We're mirrored
+		}
+		else {
+			v.Det = 1.0f; // We're not mirrored
+		}
+	}
+
+	delete[] tempTangent;
+	delete[] tempBinormal;
 }
 
 Vector3 LineSegment::PointOnSegment(float t) const
