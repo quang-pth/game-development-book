@@ -1,59 +1,56 @@
 #include "include/Subject.h"
 
-Subject::Subject() : mHead(nullptr)
+Subject::Subject()
 {
 }
 
 Subject::~Subject()
 {
-	InputObserver* iter = mHead;
-	while (iter != nullptr) {
-		mHead = iter->mNext;
+	Observer* head = this->GetHead();
+	Observer* iter = head;
 
-		iter->mPrev = nullptr;
-		iter->mNext = nullptr;
+	while (iter != nullptr) {
+		head = iter->GetNext();
+
+		iter->SetPrev(nullptr);
+		iter->SetNext(nullptr);
 		delete iter;
 
-		iter = mHead;
+		iter = head;
 	}
 }
 
-void Subject::AddInputObserver(InputObserver* observer)
+void Subject::AddInputObserver(Observer* observer)
 {
-	if (mHead == nullptr) {
-		mHead = observer;
+	Observer* head = this->GetHead();
+
+	if (head == nullptr) {
+		this->SetHead(observer);
 	}
 	else {
-		observer->mNext = mHead;
-		mHead->mPrev = observer;
-		mHead = observer;
+		observer->SetNext(head);
+		head->SetPrev(observer);
+		this->SetHead(observer);
 	}
 }
 
-void Subject::RemoveInputObserver(InputObserver* observer)
+void Subject::RemoveInputObserver(Observer* observer)
 {
-	if (observer == nullptr || mHead == nullptr) return;
+	Observer* head = this->GetHead();
 
-	if (observer == mHead) {
-		mHead = observer->mNext;
+	if (observer == nullptr || head == nullptr) return;
+
+	if (observer == head) {
+		this->SetHead(observer->GetNext());
 	}
-	else if (observer->mNext == nullptr) {
-		observer->mPrev->mNext = nullptr;
+	else if (observer->GetNext() == nullptr) {
+		observer->GetPrev()->SetNext(nullptr);
 	}
 	else {
-		observer->mNext->mPrev = observer->mPrev;
-		observer->mPrev->mNext = observer->mNext;
+		observer->GetNext()->SetPrev(observer->GetPrev());
+		observer->GetPrev()->SetNext(observer->GetNext());
 	}
 
-	observer->mNext = nullptr;
-	observer->mPrev = nullptr;
-}
-
-void Subject::NotifyControllerInput(ControllerState* controller, InputObserver::Event inputEvent)
-{
-	InputObserver* iter = mHead;
-	while (iter != nullptr) {
-		iter->OnControllerInputHandler(controller, inputEvent);
-		iter = iter->mNext;
-	}
+	observer->SetNext(nullptr);
+	observer->SetPrev(nullptr);
 }

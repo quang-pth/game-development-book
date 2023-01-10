@@ -63,6 +63,16 @@ void GameObject::ProcessGameObjectInput(const InputState& inputState)
 {
 }
 
+void GameObject::Activate()
+{
+	mState = State::EActive;
+}
+
+void GameObject::Deactivate()
+{
+	mState = State::EDeactive;
+}
+
 void GameObject::AddComponent(Component* component)
 {
 	std::vector<Component*>::iterator iter = mComponents.begin();

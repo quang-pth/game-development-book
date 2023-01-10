@@ -145,6 +145,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Observer.cpp" />
+    <ClCompile Include="src\InputSubject.cpp" />
+    <ClCompile Include="src\Ball.cpp" />
     <ClCompile Include="src\BallMoveComponent.cpp" />
     <ClCompile Include="src\PhysicWorld.cpp" />
     <ClCompile Include="src\BoxComponent.cpp" />
@@ -208,6 +211,7 @@
     <ClCompile Include="src\Subject.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Ball.h" />
     <ClInclude Include="include\BallMoveComponent.h" />
     <ClInclude Include="include\BoxComponent.h" />
     <ClInclude Include="include\Collision.h" />
@@ -268,6 +272,8 @@
     <ClInclude Include="include\OrbitGameObject.h" />
     <ClInclude Include="include\SplineGameObject.h" />
     <ClInclude Include="include\PhysicWorld.h" />
+    <ClInclude Include="include\InputSubject.h" />
+    <ClInclude Include="include\Observer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\basic-frag.glsl" />

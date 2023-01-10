@@ -2,7 +2,7 @@
 
 #include"include/MoveComponent.h"
 
-class BallMoveComponent : MoveComponent
+class BallMoveComponent : public MoveComponent
 {
 public:
 	BallMoveComponent(class GameObject* owner, int updateOrder = 101, const std::string& name = "BallMoveComponent");

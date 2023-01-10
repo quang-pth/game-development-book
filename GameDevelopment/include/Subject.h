@@ -3,18 +3,14 @@
 #include "include/InputObserver.h"
 #include<vector>
 
-class ControllerState;
-
 class Subject
 {
 public:
 	Subject();
 	virtual ~Subject();
-	void AddInputObserver(InputObserver* observer);
-	void RemoveInputObserver(InputObserver* observer);
-protected:
-	void NotifyControllerInput(ControllerState* controller, InputObserver::Event inputEvent);
-private:
-	InputObserver* mHead;
+	void AddInputObserver(Observer* observer);
+	void RemoveInputObserver(Observer* observer);
+	virtual Observer* GetHead() const { return nullptr; };
+	virtual void SetHead(Observer* head) {};
 };
 

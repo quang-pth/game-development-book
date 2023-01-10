@@ -1,10 +1,10 @@
 #pragma once
 
+#include"include/InputSubject.h"
 #include"include/InputObserver.h"
 #include"include/KeyboardState.h"
 #include"include/MouseState.h"
 #include"include/ControllerState.h"
-#include"include/Subject.h"
 #include<SDL2/SDL.h>
 #include<cstdint>
 #include<vector>
@@ -30,7 +30,7 @@ struct RelativeMouse {
 	std::uint32_t Buttons;
 };
 
-class InputSystem : public Subject
+class InputSystem : public InputSubject
 {
 public:
 	InputSystem(class Game* game);

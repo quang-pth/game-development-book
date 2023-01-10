@@ -1,9 +1,9 @@
 #pragma once
 
-#include<vector>
-#include<string>
 #include"include/CustomMath.h"
 #include"include/InputSystem.h"
+#include<string>
+#include<vector>
 
 class GameObject
 {
@@ -25,6 +25,8 @@ public:
 	void ProcessInput(const InputState& inputState);
 	virtual void UpdateGameObject(float deltaTime);
 	virtual void ProcessGameObjectInput(const InputState& inputState);
+	virtual void Activate();
+	virtual void Deactivate();
 	// Add component in sorted order based-on its update order
 	void AddComponent(class Component* component);	
 	void RemoveComponent(class Component* component);

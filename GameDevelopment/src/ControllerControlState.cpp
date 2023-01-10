@@ -22,7 +22,7 @@ void ControllerControlState::OnUpdate(InputComponent* owner, float deltaTime)
 	TransformComponent* transformComponent = owner->mOwner->GetTransform();
 	Vector3 position = transformComponent->GetPosition();
 
-	position += owner->mVelocity * owner->mForwardSpeed * deltaTime;
+	position += owner->mForwardVelocity * owner->mForwardSpeed * deltaTime;
 	transformComponent->SetPosition(position);
 
 	if (!Math::NearZero(owner->mAngularSpeed)) {
@@ -40,11 +40,15 @@ void ControllerControlState::OnProcessInput(InputComponent* owner, const InputSt
 	if (controller != nullptr && controller->GetIsConnected())
 	{
 		mVelocity = this->GetControllerMoveDirection(controller, owner->mOwner);
-		owner->SetVelocity(mVelocity);
+		owner->SetForwardVelocity(mVelocity);
 		const Vector2& rotation = controller->GetRightStick();
 		const float maxAngularSpeed = Math::Pi * 1.5;
 		owner->SetAngularSpeed(rotation.x * maxAngularSpeed);
 		owner->mOwner->GetGame()->GetFPSGameObject()->GetCamera()->SetPitchSpeed(-rotation.y * maxAngularSpeed);
+		// Fire
+		if (controller->GetRightTrigger() != 0.0f) {
+			owner->mOwner->GetGame()->GetFPSGameObject()->Fire();
+		}
 	}
 }
 

@@ -18,12 +18,14 @@ public:
 	~FPSGameObject();
 	virtual void UpdateGameObject(float deltaTime) override;
 	virtual void ProcessGameObjectInput(const InputState& inputState) override;
-	InputComponent* GetInputComponent() const { return mInputComponent; }
-	const std::shared_ptr<CameraComponent>& GetCamera() const { return mCurrentCamera; }
 	void SetFootstepSurface(float value);
-	FPSModel* GetModel() const { return mFPSModel; }
 	void SetModel(FPSModel* model) { mFPSModel = model; };
 	void SetVisible(bool visible);
+	void Fire();
+	InputComponent* GetInputComponent() const { return mInputComponent; }
+	const std::shared_ptr<CameraComponent>& GetCamera() const { return mCurrentCamera; }
+	FPSModel* GetModel() const { return mFPSModel; }
+	const Vector3& GetFireDirection() const { return mFireDirection; }
 private:
 	void ChangeCamera(CameraComponent::State state);
 	void FixCollisions();
@@ -37,6 +39,6 @@ private:
 	std::shared_ptr<CameraComponent> mCurrentCamera;
 	std::vector<std::shared_ptr<CameraComponent>> mCameras;
 	FPSModel* mFPSModel;
-	GameObject* mStartPoint, *mEndPoint;
+	Vector3 mFireDirection;
 };
 

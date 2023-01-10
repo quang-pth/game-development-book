@@ -36,20 +36,6 @@ FPSGameObject::FPSGameObject(Game* game, const std::string& name) :
 
 	mFootStep = mAudioComponent->PlayEvent("event:/Footstep");
 	mFootStep.SetPaused(true);
-
-	mStartPoint = new GameObject(game);
-	mStartPoint->GetTransform()->SetPosition(Vector3(25.0f, 10.0f, 0.0f));
-	mStartPoint->GetTransform()->SetScale(1.5f);
-	mStartPoint->GetTransform()->SetRotation(Quaternion(Vector3::UnitX, 180.0f));
-	MeshComponent* mesh = new MeshComponent(mStartPoint);
-	mesh->SetMesh(game->GetRenderer()->GetMesh("Assets/Chapter6/Cube.gpmesh"));
-	
-	mEndPoint = new GameObject(game);
-	mEndPoint->GetTransform()->SetPosition(Vector3(25.0f, 10.0f, 0.0f));
-	mEndPoint->GetTransform()->SetScale(1.5f);
-	mEndPoint->GetTransform()->SetRotation(Quaternion(Vector3::UnitX, 180.0f));
-	mesh = new MeshComponent(mEndPoint);
-	mesh->SetMesh(game->GetRenderer()->GetMesh("Assets/Chapter6/Cube.gpmesh"));
 }
 
 FPSGameObject::~FPSGameObject()
@@ -92,14 +78,6 @@ void FPSGameObject::ProcessGameObjectInput(const InputState& inputState)
 	else if (mInputComponent->GetMappedActionState("FPSCamera")) {
 		this->ChangeCamera(CameraComponent::State::EFPS);
 	}
-	if (mInputComponent->GetMappedActionValue("Fire")) {
-		Vector3 screenPoint(0.0f, 0.0f, 0.0f);
-		Vector3 start = GameObject::GetGame()->GetRenderer()->Unproject(screenPoint);
-		screenPoint.z = 0.95f;
-		Vector3 end = GameObject::GetGame()->GetRenderer()->Unproject(screenPoint);
-		mStartPoint->GetTransform()->SetPosition(start);
-		mEndPoint->GetTransform()->SetPosition(end);
-	}
 }
 
 void FPSGameObject::SetFootstepSurface(float value)
@@ -111,6 +89,16 @@ void FPSGameObject::SetFootstepSurface(float value)
 void FPSGameObject::SetVisible(bool visible)
 {
 	mFPSModel->SetVisible(visible);
+}
+
+void FPSGameObject::Fire()
+{
+	Vector3 screenPoint(0.0f, 0.0f, 0.0f);
+	Vector3 start = GameObject::GetGame()->GetRenderer()->Unproject(screenPoint);
+	screenPoint.z = 0.95f;
+	Vector3 end = GameObject::GetGame()->GetRenderer()->Unproject(screenPoint);
+	mFireDirection = end - start;
+	mFireDirection.Normalized();
 }
 
 void FPSGameObject::ChangeCamera(CameraComponent::State state)

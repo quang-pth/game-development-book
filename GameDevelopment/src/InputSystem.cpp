@@ -1,7 +1,6 @@
 #include "include/InputSystem.h"
 #include "include/Game.h"
 #include "include/Renderer.h"
-#include "include/KeyboardState.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -55,7 +54,7 @@ void InputSystem::ProcessEvent(SDL_Event& e)
 			mState.Controllers[controllerIdx].mID = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(mControllers[controllerIdx]));
 			mState.Controllers[controllerIdx].mIsConnected = true;
 			SDL_Log("Controller with ID %i has been added", mState.Controllers[controllerIdx].mID);
-			Subject::NotifyControllerInput(&mState.Controllers[controllerIdx], InputObserver::Event::EAdded);
+			InputSubject::NotifyControllerInput(&mState.Controllers[controllerIdx], InputObserver::Event::EAdded);
 		}
 		break;
 	case SDL_CONTROLLERDEVICEREMOVED:
@@ -66,7 +65,7 @@ void InputSystem::ProcessEvent(SDL_Event& e)
 				mControllers[controllerIdx] = nullptr;
 				mState.Controllers[controllerIdx].mIsConnected = false;
 				SDL_Log("Controller with ID %i has been removed", instanceID);
-				Subject::NotifyControllerInput(&mState.Controllers[controllerIdx], InputObserver::Event::ERemoved);
+				InputSubject::NotifyControllerInput(&mState.Controllers[controllerIdx], InputObserver::Event::ERemoved);
 				break;
 			}
 		}

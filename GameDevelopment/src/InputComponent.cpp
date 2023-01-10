@@ -72,8 +72,8 @@ void InputComponent::OnControllerInputHandler(ControllerState* controller, Input
 		break;
 	case InputObserver::Event::ERemoved:
 		if (mController != nullptr && controller->GetInstanceID() == mController->GetInstanceID()) {
-			mController = nullptr;
 			mController->SetIsUsed(false);
+			mController = nullptr;
 			this->ChangeState(ControlState::State::EKeyboard);
 		}
 		break;
